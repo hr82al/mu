@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="325.0" prefWidth="323.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.updrec_pmplan_controller">
+   <children>
+      <Pane prefHeight="325.0" prefWidth="323.0">
+         <children>
+            <Label fx:id="lbl_upd_record_pmplan" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="299.0" text="Обновление записи в PM Plan">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="64.0" text="Id:" />
+            <Label fx:id="lbl_de_pmplan" layoutX="14.0" layoutY="164.0" text="Дата выполнения:" />
+            <Label fx:id="lbl_resp_pmplan" layoutX="14.0" layoutY="219.0" text="Ответственный:" />
+            <JFXDatePicker fx:id="data_pmplan" layoutX="137.0" layoutY="160.0" />
+            <JFXTextField fx:id="id_pmplan" disable="true" layoutX="137.0" layoutY="60.0" />
+            <JFXButton fx:id="cancel_pmplan" layoutX="240.0" layoutY="276.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></JFXButton>
+            <JFXButton fx:id="upd_pmplan" layoutX="133.0" layoutY="276.0" text="Применить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></JFXButton>
+            <ComboBox fx:id="oft_pmplan" layoutX="137.0" layoutY="215.0" prefWidth="150.0" />
+            <Label fx:id="lbl_group_pm" layoutX="14.0" layoutY="115.0" text="Группа:" />
+            <JFXTextField fx:id="group_pm_pmplan" disable="true" layoutX="137.0" layoutY="111.0" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

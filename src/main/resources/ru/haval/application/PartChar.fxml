@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="590.0" prefWidth="1077.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.PartChar_Controller">
+   <children>
+      <Pane prefHeight="590.0" prefWidth="1077.0">
+         <children>
+            <ImageView fitHeight="29.0" fitWidth="106.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@haval.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="lbl_title_pc" alignment="CENTER" layoutX="121.0" layoutY="20.0" prefHeight="20.0" prefWidth="888.0" text="Part Characteristic - Редактор">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <TableView fx:id="table_partchar" layoutX="21.0" layoutY="50.0" prefHeight="452.0" prefWidth="1035.0">
+              <columns>
+                <TableColumn fx:id="col_id_pc" prefWidth="51.0" text="№" />
+                  <TableColumn fx:id="col_Part_Type" prefWidth="69.0" text="Part Type" />
+                  <TableColumn fx:id="col_SP_KIND" prefWidth="34.0" text="Kind" />
+                  <TableColumn fx:id="col_Part_Sub_Type" prefWidth="83.0" text="Part Sub Type" />
+                  <TableColumn fx:id="col_Part_Sub_Type_ENG" prefWidth="113.0" text="Part Sub Type ENG" />
+                  <TableColumn fx:id="col_Part_Characteristic_Name_1" prefWidth="159.0" text="Part Char Name1" />
+                  <TableColumn fx:id="col_Part_Characteristic_Name_2" prefWidth="159.0" text="Part Char Name2" />
+                  <TableColumn fx:id="col_Part_Characteristic_Name_3" prefWidth="159.0" text="Part Char Name3" />
+                  <TableColumn fx:id="col_Part_Characteristic_Name_4" prefWidth="159.0" text="Part Char Name4" />
+              </columns>
+            </TableView>
+            <HBox alignment="CENTER_LEFT" layoutX="21.0" layoutY="502.0" prefHeight="86.0" prefWidth="1035.0">
+               <children>
+                  <JFXButton fx:id="btn_add_pc" text="Создать">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <HBox prefHeight="100.0" prefWidth="17.0" />
+                  <JFXButton fx:id="btn_upd_pc" text="Обновить запись">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <HBox prefHeight="100.0" prefWidth="17.0" />
+                  <JFXButton fx:id="btn_del_pc" text="Удалить">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <HBox prefHeight="100.0" prefWidth="17.0" />
+                  <JFXButton fx:id="btn_cancel_pc" text="Отмена">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <HBox prefHeight="100.0" prefWidth="17.0" />
+                  <JFXButton fx:id="btn_upd_tbl_pc" text="Обновить таблицу">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

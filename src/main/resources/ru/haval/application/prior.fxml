@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="200.0" prefWidth="339.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.prior_controller">
+   <children>
+      <Pane prefHeight="475.0" prefWidth="837.0">
+         <children>
+            <VBox prefHeight="475.0" prefWidth="837.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="837.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@haval.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="title_prior" alignment="CENTER" prefHeight="20.0" prefWidth="415.0" text="Справочник приоритетов">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="359.0" prefWidth="837.0">
+                     <children>
+                        <TableView fx:id="table_prior" prefHeight="100.0" prefWidth="804.0">
+                          <columns>
+                            <TableColumn fx:id="col_id_tsk" prefWidth="75.0" sortable="false" text="ID Приор." />
+                            <TableColumn fx:id="col_name_prior" prefWidth="197.0" sortable="false" text="Название" />
+                            <TableColumn fx:id="col_description" prefWidth="423.0" sortable="false" text="Полное описание" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="837.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="18.0" />
+                        <JFXButton fx:id="add_prior" text="Создать запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="25.0" />
+                        <JFXButton fx:id="upd_prior" text="Обновить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="25.0" />
+                        <JFXButton fx:id="del_prior" text="Удалить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="25.0" />
+                        <JFXButton fx:id="cancel_prior" text="Отмена">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

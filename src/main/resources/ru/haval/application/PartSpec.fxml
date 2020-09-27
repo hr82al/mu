@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="711.0" prefWidth="987.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.PartSpec_Controller">
+   <children>
+      <Pane prefHeight="711.0" prefWidth="987.0">
+         <children>
+            <VBox prefHeight="711.0" prefWidth="987.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="995.0">
+                     <children>
+                        <ImageView fitHeight="51.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@haval.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_title_ps" alignment="CENTER" prefHeight="20.0" prefWidth="789.0" text="Parts Specification - Редактор">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="637.0" prefWidth="832.0">
+                     <children>
+                        <TableView fx:id="table_parts" prefHeight="599.0" prefWidth="965.0">
+                          <columns>
+                            <TableColumn fx:id="col_id_ps" prefWidth="75.0" text="№" />
+                            <TableColumn fx:id="col_HMMR_Material_Num" prefWidth="140.0" text="Наименование" />
+                              <TableColumn fx:id="col_Equipment" prefWidth="161.0" text="Оборудование" />
+                              <TableColumn fx:id="col_Drawing" prefWidth="143.0" text="№ чертежа" />
+                              <TableColumn fx:id="col_Position_On_Drawing" prefWidth="91.0" text="№ на чертеже" />
+                              <TableColumn fx:id="col_Key_No_Backup_Yes" prefWidth="86.0" text="KN BackupYes" />
+                              <TableColumn fx:id="col_Key_No_Backup_No" prefWidth="83.0" text="KN BackupNo" />
+                              <TableColumn fx:id="col_Key_Yes_Backup_Yes" prefWidth="85.0" text="KY BackupYes" />
+                              <TableColumn fx:id="col_Key_Yes_Backup_No" prefWidth="81.0" text="KY BackupNo" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="31.0" />
+                        <JFXButton fx:id="btn_add_rec" text="Создать запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_rec" text="Обновить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_del_rec" text="Удалить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_tbl" text="Обновить таблицу">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_cancel" text="Отмена">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="dub_ps" text="Дублировать x записей" visible="false">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

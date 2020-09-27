@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_Letter" pageWidth="332" pageHeight="335" columnWidth="292" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="15a69ad6-0666-421f-8eb4-7ae9d8131396">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="src\report\DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Id" class="java.lang.String"/>
+	<parameter name="Tsk" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT hmmr_mu.hmmr_action_plan.id,
+	hmmr_mu.hmmr_action_plan.`Description`,
+	hmmr_mu.hmmr_action_plan.`Due_Date`,
+	hmmr_mu.hmmr_action_plan.`Otv`,
+	hmmr_mu.hmmr_action_plan.`Equipment`
+FROM hmmr_mu.hmmr_action_plan
+where Type = 'TSK' AND id = $P{Id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hmmr_action_plan"/>
+	</field>
+	<field name="Description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hmmr_action_plan"/>
+	</field>
+	<field name="Due_Date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="Due_Date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hmmr_action_plan"/>
+	</field>
+	<field name="Otv" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Otv"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hmmr_action_plan"/>
+	</field>
+	<field name="Equipment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Equipment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hmmr_action_plan"/>
+	</field>
+	<group name="id">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="289" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="90" width="266" height="130" uuid="d63cad98-60de-4896-8909-2ed24e97e1c8"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Description} +"  "+ $F{Equipment}]]></textFieldExpression>
+			</textField>
+			<textField pattern=" yyyy/MM/dd">
+				<reportElement x="105" y="27" width="100" height="19" uuid="038bc7f1-e085-4239-9277-cb1190e1ce59"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="26" width="67" height="20" uuid="635a0249-8897-49fe-a876-7a6b11a5a298"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Tsk}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="5" y="3" width="276" height="1" uuid="56fd9066-8f8d-48fe-aef7-0fc70e027d5e"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="5" y="4" width="1" height="276" uuid="d1aba2b3-2f50-42b7-8c37-60b21ce6305d"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="282" y="3" width="1" height="276" uuid="ca20f30f-dae6-4203-9640-838901c94d16"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="5" y="53" width="276" height="1" uuid="f05152f8-0638-40ef-aa28-4cc89de22050"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="98" y="4" width="1" height="49" uuid="aa653758-c4ca-43fd-b382-fea3523336a1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement positionType="FixRelativeToBottom" x="206" y="6" width="73" height="34" uuid="a6946e3b-8061-42ce-a223-14df1df0eba5"/>
+				<imageExpression><![CDATA["application/haval1.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="104" y="6" width="102" height="21" uuid="8992c0e6-9d59-4d5f-aa4a-d8c93994c1af"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Дата получения задачи:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="6" width="68" height="20" uuid="b9b029fd-52b0-436d-bbf1-1e033d37c870"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Задача:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="6" y="280" width="275" height="1" uuid="fbd187cf-e4a4-43e9-866e-1a1be6143902"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="5" y="235" width="276" height="1" uuid="1df79551-3ed5-4919-a9be-5d8e0215027b"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="149" y="236" width="1" height="44" uuid="e8ef8a59-f589-41b2-8e32-c8f73b1f62e2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="9" y="63" width="267" height="21" uuid="c0459c5c-f958-4313-acee-a9ab9af770c8"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Что необходимо выполнить:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="241" width="141" height="17" uuid="60e50df8-b311-4165-9555-7c8cb4e244b9"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID и подпись ответственного:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="8" y="258" width="100" height="17" uuid="379c2cf1-c3db-410f-b404-4d73a84254e9"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Otv}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="152" y="241" width="127" height="17" uuid="f234a25b-ad7f-41c4-a033-998e2e537b11"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Крайний срок выполнения:]]></text>
+			</staticText>
+			<textField pattern=" yyyy/MM/dd">
+				<reportElement x="153" y="258" width="100" height="15" uuid="1c191c40-2e3a-4e60-af04-c7a9a9351ff6"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Due_Date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

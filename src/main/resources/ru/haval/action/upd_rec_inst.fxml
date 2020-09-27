@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="568.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.updrec_inst_controller">
+   <children>
+      <Pane prefHeight="568.0" prefWidth="918.0">
+         <children>
+            <Label fx:id="head_upd_inst" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="33.0" prefHeight="17.0" prefWidth="769.0" text="Обновление записи в таблицу PM - Instruction">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font></Label>
+            <Label fx:id="col_ninst_inst" layoutX="14.0" layoutY="80.0" text="Номер инструкции:" />
+            <TextField fx:id="ninst_inst_upd" layoutX="171.0" layoutY="80.0" />
+            <Label fx:id="col_ver_inst" layoutX="14.0" layoutY="240.0" text="Версия:" />
+            <TextField fx:id="ver_inst_upd" layoutX="171.0" layoutY="240.0" />
+            <Label fx:id="col_mt_inst" layoutX="14.0" layoutY="280.0" text="Модель/Тип:" />
+            <TextField fx:id="mt_inst_upd" layoutX="171.0" layoutY="280.0" />
+            <Label fx:id="col_pmn_inst" layoutX="14.0" layoutY="320.0" text="Имя PM:" />
+            <TextField fx:id="pmname_inst_upd" layoutX="171.0" layoutY="320.0" />
+            <Label fx:id="col_pmt_inst" layoutX="14.0" layoutY="360.0" text="Тип PM:" />
+            <Label fx:id="col_pmc1_inst" layoutX="14.0" layoutY="400.0" text="Цикл PM1:" />
+            <Label fx:id="col_ool_inst" layoutX="14.0" layoutY="480.0" text="Линия:" />
+            <ComboBox fx:id="line_inst_upd" layoutX="171.0" layoutY="480.0" prefWidth="150.0" />
+            <Label fx:id="col_oop_inst" layoutX="14.0" layoutY="520.0" text="Питание:" />
+            <ComboBox fx:id="power_inst_upd" layoutX="171.0" layoutY="520.0" prefWidth="150.0" />
+            <Label fx:id="col_pos_inst" layoutX="428.0" layoutY="80.0" text="Должность:" />
+            <ComboBox fx:id="pos_inst_upd" layoutX="585.0" layoutY="80.0" prefWidth="150.0" />
+            <Label fx:id="col_sinfo_inst" layoutX="429.0" layoutY="123.0" text="Источник информации:" />
+            <ComboBox fx:id="sinfo_inst_upd" layoutX="583.0" layoutY="123.0" prefWidth="150.0" />
+            <Label fx:id="col_sdoc_inst" layoutX="429.0" layoutY="163.0" text="Документ источника:" />
+            <Label fx:id="col_qspec_inst" layoutX="429.0" layoutY="203.0" text="Кол-во специалистов:" />
+            <TextField fx:id="qtyspec_inst_upd" layoutX="583.0" layoutY="203.0" />
+            <Label fx:id="col_pty_inst" layoutX="429.0" layoutY="243.0" text="Время подготовит. работ:" />
+            <TextField fx:id="ptw_inst_upd" layoutX="583.0" layoutY="243.0" promptText="указывается в минутах" />
+            <Label fx:id="col_wt_inst" layoutX="429.0" layoutY="283.0" text="Время работы:" />
+            <TextField fx:id="wt_inst_upd" layoutX="583.0" layoutY="283.0" promptText="указывается в минутах" />
+            <Label fx:id="col_adm2_inst" layoutX="429.0" layoutY="323.0" text="Допуск 2:" />
+            <TextField fx:id="adm2_inst_upd" layoutX="583.0" layoutY="323.0" />
+            <Label fx:id="col_adm3_inst" layoutX="429.0" layoutY="363.0" text="Допуск 3:" />
+            <TextField fx:id="adm3_inst_upd" layoutX="583.0" layoutY="363.0" />
+            <Label fx:id="col_of1_inst" layoutX="429.0" layoutY="403.0" text="Наряд 1:" />
+            <TextField fx:id="of1_inst_upd" layoutX="583.0" layoutY="403.0" />
+            <Label fx:id="col_of2_inst" layoutX="429.0" layoutY="443.0" text="Наряд 2:" />
+            <TextField fx:id="of2_inst_upd" layoutX="583.0" layoutY="443.0" />
+            <ComboBox fx:id="typepm_inst_upd" layoutX="171.0" layoutY="360.0" prefWidth="150.0" />
+            <ComboBox fx:id="cyclepm1_inst_upd" layoutX="171.0" layoutY="400.0" prefWidth="150.0" />
+            <TextField fx:id="sdoc_txt_inst_upd" layoutX="583.0" layoutY="163.0" />
+            <Label fx:id="error_msg_upd" alignment="CENTER" contentDisplay="CENTER" layoutX="429.0" layoutY="483.0" prefHeight="17.0" prefWidth="304.0" text="Пожалуйста, заполните все поля!" textFill="#dd1313" visible="false">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="col_pmc2_inst" layoutX="14.0" layoutY="440.0" text="Цикл PM2:" />
+            <ComboBox fx:id="cyclepm2_inst_upd" layoutX="170.0" layoutY="440.0" prefWidth="150.0" />
+            <JFXButton fx:id="sdoc_inst_upd" layoutX="744.0" layoutY="163.0" text="Обзор">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="add_confirm_inst_upd" layoutX="565.0" layoutY="507.0" text="Применить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="add_cancel_inst_upd" layoutX="670.0" layoutY="507.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <ComboBox fx:id="list_adm2" layoutX="744.0" layoutY="323.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_adm3" layoutX="744.0" layoutY="363.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_of1" layoutX="744.0" layoutY="403.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_of2" layoutX="744.0" layoutY="443.0" prefWidth="150.0" />
+         </children>
+      </Pane>
+      <Label layoutX="14.0" layoutY="120.0" text="Дата создания:" />
+      <Label layoutX="14.0" layoutY="160.0" text="Дата изменения:" />
+      <Label layoutX="14.0" layoutY="200.0" text="Инструкция PDF:" />
+      <DatePicker fx:id="date_create_pi" disable="true" layoutX="171.0" layoutY="117.0" prefHeight="25.0" prefWidth="150.0" />
+      <DatePicker fx:id="date_change_pi" layoutX="171.0" layoutY="156.0" prefHeight="25.0" prefWidth="150.0" />
+      <TextField fx:id="inst_pdf_pi" layoutX="171.0" layoutY="196.0" />
+      <JFXButton fx:id="exp_inst_pdf" layoutX="337.0" layoutY="195.0" text="Обзор">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+   </children>
+</AnchorPane>

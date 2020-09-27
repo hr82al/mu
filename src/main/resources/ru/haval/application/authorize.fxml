@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="243.0" prefWidth="296.0" stylesheets="/ru/haval/application/application.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.application.conn_connector">
+   <children>
+      <Pane prefHeight="243.0" prefWidth="296.0" stylesheets="/ru/haval/application/application.css">
+         <children>
+            <Label id="l_info" fx:id="l_info" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="7.0" prefHeight="31.0" prefWidth="309.0" text="Вход в систему" textAlignment="CENTER" textFill="#099717">
+               <font>
+                  <Font name="System Bold Italic" size="21.0" />
+               </font></Label>
+            <Label id="host_err" fx:id="host_err" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="136.0" prefHeight="17.0" prefWidth="166.0" stylesheets="/ru/haval/application/application.css" text="Неверный логин или пароль!" textAlignment="CENTER" textFill="#e80909" visible="false">
+               <font>
+                  <Font name="Times New Roman Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="login_id" layoutX="23.0" layoutY="56.0" promptText="Введите логин:" stylesheets="/ru/haval/application/application.css" />
+            <PasswordField fx:id="passwd_id" layoutX="23.0" layoutY="104.0" onAction="#_click_on_passwd" promptText="Введите пароль:" />
+            <JFXComboBox fx:id="s_lan" layoutX="24.0" layoutY="152.0" prefHeight="25.0" prefWidth="173.0" promptText="Select language" viewOrder="1.0" />
+            <JFXButton fx:id="btn_conn" layoutX="219.0" layoutY="104.0" onAction="#_click_btn_conn" text="Войти">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXCheckBox fx:id="for_pc" layoutX="23.0" layoutY="203.0" prefHeight="18.0" prefWidth="208.0" text="Чужой компьютер" textFill="#e11111">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXCheckBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

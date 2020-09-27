@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.Part_Controller">
+   <children>
+      <Pane prefHeight="542.0" prefWidth="560.0">
+         <children>
+            <ImageView fitHeight="32.0" fitWidth="113.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@haval.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="lbl_title_part" alignment="CENTER" layoutX="134.0" layoutY="22.0" prefHeight="20.0" prefWidth="321.0" text="Part Type - Редактор">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <TableView fx:id="table_part" layoutX="77.0" layoutY="63.0" prefHeight="376.0" prefWidth="407.0">
+              <columns>
+                <TableColumn fx:id="col_id_part" prefWidth="75.0" text="№" />
+                <TableColumn fx:id="col_part_type" prefWidth="159.0" text="Part Type" />
+                  <TableColumn fx:id="col_part_type_eng" prefWidth="155.0" text="Part Type ENG" />
+              </columns>
+            </TableView>
+            <JFXButton fx:id="btn_add_part" layoutX="70.0" layoutY="470.0" text="Создать">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_upd_part" layoutX="147.0" layoutY="470.0" text="Обновить запись">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_del_part" layoutX="278.0" layoutY="470.0" text="Удалить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_upd_tbl_part" layoutX="358.0" layoutY="470.0" text="Обновить таблицу">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

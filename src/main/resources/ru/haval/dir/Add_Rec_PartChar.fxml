@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="451.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.Addrec_PartChar_Controller">
+   <children>
+      <Pane prefHeight="451.0" prefWidth="552.0">
+         <children>
+            <Label fx:id="lbl_title_pc" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="524.0" text="Добавить запись к Part Char">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_pt" layoutX="14.0" layoutY="69.0" text="Part Type:" />
+            <Label fx:id="lbl_spk" layoutX="14.0" layoutY="109.0" text="SP Kind:" />
+            <Label fx:id="lbl_pst" layoutX="14.0" layoutY="149.0" text="Part Sub Type:" />
+            <Label fx:id="lbl_pste" layoutX="14.0" layoutY="189.0" text="Part Sub Type ENG:" />
+            <Label fx:id="lbl_pcn1" layoutX="14.0" layoutY="229.0" text="Part Characteristic Name 1:" />
+            <Label fx:id="lbl_pcn2" layoutX="14.0" layoutY="269.0" text="Part Characteristic Name 2:" />
+            <Label fx:id="lbl_pcn3" layoutX="14.0" layoutY="309.0" text="Part Characteristic Name 3:" />
+            <Label fx:id="lbl_pcn4" layoutX="14.0" layoutY="349.0" text="Part Characteristic Name 4:" />
+            <ComboBox fx:id="list_pt" layoutX="208.0" layoutY="66.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_spk" layoutX="208.0" layoutY="106.0" prefWidth="150.0" />
+            <TextField fx:id="txt_pst" layoutX="208.0" layoutY="146.0" />
+            <TextField fx:id="txt_pste" layoutX="208.0" layoutY="186.0" />
+            <TextField fx:id="txt_pcn1" layoutX="208.0" layoutY="226.0" />
+            <TextField fx:id="txt_pcn2" layoutX="208.0" layoutY="266.0" />
+            <TextField fx:id="txt_pcn3" layoutX="208.0" layoutY="306.0" />
+            <TextField fx:id="txt_pcn4" layoutX="208.0" layoutY="346.0" />
+            <ComboBox fx:id="list_pcn1" layoutX="367.0" layoutY="226.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_pcn2" layoutX="367.0" layoutY="266.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_pcn3" layoutX="367.0" layoutY="306.0" prefWidth="150.0" />
+            <ComboBox fx:id="list_pcn4" layoutX="367.0" layoutY="346.0" prefWidth="150.0" />
+            <JFXButton fx:id="btn_add_pc" layoutX="347.0" layoutY="398.0" text="Применить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_cancel_pc" layoutX="454.0" layoutY="398.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

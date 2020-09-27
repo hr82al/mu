@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.Addrec_PartCharDir_Controller">
+   <children>
+      <Pane prefHeight="292.0" prefWidth="415.0">
+         <children>
+            <Label fx:id="title_part_add" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="379.0" text="Добавление записи к Part Char">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_part_type" layoutX="46.0" layoutY="93.0" text="Part Char:" />
+            <Label fx:id="lbl_part_type_eng" layoutX="46.0" layoutY="146.0" text="Part Type ENG:" />
+            <TextField fx:id="txt_part_type" layoutX="179.0" layoutY="89.0" prefHeight="25.0" prefWidth="212.0" />
+            <TextField fx:id="txt_part_type_eng" layoutX="179.0" layoutY="142.0" prefHeight="25.0" prefWidth="212.0" />
+            <JFXButton fx:id="btn_add_part" layoutX="175.0" layoutY="227.0" text="Применить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_cancel_part" layoutX="281.0" layoutY="227.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

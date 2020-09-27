@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="436.0" prefWidth="369.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.addrec_groupcycle_controller">
+   <children>
+      <Pane prefHeight="436.0" prefWidth="369.0">
+         <children>
+            <Label fx:id="lbl_title" alignment="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="20.0" prefWidth="349.0" text="Добавить запись в справочник Группа - Период">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_pm_group" layoutX="35.0" layoutY="80.0" text="Группа:" />
+            <Label fx:id="lbl_pm_cycle" layoutX="35.0" layoutY="137.0" text="Период:" />
+            <TextField fx:id="txt_pm_group" layoutX="178.0" layoutY="76.0" />
+            <ComboBox fx:id="list_pm_cycle" layoutX="178.0" layoutY="131.0" prefWidth="150.0" />
+            <JFXButton fx:id="add_rec" layoutX="29.0" layoutY="379.0" text="Создать">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="cancel_form" layoutX="132.0" layoutY="379.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <Label fx:id="lbl_days_gc" layoutX="35.0" layoutY="305.0" text="Предупредить за:" />
+            <TextField fx:id="txt_days_gc" layoutX="178.0" layoutY="302.0" />
+            <Label fx:id="lbl_start_date" layoutX="35.0" layoutY="194.0" text="Дата старта:" />
+            <Label fx:id="lbl_duration" layoutX="35.0" layoutY="251.0" text="Длительность:" />
+            <TextField fx:id="txt_duration" layoutX="178.0" layoutY="246.0" />
+            <DatePicker fx:id="d_start_date" layoutX="178.0" layoutY="190.0" prefHeight="25.0" prefWidth="150.0" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

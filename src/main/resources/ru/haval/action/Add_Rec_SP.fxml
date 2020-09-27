@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.AddRec_SP_Controller">
+   <children>
+      <Pane prefHeight="556.0" prefWidth="879.0">
+         <children>
+            <TabPane prefHeight="556.0" prefWidth="879.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="general" text="Общие">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="lbl_title_sp" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="841.0" text="Добавление записи к SP DB">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="54.0" text="Номер материала:" />
+                              <Label layoutX="14.0" layoutY="104.0" text="Производитель:" />
+                              <Label layoutX="14.0" layoutY="154.0" text="Модель:" />
+                              <Label layoutX="14.0" layoutY="204.0" text="Артикул:" />
+                              <Label layoutX="14.0" layoutY="254.0" text="Тип:" />
+                              <Label layoutX="12.0" layoutY="304.0" text="Описание:" />
+                              <Label layoutX="12.0" layoutY="423.0" text="Описание FD:" />
+                              <Label layoutX="449.0" layoutY="51.0" text="Описание производителя:" />
+                              <Label layoutX="517.0" layoutY="169.0" text="Риск поломки:" />
+                              <Label layoutX="517.0" layoutY="219.0" text="Время доставки:" />
+                              <Label layoutX="517.0" layoutY="269.0" text="Взаимозаменяемость:" />
+                              <Label layoutX="517.0" layoutY="319.0" text="Идентичность ЗИП:" />
+                              <Label layoutX="517.0" layoutY="369.0" text="Коэффициент:" />
+                              <TextField fx:id="txt_HMMR_Material_Num" layoutX="123.0" layoutY="50.0" />
+                              <ComboBox fx:id="list_Manufacturer" layoutX="283.0" layoutY="100.0" prefWidth="150.0" />
+                              <TextField fx:id="txt_Manufacturer" layoutX="123.0" layoutY="100.0" />
+                              <TextField fx:id="txt_Model" layoutX="123.0" layoutY="150.0" />
+                              <ComboBox fx:id="list_Model" layoutX="283.0" layoutY="150.0" prefWidth="150.0" />
+                              <TextField fx:id="txt_Article" layoutX="123.0" layoutY="200.0" />
+                              <TextArea fx:id="txt_SP_MU_Description_RUS" layoutX="123.0" layoutY="305.0" prefHeight="83.0" prefWidth="211.0" wrapText="true" />
+                              <TextArea fx:id="txt_SP_FD_Description" layoutX="123.0" layoutY="421.0" prefHeight="90.0" prefWidth="264.0" wrapText="true" />
+                              <TextArea fx:id="txt_SP_Supplier_Description" layoutX="605.0" layoutY="44.0" prefHeight="89.0" prefWidth="262.0" wrapText="true" />
+                              <TextField fx:id="txt_Risk_Breakage" layoutX="665.0" layoutY="165.0" />
+                              <TextField fx:id="txt_Delivery_Time" layoutX="665.0" layoutY="215.0" />
+                              <TextField fx:id="txt_Replacement_Model" layoutX="665.0" layoutY="265.0" text="-" />
+                              <TextField fx:id="txt_Identity_SP" layoutX="665.0" layoutY="315.0" text="-" />
+                              <TextField fx:id="txt_Coefficient" layoutX="665.0" layoutY="365.0" />
+                              <Label layoutX="517.0" layoutY="419.0" text="Цена:" />
+                              <TextField fx:id="txt_Price" layoutX="665.0" layoutY="415.0" />
+                              <JFXButton fx:id="btn_add_rec" layoutX="677.0" layoutY="477.0" text="Применить">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_cancel" layoutX="799.0" layoutY="477.0" text="Отмена">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <ComboBox fx:id="list_Single_Complex_Sub" layoutX="123.0" layoutY="251.0" prefWidth="150.0" />
+                              <ComboBox fx:id="list_part_type" editable="true" layoutX="345.0" layoutY="328.0" prefWidth="150.0" />
+                              <JFXButton fx:id="btn_mtc" layoutX="283.0" layoutY="50.0" text="MTC" textFill="#b82e2e">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_mtcsp" layoutX="334.0" layoutY="50.0" text="MTCSP" textFill="#b82e2e">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="info" text="Информационные">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="840.0" text="Информационные поля">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="71.0" text="Kind:" />
+                              <Label layoutX="14.0" layoutY="121.0" text="SP Part Type:" />
+                              <Label layoutX="14.0" layoutY="171.0" text="SP Sub Part Type:" />
+                              <Label layoutX="14.0" layoutY="221.0" text="Part Characteristic 1:" />
+                              <Label layoutX="14.0" layoutY="271.0" text="Part Characteristic 2:" />
+                              <Label layoutX="14.0" layoutY="321.0" text="Part Characteristic 3:" />
+                              <Label layoutX="14.0" layoutY="371.0" text="Part Characteristic 4:" />
+                              <Label layoutX="674.0" layoutY="52.0" text="Количество">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="583.0" layoutY="81.0" text="S:" />
+                              <TextField fx:id="txt_Qty_S" disable="true" layoutX="595.0" layoutY="77.0" prefHeight="25.0" prefWidth="37.0" />
+                              <TextField fx:id="txt_Qty_W" disable="true" layoutX="670.0" layoutY="77.0" prefHeight="25.0" prefWidth="37.0" />
+                              <TextField fx:id="txt_Qty_P" disable="true" layoutX="739.0" layoutY="77.0" prefHeight="25.0" prefWidth="37.0" />
+                              <TextField fx:id="txt_Qty_A" disable="true" layoutX="809.0" layoutY="77.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Label layoutX="653.0" layoutY="81.0" text="W:" />
+                              <Label layoutX="727.0" layoutY="81.0" text="P:" />
+                              <Label layoutX="796.0" layoutY="81.0" text="A:" />
+                              <Label layoutX="670.0" layoutY="140.0" text="Не ключевое">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="592.0" layoutY="170.0" text="Backup Yes:" />
+                              <TextField fx:id="txt_Key_No_Backup_Yes" disable="true" layoutX="662.0" layoutY="166.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Label layoutX="731.0" layoutY="170.0" text="Backup No:" />
+                              <TextField fx:id="txt_Key_No_Backup_No" disable="true" layoutX="800.0" layoutY="166.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Label layoutX="677.0" layoutY="221.0" text="Ключевое">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="592.0" layoutY="251.0" text="Backup Yes:" />
+                              <TextField fx:id="txt_Key_Yes_Backup_Yes" disable="true" layoutX="662.0" layoutY="247.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Label layoutX="731.0" layoutY="247.0" text="Backup No:" />
+                              <TextField fx:id="txt_Key_Yes_Backup_No" disable="true" layoutX="800.0" layoutY="245.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Label layoutX="619.0" layoutY="302.0" text="Количество взаимозаменяемых">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_Qty_Interchangeability" disable="true" layoutX="679.0" layoutY="330.0" prefHeight="25.0" prefWidth="73.0" />
+                              <Label layoutX="643.0" layoutY="372.0" text="Количество идентичных">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_Qty_Identify_SP" disable="true" layoutX="679.0" layoutY="398.0" prefHeight="25.0" prefWidth="73.0" />
+                              <TextField fx:id="txt_Kind" disable="true" layoutX="164.0" layoutY="67.0" />
+                              <TextField fx:id="txt_SP_Part_Type" disable="true" layoutX="164.0" layoutY="117.0" prefHeight="25.0" prefWidth="219.0" />
+                              <TextField fx:id="txt_SP_Sub_Part_Type" disable="true" layoutX="164.0" layoutY="167.0" prefHeight="25.0" prefWidth="219.0" />
+                              <TextField fx:id="txt_Part_Characteristic_1" disable="true" layoutX="164.0" layoutY="217.0" prefHeight="25.0" prefWidth="363.0" />
+                              <TextField fx:id="txt_Part_Characteristic_2" disable="true" layoutX="164.0" layoutY="267.0" prefHeight="25.0" prefWidth="363.0" />
+                              <TextField fx:id="txt_Part_Characteristic_3" disable="true" layoutX="164.0" layoutY="317.0" prefHeight="25.0" prefWidth="363.0" />
+                              <TextField fx:id="txt_Part_Characteristic_4" disable="true" layoutX="164.0" layoutY="367.0" prefHeight="25.0" prefWidth="363.0" />
+                              <Label layoutX="247.0" layoutY="479.0" text="АНАЛИЗ РИСКОВ" textFill="#f42525">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="406.0" layoutY="479.0" text="MIN:" textFill="#f42525">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="528.0" layoutY="479.0" text="BATCH:" textFill="#f42525">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_MIN" disable="true" layoutX="451.0" layoutY="478.0" prefHeight="25.0" prefWidth="37.0" />
+                              <TextField fx:id="txt_BATCH" disable="true" layoutX="590.0" layoutY="478.0" prefHeight="25.0" prefWidth="37.0" />
+                              <Separator layoutX="7.0" layoutY="456.0" prefHeight="0.0" prefWidth="865.0" />
+                              <Separator layoutX="558.0" layoutY="44.0" orientation="VERTICAL" prefHeight="413.0" prefWidth="0.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

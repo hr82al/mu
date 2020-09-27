@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="432.0" prefWidth="355.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.updrec_cycle_controller">
+   <children>
+      <Pane prefHeight="432.0" prefWidth="355.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" layoutY="25.0" prefHeight="20.0" prefWidth="342.0" text="Обновление записи для справочника PM_Cycle">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="87.0" prefHeight="17.0" prefWidth="77.0" text="Цикл:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="137.0" text="Переодичность:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="type_cycle" disable="true" layoutX="163.0" layoutY="85.0" />
+            <TextField fx:id="pereodic_cycle" layoutX="163.0" layoutY="135.0" />
+            <Label fx:id="err_info_cycle" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="275.0" prefHeight="17.0" prefWidth="323.0" text="Пожалуйста, заполните все поля!" textFill="#d02710" visible="false">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="187.0" text="Моточасы:" />
+            <TextField fx:id="moto_cycle" layoutX="163.0" layoutY="185.0" />
+            <Label layoutX="14.0" layoutY="237.0" text="Дата начала:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="bdate_cycle" layoutX="163.0" layoutY="235.0" prefHeight="25.0" prefWidth="149.0" />
+            <Label layoutX="14.0" layoutY="287.0" text="Дата окончания:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="edate_cycle" layoutX="163.0" layoutY="285.0" prefHeight="25.0" prefWidth="149.0" />
+            <JFXButton fx:id="upd_cycle" layoutX="160.0" layoutY="377.0" text="Обновить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="add_cycle_cancel" layoutX="257.0" layoutY="377.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

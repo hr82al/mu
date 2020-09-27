@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="444.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.group_cycle_controller">
+   <children>
+      <Pane prefHeight="444.0" prefWidth="685.0">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="127.0" layoutX="8.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@haval.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="title_label" alignment="CENTER" layoutX="135.0" layoutY="14.0" prefHeight="20.0" prefWidth="498.0" text="Группа - Период: - Редактор">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <TableView fx:id="table_gc" layoutX="26.0" layoutY="55.0" prefHeight="315.0" prefWidth="630.0">
+              <columns>
+                  <TableColumn fx:id="col_id_gc" prefWidth="73.0" text="№" />
+                <TableColumn fx:id="col_group_pm" minWidth="0.0" prefWidth="115.0" text="Группа" />
+                <TableColumn fx:id="col_cycle_pm" minWidth="0.0" prefWidth="110.0" sortable="false" text="Период" />
+                  <TableColumn fx:id="col_start_date" prefWidth="96.0" text="Дата старта" />
+                  <TableColumn fx:id="col_duration" prefWidth="88.0" text="Длительность" />
+                  <TableColumn fx:id="col_days_gc" prefWidth="141.0" sortable="false" text="Предупредить за, дней" />
+              </columns>
+            </TableView>
+            <JFXButton fx:id="add_rec" layoutX="26.0" layoutY="386.0" text="Создать">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="upd_rec" layoutX="102.0" layoutY="386.0" text="Обновить запись">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="del_rec" layoutX="233.0" layoutY="386.0" text="Удалить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="cancel_form" layoutX="313.0" layoutY="386.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

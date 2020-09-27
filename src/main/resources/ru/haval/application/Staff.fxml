@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="sp_staff" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="642.0" prefWidth="1196.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.Stuff_Controller">
+  <content>
+    <AnchorPane fx:id="ap_staff" minHeight="0.0" minWidth="0.0" prefHeight="638.0" prefWidth="1194.0">
+         <children>
+            <Pane fx:id="pane_staff" prefHeight="642.0" prefWidth="1196.0">
+               <children>
+                  <VBox fx:id="vb_staff" prefHeight="642.0" prefWidth="1196.0">
+                     <children>
+                        <HBox fx:id="hb1_staff" alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="1133.0">
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@haval.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="title_staff" alignment="CENTER" prefHeight="27.0" prefWidth="757.0" text="STAFF - Редактор">
+                                 <font>
+                                    <Font name="System Bold Italic" size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="hb2_staff" alignment="CENTER" prefHeight="517.0" prefWidth="1133.0">
+                           <children>
+                              <TableView fx:id="table_staff" prefHeight="517.0" prefWidth="1171.0">
+                                <columns>
+                                  <TableColumn fx:id="col_num_staff" prefWidth="38.0" text="№" />
+                                  <TableColumn fx:id="col_staff_id" prefWidth="48.000030517578125" sortable="false" text="Staff ID" />
+                                    <TableColumn fx:id="col_id_staff" prefWidth="35.0" text="ID" />
+                                    <TableColumn fx:id="col_fam_staff" prefWidth="75.0" text="Фамилия" />
+                                    <TableColumn fx:id="col_imya_staff" prefWidth="75.0" sortable="false" text="Имя" />
+                                    <TableColumn fx:id="col_otch_staff" prefWidth="75.0" sortable="false" text="Отчество" />
+                                    <TableColumn fx:id="col_dob_staff" prefWidth="75.0" sortable="false" text="Дата рождения" />
+                                    <TableColumn fx:id="col_sec_staff" prefWidth="51.0" sortable="false" text="Секция" />
+                                    <TableColumn fx:id="col_groups_staff" prefWidth="32.0" text="Цех" />
+                                    <TableColumn fx:id="col_team_staff" prefWidth="35.0" sortable="false" text="Team" />
+                                    <TableColumn fx:id="col_position_staff" prefWidth="75.0" sortable="false" text="Должность" />
+                                    <TableColumn fx:id="col_gwm_staff" prefWidth="65.0" sortable="false" text="GWM ID" />
+                                    <TableColumn fx:id="col_ds_staff" prefWidth="75.0" text="Дата старта" />
+                                    <TableColumn fx:id="col_cell_staff" prefWidth="75.0" sortable="false" text="Телефон" />
+                                    <TableColumn fx:id="col_adr_staff" prefWidth="48.0" sortable="false" text="Адрес" />
+                                    <TableColumn fx:id="col_avto_staff" prefWidth="55.0" sortable="false" text="№ авто" />
+                                    <TableColumn fx:id="col_shoes_staff" prefWidth="75.0" sortable="false" text="Размер обуви" />
+                                    <TableColumn fx:id="col_clothes_staff" prefWidth="75.0" sortable="false" text="Размер одежды" />
+                                    <TableColumn fx:id="col_login_staff" prefWidth="75.0" sortable="false" text="Логин" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="hb3_staff" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <HBox prefHeight="84.0" prefWidth="14.0" />
+                              <JFXButton fx:id="add_staff" text="Создать">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <HBox prefHeight="84.0" prefWidth="17.0" />
+                              <JFXButton fx:id="upd_staff" text="Обновить запись">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <HBox prefHeight="84.0" prefWidth="17.0" />
+                              <JFXButton fx:id="del_staff" text="Удалить">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <HBox prefHeight="84.0" prefWidth="17.0" />
+                              <JFXButton fx:id="upd_tbl_staff" text="Обновить таблицу">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                              <HBox prefHeight="84.0" prefWidth="17.0" />
+                              <JFXButton fx:id="cancel_staff" text="Отмена">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </Pane>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

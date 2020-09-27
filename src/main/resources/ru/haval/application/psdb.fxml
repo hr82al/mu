@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="sp_ps" hbarPolicy="NEVER" prefHeight="791.0" prefWidth="3734.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.ps_controller">
+	   
+        <content>
+          <AnchorPane fx:id="ap_ps" minHeight="0.0" minWidth="0.0" prefHeight="776.0" prefWidth="3732.0">
+               <children>
+            <VBox fx:id="vb_ps" prefHeight="791.0" prefWidth="3727.0">
+               <children>
+                  <HBox fx:id="hb1" prefHeight="31.0" prefWidth="3727.0">
+                     <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="1352.0" text="Редактор Function Location">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb2" alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="3727.0">
+                     <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@haval.jpg" />
+                                 </image>
+                              </ImageView>
+                        <Label text="Фильтры:" />
+                        <ComboBox fx:id="c_shop" prefHeight="25.0" prefWidth="90.0" promptText="Цех" />
+                        <ComboBox fx:id="c_group" prefHeight="25.0" prefWidth="117.0" promptText="Группа" />
+                        <ComboBox fx:id="c_line" prefHeight="25.0" prefWidth="112.0" promptText="Линия" />
+                        <ComboBox fx:id="c_os" prefHeight="25.0" prefWidth="114.0" promptText="Станция" />
+                        <ComboBox fx:id="c_equip" prefHeight="25.0" prefWidth="125.0" promptText="Оборудование" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb3" alignment="CENTER" prefHeight="707.0" prefWidth="3727.0">
+                     <children>
+                              <TableView fx:id="table_ps" prefHeight="638.0" prefWidth="3669.0">
+                                <columns>
+                                    <TableColumn fx:id="col_num_ps" prefWidth="44.0" sortable="false" text="№" />
+                                  <TableColumn fx:id="col_company_ps" prefWidth="106.0" sortable="false" text="Company" />
+                                  <TableColumn fx:id="col_plant_ps" prefWidth="75.0" sortable="false" text="Plant" />
+                                    <TableColumn fx:id="col_shops_ps" prefWidth="75.0" sortable="false" text="Цех, сокр" />
+                                    <TableColumn fx:id="col_groups_ps" prefWidth="84.0" sortable="false" text="Группа, сокр" />
+                                    <TableColumn fx:id="col_lines_ps" prefWidth="84.0" sortable="false" text="Линия, сокр" />
+                                    <TableColumn fx:id="col_oss_ps" prefWidth="104.0" sortable="false" text="Станция, сокр" />
+                                    <TableColumn fx:id="col_equips_ps" prefWidth="96.0" sortable="false" text="Оборуд., сокр" />
+                                    <TableColumn fx:id="col_shop_ps" prefWidth="55.0" sortable="false" text="Цех" />
+                              <TableColumn fx:id="col_group_ps" prefWidth="48.0" sortable="false" text="Группа" />
+                                    <TableColumn fx:id="col_line_ps" prefWidth="57.0" sortable="false" text="Линия" />
+                                    <TableColumn fx:id="col_os_ps" prefWidth="63.0" sortable="false" text="Станция" />
+                                    <TableColumn fx:id="col_equip_ps" prefWidth="98.0" sortable="false" text="Оборудование" />
+                              <TableColumn fx:id="col_shoprus_ps" prefWidth="59.0" sortable="false" text="Цех,рус." />
+                              <TableColumn fx:id="col_grouprus_ps" prefWidth="74.0" sortable="false" text="Группа,рус." />
+                                    <TableColumn fx:id="col_linerus_ps" prefWidth="75.0" sortable="false" text="Линия, рус." />
+                                    <TableColumn fx:id="col_osrus_ps" prefWidth="83.0" sortable="false" text="Станция, рус." />
+                              <TableColumn fx:id="col_equiprus_ps" prefWidth="79.0" sortable="false" text="Оборуд.,рус." />
+                                    <TableColumn fx:id="col_description_ps" prefWidth="192.0" sortable="false" text="Описание" />
+                                    <TableColumn fx:id="col_equiplabel_ps" prefWidth="97.0" sortable="false" text="Equip Label" />
+                                    <TableColumn fx:id="col_stationlabel_ps" prefWidth="108.0" sortable="false" text="Station Label" />
+                                    <TableColumn fx:id="col_manual_ps" prefWidth="106.0" sortable="false" text="Manual" />
+                              <TableColumn fx:id="col_groupotv_ps" prefWidth="75.0" sortable="false" text="Группа ответственных" />
+                              <TableColumn fx:id="col_invnum_ps" prefWidth="75.0" sortable="false" text="Инв. №" />
+                              <TableColumn fx:id="col_numos_ps" prefWidth="75.0" sortable="false" text="№ Осн. Средства" />
+                              <TableColumn fx:id="col_startdate_ps" prefWidth="75.0" sortable="false" text="Дата запуска" />
+                              <TableColumn fx:id="col_cost_ps" prefWidth="75.0" sortable="false" text="Cost Center" />
+                                    <TableColumn fx:id="col_location_ps" prefWidth="76.0" sortable="false" text="Location" />
+                                    <TableColumn fx:id="col_cham_ps" prefWidth="69.0" sortable="false" text="CHAMBER" />
+                                    <TableColumn fx:id="col_coord_ps" prefWidth="93.0" sortable="false" text="Координаты" />
+                                    <TableColumn fx:id="col_alt_ps" prefWidth="68.0" sortable="false" text="Высота" />
+                                    <TableColumn fx:id="col_trcu_ps" prefWidth="48.0" sortable="false" text="TR_CU" />
+                                    <TableColumn fx:id="col_trcul_ps" prefWidth="83.0" sortable="false" text="TR_CU_Link" />
+                                    <TableColumn fx:id="col_hazardous_ps" prefWidth="68.0" sortable="false" text="Hazardous" />
+                                    <TableColumn fx:id="col_keyequip_ps" prefWidth="71.0" sortable="false" text="Key equip." />
+                                    <TableColumn fx:id="col_stsupplier_ps" prefWidth="111.0" sortable="false" text="St. Supplier" />
+                                    <TableColumn fx:id="col_manuf_ps" prefWidth="54.0" sortable="false" text="Manuf." />
+                                    <TableColumn fx:id="col_type_ps" prefWidth="46.0" sortable="false" text="Type" />
+                                    <TableColumn fx:id="col_sn_ps" prefWidth="54.0" sortable="false" text="S/N" />
+                                    <TableColumn fx:id="col_mtc_ps" prefWidth="58.0" sortable="false" text="Main TC" />
+                                    <TableColumn fx:id="col_respons_ps" prefWidth="70.0" sortable="false" text="Respons" />
+                                    <TableColumn fx:id="col_melec_ps" prefWidth="62.0" sortable="false" text="M Electric" />
+                                    <TableColumn fx:id="col_mair_ps" prefWidth="48.0" sortable="false" text="M Air" />
+                                    <TableColumn fx:id="col_mwater_ps" prefWidth="58.0" sortable="false" text="M Water" />
+                                    <TableColumn fx:id="col_mcwater_ps" prefWidth="86.0" sortable="false" text="M Cold Water" />
+                                    <TableColumn fx:id="col_mhwater_ps" prefWidth="84.0" sortable="false" text="M Hot Water" />
+                                    <TableColumn fx:id="col_rowater_ps" prefWidth="60.0" sortable="false" text="M RO Water" />
+                                    <TableColumn fx:id="col_mgas_ps" prefWidth="41.0" sortable="false" text="M Gas" />
+                                </columns>
+                              </TableView>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb4" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="53.0" prefWidth="30.0" />
+                        <JFXButton fx:id="add_ps" text="Создать">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="upd_ps" text="Обновить">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="del_ps" text="Удалить">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="upd_table" text="Обновить таблицу">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="21.0" />
+                        <JFXButton fx:id="btn_duplicate" text="Дублировать запись х">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+        
+      </ScrollPane>

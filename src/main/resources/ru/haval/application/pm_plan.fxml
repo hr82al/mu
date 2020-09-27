@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="569.0" prefWidth="485.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pmplan_controller">
+   <children>
+      <Pane prefHeight="569.0" prefWidth="485.0">
+         <children>
+            <Label fx:id="lbl_upd_pmplan" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="429.0" text="PM Plan - Редактор">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <TableView fx:id="table_pmplan" layoutX="25.0" layoutY="85.0" prefHeight="411.0" prefWidth="429.0">
+              <columns>
+                <TableColumn fx:id="col_num_pmplan" prefWidth="97.0" text="№" />
+                  <TableColumn fx:id="col_group_pm_pmplan" prefWidth="75.0" text="Группа" />
+                <TableColumn fx:id="col_dd_pmplan" prefWidth="104.0" text="Due Date" />
+                <TableColumn fx:id="col_resp_pmplan" prefWidth="142.0" sortable="false" text="Ответственный" />
+              </columns>
+            </TableView>
+            <JFXButton fx:id="cancel_pmplan" layoutX="404.0" layoutY="518.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="upd_pmplan" layoutX="278.0" layoutY="518.0" text="Обновить запись">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXDatePicker fx:id="e_data_pmplan" layoutX="348.0" layoutY="45.0" prefWidth="115.0" />
+            <JFXDatePicker fx:id="b_data_pmplan" layoutX="169.0" layoutY="45.0" prefWidth="115.0" />
+            <Label fx:id="lbl_to_pmplan" layoutX="311.0" layoutY="51.0" text="по:" />
+            <Label fx:id="lbl_with_pmplan" layoutX="136.0" layoutY="51.0" text="с:" />
+            <Label fx:id="lbl_search_pmplan" layoutX="16.0" layoutY="51.0" text="Поиск по дате:">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="upd_table_pmplan" layoutX="14.0" layoutY="518.0" text="Обновить таблицу">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <ImageView fitHeight="40.0" fitWidth="166.0" layoutX="14.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@haval.jpg" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="filter_clear" layoutX="151.0" layoutY="518.0" text="Сбросить фильтр">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

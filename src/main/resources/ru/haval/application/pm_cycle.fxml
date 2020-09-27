@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="340.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.dir.CycleController">
+   <children>
+      <Pane prefHeight="340.0" prefWidth="775.0">
+         <children>
+            <TableView fx:id="table_cycle" layoutX="23.0" layoutY="68.0" prefHeight="200.0" prefWidth="726.0">
+              <columns>
+                <TableColumn fx:id="col_id" prefWidth="75.0" sortable="false" text="№" />
+                <TableColumn fx:id="col_type" prefWidth="75.0" sortable="false" text="Цикл" />
+                  <TableColumn fx:id="col_pereodic" prefWidth="113.0" sortable="false" />
+                  <TableColumn fx:id="col_begin_date" prefWidth="100.0" sortable="false" text="Дата начала" />
+                  <TableColumn fx:id="col_end_date" prefWidth="100.0" sortable="false" />
+                  <TableColumn fx:id="col_motohours" prefWidth="276.0" sortable="false" text="Моточасы" />
+              </columns>
+            </TableView>
+            <Label fx:id="lbl_dir" alignment="CENTER" contentDisplay="CENTER" layoutX="28.0" layoutY="10.0" prefHeight="20.0" prefWidth="719.0" text="Справочник - PM_Cycle">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="35.0" fitWidth="148.0" layoutX="24.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@haval.jpg" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="add_c" layoutX="25.0" layoutY="290.0" text="Создать">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="upd_c" layoutX="100.0" layoutY="290.0" text="Обновить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="del_c" layoutX="185.0" layoutY="290.0" text="Удалить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="cancel_c" layoutX="260.0" layoutY="290.0" text="Отмена">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="upd_table_cycle" layoutX="333.0" layoutY="290.0" text="Обновить таблицу">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <Label fx:id="lbl_qty" layoutX="145.0" layoutY="44.0" text="Кол-во машин, год:">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <JFXRadioButton fx:id="K10" layoutX="274.0" layoutY="44.0" text="10000" />
+            <JFXRadioButton fx:id="K20" layoutX="341.0" layoutY="44.0" text="20000" />
+            <JFXRadioButton fx:id="K30" layoutX="410.0" layoutY="44.0" text="30000" />
+            <JFXRadioButton fx:id="K40" layoutX="480.0" layoutY="44.0" text="40000" />
+            <JFXRadioButton fx:id="K50" layoutX="550.0" layoutY="44.0" text="50000" />
+            <JFXRadioButton fx:id="K60" layoutX="618.0" layoutY="44.0" text="60000" />
+            <JFXRadioButton fx:id="K70" layoutX="687.0" layoutY="44.0" text="70000" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="sp_inst" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="1851.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_inst_controller">
+   <content>
+      <Pane fx:id="pane_inst" prefHeight="828.0" prefWidth="1841.0">
+         <children>
+            <VBox fx:id="vbox_inst" alignment="TOP_CENTER" prefHeight="828.0" prefWidth="1837.0">
+               <children>
+                  <HBox fx:id="hb1" alignment="CENTER" prefHeight="100.0" prefWidth="1644.0">
+                     <children>
+                        <ImageView fitHeight="70.0" fitWidth="219.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@haval.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="head_pm" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="1340.0" text="Редактирование таблицы PM Instruction">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb2" alignment="CENTER_LEFT" prefHeight="681.0" prefWidth="1613.0">
+                     <children>
+                        <TableView fx:id="table_inst" prefHeight="673.0" prefWidth="1805.0">
+                          <columns>
+                            <TableColumn fx:id="col_id_inst" prefWidth="40.0" text="№" />
+                            <TableColumn fx:id="col_ninst_inst" prefWidth="134.0" text="№ инструкции" />
+                              <TableColumn fx:id="col_date_create_pi" prefWidth="75.0" sortable="false" text="Дата созд." />
+                              <TableColumn fx:id="col_date_change_pi" prefWidth="75.0" sortable="false" text="Дата изм." />
+                              <TableColumn fx:id="col_inst_pi" prefWidth="75.0" sortable="false" text="Инс-я PDF" />
+                              <TableColumn fx:id="col_ver_inst" prefWidth="51.0" sortable="false" text="Версия" />
+                              <TableColumn fx:id="col_mt_inst" prefWidth="84.0" sortable="false" text="Модель/Тип" />
+                              <TableColumn fx:id="col_pmn_inst" prefWidth="66.0" sortable="false" text="PM name" />
+                              <TableColumn fx:id="col_pmt_inst" prefWidth="75.0" sortable="false" text="PM Type" />
+                              <TableColumn fx:id="col_pmc1_inst" prefWidth="75.0" sortable="false" text="PM Cycle1" />
+                              <TableColumn fx:id="col_pmc2_inst" prefWidth="75.0" sortable="false" text="PM Cycle2" />
+                              <TableColumn fx:id="col_ool_inst" prefWidth="86.0" sortable="false" text="ON/OFF Line" />
+                              <TableColumn fx:id="col_oop_inst" prefWidth="92.0" sortable="false" text="ON/OFF Power" />
+                              <TableColumn fx:id="col_pos_inst" prefWidth="91.0" sortable="false" text="Должность" />
+                              <TableColumn fx:id="col_sinfo_inst" prefWidth="72.0" sortable="false" text="Ист. инф." />
+                              <TableColumn fx:id="col_sdoc_inst" prefWidth="68.0" sortable="false" text="Документ" />
+                              <TableColumn fx:id="col_qspec_inst" minWidth="0.0" prefWidth="109.0" sortable="false" text="Кол-во спец-ов" />
+                              <TableColumn fx:id="col_pty_inst" minWidth="0.0" prefWidth="108.0" sortable="false" text="Время подгот. работ, мин." />
+                              <TableColumn fx:id="col_wt_inst" minWidth="0.0" prefWidth="91.0" sortable="false" text="Время работы" />
+                              <TableColumn fx:id="col_adm2_inst" minWidth="0.0" prefWidth="61.0" sortable="false" text="Допуск 2" />
+                              <TableColumn fx:id="col_adm3_inst" minWidth="0.0" prefWidth="61.0" sortable="false" text="Допуск 3" />
+                              <TableColumn fx:id="col_of1_inst" minWidth="0.0" prefWidth="61.0" sortable="false" text="Наряд 1" />
+                              <TableColumn fx:id="col_of2_inst" minWidth="0.0" prefWidth="61.0" sortable="false" text="Наряд 2" />
+                          </columns>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb3" alignment="CENTER_LEFT" prefHeight="71.0" prefWidth="1602.0">
+                     <children>
+                        <HBox prefHeight="63.0" prefWidth="53.0" />
+                        <JFXButton fx:id="add_inst" text="Создать">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="63.0" prefWidth="17.0" />
+                        <JFXButton fx:id="upd_inst" text="Обновить">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="del_inst" text="Удалить">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="close_inst" text="Отмена">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="63.0" prefWidth="17.0" />
+                        <JFXButton fx:id="upd_table_inst" text="Обновить таблицу">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </content>
+</ScrollPane>

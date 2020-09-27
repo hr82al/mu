@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.CS_Controller">
+   <children>
+      <Pane prefHeight="643.0" prefWidth="863.0">
+         <children>
+            <VBox prefHeight="643.0" prefWidth="863.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="52.0" prefWidth="863.0">
+                     <children>
+                        <ImageView fitHeight="54.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@haval.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_title_cs" alignment="CENTER" prefHeight="20.0" prefWidth="643.0" text="Components Specification - Редактор">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="74.0" prefWidth="863.0">
+                     <children>
+                        <HBox prefHeight="67.0" prefWidth="17.0" />
+                        <JFXRadioButton fx:id="rbtn_num" selected="true" text="Поиск по номеру" />
+                        <HBox prefHeight="45.0" prefWidth="31.0" />
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXRadioButton fx:id="rbtn_name" text="Поиск по названию" />
+                        <HBox prefHeight="45.0" prefWidth="43.0" />
+                        <TextField fx:id="txt_search" prefHeight="25.0" prefWidth="228.0" />
+                        <HBox prefHeight="16.0" prefWidth="17.0" />
+                        <JFXButton fx:id="clear_filter" text="Сбросить фильтр">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="513.0" prefWidth="863.0">
+                     <children>
+                        <TableView fx:id="table_cs" prefHeight="513.0" prefWidth="830.0">
+                           <columns>
+                              <TableColumn fx:id="col_id_cs" prefWidth="75.0" text="№ п/п" />
+                              <TableColumn fx:id="col_comp_id" maxWidth="500.0" minWidth="100.0" prefWidth="300.0" text="Название материала (complex)" />
+                              <TableColumn fx:id="col_sub_id" maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+                           </columns></TableView>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="863.0">
+                     <children>
+                        <HBox prefHeight="76.0" prefWidth="18.0" />
+                        <JFXButton fx:id="btn_add_rec" text="Создать запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_rec" text="Обновить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_del_rec" text="Удалить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_tbl" text="Обновить таблицу">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_cancel" text="Отмена">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

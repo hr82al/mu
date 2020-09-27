@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inst_rep" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="20" rightMargin="10" topMargin="10" bottomMargin="7" whenResourceMissingType="Error" uuid="bbc9c7f4-63d8-44d2-aa95-9a0bcc2f2eff">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="src\report\DataAdapter.xml"/>
+	<queryString>
+		<![CDATA[SELECT hmmr_mu.hmmr_action_plan.id,
+	hmmr_mu.hmmr_action_plan.`Description`,
+	hmmr_mu.hmmr_action_plan.`Due_Date`,
+	hmmr_mu.hmmr_action_plan.`Otv`,
+	hmmr_mu.hmmr_action_plan.`Equipment`,
+	hmmr_mu.hmmr_action_plan.`Otv_For_Task`,
+	hmmr_mu.hmmr_action_plan.`Type`
+FROM hmmr_mu.hmmr_action_plan]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="449" splitType="Stretch">
+			<line>
+				<reportElement x="-1" y="1" width="1" height="59" uuid="a7156548-bd24-4c58-ad9b-aad2a2b1075c"/>
+			</line>
+			<line>
+				<reportElement x="439" y="2" width="1" height="52" uuid="b5c44982-1132-4c49-8b6b-a56511b7d54c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="22" width="439" height="1" uuid="038f8873-73eb-461d-96f3-ca27bba3855b"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="3" width="99" height="9" uuid="fc761a21-7aba-43ec-b294-2ee2a40078bb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Номер документа/]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="1" width="567" height="1" uuid="cdee4aca-faa7-48ed-960e-6bb30a4db368"/>
+			</line>
+			<staticText>
+				<reportElement x="319" y="3" width="118" height="18" uuid="de1bb972-bd1a-444a-b8c4-1c33f8c6c93b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="24" width="99" height="9" uuid="269d5143-4b6c-4d6a-b392-b881e7956f24"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Редакция/Edition:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="33" width="439" height="1" uuid="fef1f0de-80cc-4910-9519-5e89fc2ce09c"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="219" y="24" width="98" height="9" uuid="197e1e97-6dca-4fab-8a50-8380dbe9892b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Процесс/Process:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="107" y="35" width="107" height="18" uuid="79a56020-1658-4c71-9411-5c1be4b61d0b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="320" y="24" width="118" height="9" uuid="d7628c1a-06b0-4be3-8923-f6e68177f96a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Создание инструкции]]></text>
+			</staticText>
+			<image>
+				<reportElement x="442" y="9" width="122" height="38" uuid="8f76f05d-18b5-4592-87e6-ee37d8d63f0f"/>
+				<imageExpression><![CDATA["src/application/haval1.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="567" y="1" width="1" height="56" uuid="cbdc1ed6-e181-444d-98e3-54d06eea96e0"/>
+			</line>
+			<textField>
+				<reportElement x="107" y="3" width="107" height="18" uuid="e7e2f3e4-e549-4436-aa6a-40fd0969ec7b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="12" width="99" height="9" uuid="7b0e4061-3d7f-4116-b243-143842aacfb3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Code of document:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="102" y="2" width="1" height="20" uuid="9b0a1980-7fb6-4b5f-ae48-fc6bf7a63b3d"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="102" y="23" width="1" height="10" uuid="1d2a03f2-4f83-4afd-932b-e9bef2ed78fe"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="219" y="3" width="99" height="9" uuid="6220c9d8-c6f1-4f97-be0b-faa8d9d80726"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Ответственность/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="219" y="12" width="99" height="9" uuid="469d912b-f6cd-4de4-9369-6472773bbf20"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Responsibillity:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="215" y="2" width="1" height="20" uuid="c454f5ac-4e63-462f-be37-4ee22bb665d9"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="215" y="23" width="1" height="10" uuid="ba50464d-8f3b-4a66-80ab-91b3172d7023"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="318" y="2" width="1" height="20" uuid="8dae8826-0a02-4e51-9909-7cb8b2853a65"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="318" y="23" width="1" height="10" uuid="76e8da70-e547-42bc-b5e8-39454aa22213"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="-1" y="60" width="1" height="29" uuid="8a308270-0ba4-4570-9118-308f9eadcb34"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="54" width="567" height="1" uuid="c04c7ef4-e98d-4fc2-9055-9a52603cdb08"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="567" y="57" width="1" height="31" uuid="1406be04-fc00-45f7-9bec-833e0d145442"/>
+			</line>
+			<line>
+				<reportElement x="102" y="34" width="1" height="20" uuid="9adf0623-1cdf-4b8d-8650-c16adfb9455d"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="35" width="99" height="9" uuid="f6654561-892f-4e26-95a8-af0a70b6dff1"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Вид документа/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="44" width="99" height="9" uuid="74dd86ea-0f3f-458c-ba83-a4fe7f8139ec"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Type of document:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="215" y="34" width="1" height="20" uuid="17e5f14c-eafa-4f8b-8508-4bcb819f21c5"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="107" y="24" width="107" height="9" uuid="e3798f7c-6baa-4699-a79c-1f7314448e16"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[0/A]]></text>
+			</staticText>
+			<line>
+				<reportElement x="318" y="34" width="1" height="20" uuid="77aaea00-b983-41c9-9325-759f9270a0ce"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="216" y="35" width="98" height="18" uuid="a64ce41c-e0c9-4830-aba8-d49035cd73c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Link:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-1" y="89" width="1" height="29" uuid="2f490341-ae4b-46a8-b93a-6b6060ea4037"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="75" width="567" height="1" uuid="4d7741ba-8ae3-4b1c-a590-3a6fd526f385"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="567" y="88" width="1" height="29" uuid="10bfa965-e41c-4739-a27f-8b5f3275c6c2"/>
+			</line>
+			<line>
+				<reportElement x="153" y="55" width="1" height="20" uuid="31439c79-3f7a-435b-9002-82d44a34679e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="56" width="145" height="9" uuid="fc392934-2fff-421c-84a8-0bf56b39794e"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Название документа/Title of]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="65" width="145" height="9" uuid="60d62637-e12c-4b65-90c9-7c14fbd49e9c"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[document:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="157" y="56" width="407" height="18" uuid="f3c86ec7-f433-40f6-967e-daf8f1ab1121"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="89" width="567" height="1" uuid="f672fab7-8d15-44b5-8cfb-782c21f7a902"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="77" width="145" height="11" uuid="cfee2ded-31bf-4a03-b32a-6ff40f08c3aa"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Line, Machine:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="103" width="567" height="1" uuid="8a9d7521-6da4-4c66-a433-c390605bcf78"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="91" width="145" height="11" uuid="29b97756-55f7-4938-91c5-c3ffc5f1f792"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Operation, Station:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="117" width="567" height="1" uuid="9658c8d4-f495-4086-9d09-361b952249cf"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="105" width="145" height="11" uuid="426bbeaf-08d1-40c1-895f-0d400b7a0aea"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Equipment:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="131" width="567" height="1" uuid="e3879c1d-317f-4722-b163-95af72a6b50e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="119" width="145" height="11" uuid="fd99dc2e-f6ad-44cf-9f2e-b9fd9d8eaeeb"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Station Supplier:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="145" width="567" height="1" uuid="7cb42497-0d5e-4190-a80b-3ec3ce85e65a"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="133" width="145" height="11" uuid="41f18d9a-c84e-4fcf-94da-adbc6cd206a4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Model, Type, Task:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-1" y="118" width="1" height="28" uuid="4a5a392d-1805-485d-95a8-9769a3a2acd6"/>
+			</line>
+			<line>
+				<reportElement x="567" y="117" width="1" height="29" uuid="06c2e79a-e4db-4f24-abca-bdd1a8702532"/>
+			</line>
+			<line>
+				<reportElement x="153" y="76" width="1" height="13" uuid="a3a5617d-6718-415f-af85-3ed766ca2cbd"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="153" y="90" width="1" height="13" uuid="559302e5-8660-4373-92ca-091051142a73"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="153" y="104" width="1" height="13" uuid="34b2af88-6659-44b3-b2dd-83a53596537e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="153" y="118" width="1" height="13" uuid="9a907366-5f07-4f3f-86a6-bf28501fecc1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="153" y="132" width="1" height="13" uuid="36ac1db9-2ef9-4524-98c3-278f73e47658"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="380" y="76" width="1" height="13" uuid="4f55bb96-2384-42d3-87cc-1225c2815697"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="380" y="90" width="1" height="13" uuid="57ef1d63-863e-4970-a66f-9b5c5c77a748"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="380" y="104" width="1" height="13" uuid="97bc8d4c-a561-4445-bac8-9dbbdbfd1288"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="380" y="118" width="1" height="13" uuid="a1ca38ac-2056-456a-ab29-c921f05b4158"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="380" y="132" width="1" height="13" uuid="f93efb8e-d47c-4ee8-aba9-56666f636471"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="470" y="76" width="1" height="13" uuid="3a229a8c-c4c9-44df-bb18-590151309b6d"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="470" y="90" width="1" height="13" uuid="b96b4bb4-0ec7-4633-8038-ca0a044e7c8e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="470" y="104" width="1" height="13" uuid="f6c9dd56-816b-43d2-9571-52a92c6ce0a3"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="470" y="118" width="1" height="13" uuid="83d00561-5dd2-4100-9f07-898ec69af345"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="470" y="132" width="1" height="13" uuid="4d1ff120-8dd1-4349-85df-90def4bc3387"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="157" y="78" width="219" height="11" uuid="f70e2715-a455-4cd3-acf7-3cd1b0263c6f"/>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="92" width="219" height="11" uuid="89a10cae-1011-4f87-a0e1-00f842454122"/>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="106" width="219" height="11" uuid="91afb689-1a47-40f4-a27f-00e71236a414"/>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="120" width="219" height="11" uuid="acff7aa5-e9b6-4c24-b62d-763d0c4df7b7"/>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="134" width="219" height="11" uuid="fe98ec8d-7407-40bb-924d-dd052d155339"/>
+				<textFieldExpression><![CDATA["Text Field"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="383" y="78" width="81" height="11" uuid="f15fc900-85bf-4890-bf7d-bb5b85c151ee"/>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<text><![CDATA[Допуск 1:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="2" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="6" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="4" splitType="Stretch"/>
+	</summary>
+</jasperReport>

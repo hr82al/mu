@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="sp_wr" layoutX="-2.0" prefHeight="777.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.apwr_controller">
+  <content>
+    <AnchorPane fx:id="an_pn1" minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="1318.0">
+         <children>
+            <TabPane fx:id="tb_pn" prefHeight="760.0" prefWidth="1322.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+              <Tab fx:id="tab_wp" text="Work Plan">
+                  <content>
+                    <AnchorPane fx:id="an_pn_wp" minHeight="0.0" minWidth="0.0" prefHeight="723.0" prefWidth="1322.0">
+                           <children>
+                              <VBox fx:id="vb_wp" prefHeight="743.0" prefWidth="1322.0">
+                                 <children>
+                                    <HBox fx:id="hb1_wp" alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="1322.0">
+                                       <children>
+                                          <ImageView fitHeight="70.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@haval.jpg" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="title_wp" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="1063.0" text="WORK PLAN">
+                                             <font>
+                                                <Font name="System Bold Italic" size="18.0" />
+                                             </font>
+                                          </Label>
+                                       </children></HBox>
+                                    <HBox fx:id="hb2_wp" alignment="CENTER" prefHeight="592.0" prefWidth="1322.0">
+                                    <children>
+                                    	<TableView fx:id="table_wp" prefHeight="583.0" prefWidth="1206.0">
+				                                <columns>
+				                                  <TableColumn fx:id="n_wp" prefWidth="75.0" text="№ AP" />
+				                                  <TableColumn fx:id="n_pm_wp" prefWidth="75.0" sortable="false" text="№ PM" />
+				                                    <TableColumn fx:id="type_wp" prefWidth="36.0" sortable="false" text="Тип" />
+				                                    <TableColumn fx:id="desc_wp" prefWidth="356.0" sortable="false" text="Описание" />
+				                                    <TableColumn fx:id="dd_wp" minWidth="0.0" prefWidth="95.0" text="Due Date" />
+				                                    <TableColumn fx:id="equip_wp" prefWidth="200.0" sortable="false" text="Оборудование" />
+                                                <TableColumn fx:id="col_tm_wp" prefWidth="75.0" text="Владелец" />
+                                                <TableColumn fx:id="col_oft_wp" prefWidth="75.0" text="Отв. за PM" />
+                                                <TableColumn fx:id="col_otv_wp" prefWidth="114.0" text="Отв. исполнитель" />
+				                                </columns>
+				                              </TableView>
+                                    </children>
+                                    </HBox>
+                                    <HBox fx:id="hb3_wp" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox prefHeight="91.0" prefWidth="25.0" />
+                                          <JFXButton fx:id="upd_tbl_wp" text="Обновить таблицу">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <HBox prefHeight="100.0" prefWidth="17.0" />
+                                          <JFXButton fx:id="upd_rec_wp" text="Обновить запись">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                   </AnchorPane>
+                  </content>
+              </Tab>     
+                <Tab fx:id="tab_wo" text="Work Order">
+                  <content>
+                    <AnchorPane fx:id="an_pn2" minHeight="0.0" minWidth="0.0" prefHeight="723.0" prefWidth="1322.0">
+                           <children>
+                            <VBox fx:id="vb" alignment="TOP_CENTER" prefHeight="734.0" prefWidth="1322.0">
+               					<children>
+               						<HBox fx:id="hb1" alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="1290.0">
+                     					<children>
+                     						<ImageView fitHeight="70.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                                 			<image>
+                                    			<Image url="@haval.jpg" />
+                                 			</image>
+                              				</ImageView>
+                              				<Label fx:id="title_wo" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="415.0" text="WORK ORDER">
+                                 			<font>
+                                    			<Font name="System Bold Italic" size="18.0" />
+                                 			</font>
+                              				</Label>
+                              				<JFXButton fx:id="assembly" disable="true" focusTraversable="false" />
+					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="paint" disable="true" focusTraversable="false" />
+					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="stamp" disable="true" focusTraversable="false" />
+					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="welding" disable="true" focusTraversable="false" />
+					                        <HBox prefHeight="70.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="set_btn" focusTraversable="false" />
+					                        <HBox prefHeight="70.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="rus_btn" focusTraversable="false" />
+					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="chn_btn" focusTraversable="false" />
+					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+					                        <JFXButton fx:id="usa_btn" focusTraversable="false" />
+                     					</children>
+                     				</HBox>	
+                     				<HBox fx:id="hb2" alignment="CENTER_LEFT" prefHeight="541.0" prefWidth="1322.0">
+				                     <children>
+				                        <HBox prefHeight="369.0" prefWidth="24.0" />
+				                              <TableView fx:id="table_ap" prefHeight="541.0" prefWidth="1276.0">
+				                                <columns>
+				                                  <TableColumn fx:id="n_ap" prefWidth="75.0" text="№ AP" />
+				                                  <TableColumn fx:id="n_pm_ap" prefWidth="75.0" sortable="false" text="№ PM" />
+				                                    <TableColumn fx:id="type_ap" prefWidth="36.0" sortable="false" text="Тип" />
+				                                    <TableColumn fx:id="desc_ap" prefWidth="356.0" sortable="false" text="Описание" />
+				                                    <TableColumn fx:id="dd_ap" minWidth="0.0" prefWidth="95.0" text="Due Date" />
+				                                    <TableColumn fx:id="equip_ap" prefWidth="200.0" sortable="false" text="Оборудование" />
+				                                </columns>
+				                              </TableView>
+				                     </children>
+				                  </HBox>	
+				                  <HBox fx:id="hb3" alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="1322.0">
+				                     <children>
+				                        <HBox prefHeight="65.0" prefWidth="26.0" />
+				                        <JFXButton fx:id="private_ap" focusTraversable="false" text="Личные">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+				                        <JFXButton fx:id="showall_ap" focusTraversable="false" text="Показать все">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="48.0" prefWidth="17.0" />
+				                        <JFXButton fx:id="upd_table_ap" focusTraversable="false" text="Обновить таблицу">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox fx:id="hb_btn_ap" prefHeight="48.0" prefWidth="41.0" />
+				                        <JFXButton fx:id="print_tsk" focusTraversable="false" ripplerFill="#c8f5ff" text="Печать TSK">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="48.0" prefWidth="17.0" />
+				                        <JFXButton fx:id="export_excel" text="Экспорт в Excel">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="48.0" prefWidth="41.0" />
+				                        <JFXButton fx:id="add_wr" focusTraversable="false" text="Создать запись WR">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+				                        <JFXButton fx:id="create_ap" focusTraversable="false" text="Создать TSK/CM">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+				                        <JFXButton fx:id="upd_ap" focusTraversable="false" text="Обновить">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="48.0" prefWidth="93.0" />
+				                        <ComboBox fx:id="filtre_apwr" prefWidth="150.0" />
+				                     </children>
+				                     <VBox.margin>
+				                        <Insets />
+				                     </VBox.margin>
+				                  </HBox>
+               					</children>
+               				</VBox>	
+		                 </children>
+		            </AnchorPane>
+                           
+                  </content>
+                </Tab>
+                <Tab fx:id="tab_wr" text="Work Recording">
+                  <content>
+                    <AnchorPane fx:id="an_pn_wr" minHeight="0.0" minWidth="0.0" prefHeight="723.0" prefWidth="1322.0">
+                           <children>
+                              <VBox fx:id="vb_wr" alignment="TOP_CENTER" prefHeight="734.0" prefWidth="1322.0">
+                                 <children>
+                                 	<HBox fx:id="hb_wr1" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="1581.0">
+				                     <children>
+				                              <ImageView fitHeight="70.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+				                                 <image>
+				                                    <Image url="@haval.jpg" />
+				                                 </image>
+				                              </ImageView>
+				                              <Label fx:id="title_wr" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="335.0" text="WORK RECORDING">
+				                                 <font>
+				                                    <Font name="System Bold Italic" size="18.0" />
+				                                 </font>
+				                              </Label>
+				                        <HBox prefHeight="70.0" prefWidth="19.0" />
+				                              <Label fx:id="from_wr" text="с:" />
+				                              <DatePicker fx:id="begin_data" prefHeight="25.0" prefWidth="130.0" />
+				                        <HBox prefHeight="70.0" prefWidth="39.0" />
+				                              <Label fx:id="to_wr" text="по:" />
+				                              <DatePicker fx:id="last_data" disable="true" editable="false" prefHeight="25.0" prefWidth="131.0" />
+				                        <HBox prefHeight="70.0" prefWidth="39.0" />
+				                        <JFXRadioButton fx:id="r_shop_wr" selected="true" text="Цех" />
+				                        <HBox prefHeight="70.0" prefWidth="17.0" />
+				                        <JFXRadioButton fx:id="r_resp_wr" text="Сотрудник" />
+				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+				                        <ComboBox fx:id="shop_resp_wr" prefWidth="150.0" />
+				                     </children>
+				                  </HBox>
+				                  <HBox fx:id="hb_wr2" alignment="CENTER_LEFT" prefHeight="623.0" prefWidth="1322.0">
+				                     <children>
+				                        <HBox prefHeight="380.0" prefWidth="13.0" />
+				                              <TableView fx:id="table_wr" prefHeight="613.0" prefWidth="1297.0">
+				                                <columns>
+				                                  <TableColumn fx:id="num_wr" prefWidth="75.0" text="№ WR" />
+				                                  <TableColumn fx:id="shift_report_wr" prefWidth="250.00003051757812" sortable="false" text="Описание" />
+				                                    <TableColumn fx:id="req_action_wr" prefWidth="260.0" sortable="false" text="Что сделано" />
+				                                    <TableColumn fx:id="actual_time_wr" prefWidth="58.0" sortable="false" text="Время простоя, мин" />
+				                                    <TableColumn fx:id="actual_time1_wr" prefWidth="61.0" sortable="false" text="Время работы, мин" />
+				                                    <TableColumn fx:id="data_wr" prefWidth="85.0" text="Дата" />
+				                                    <TableColumn fx:id="equip_wr" prefWidth="176.0" sortable="false" text="Оборудование" />
+				                                    <TableColumn fx:id="record_type_wr" prefWidth="32.0" sortable="false" text="Тип" />
+				                                    <TableColumn fx:id="resp_wr" prefWidth="103.0" sortable="false" text="Исполнитель" />
+				                                    <TableColumn fx:id="status_wr" prefWidth="53.0" text="Статус" />
+				                                </columns>
+				                              </TableView>
+				                     </children>
+				                  </HBox>
+				                  <HBox fx:id="hb_wr3" alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="1581.0">
+				                     <children>
+				                        <HBox prefHeight="60.0" prefWidth="13.0" />
+				                        <JFXButton fx:id="clear_filter" focusTraversable="false" text="Сбросить фильтр">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox prefHeight="59.0" prefWidth="13.0" />
+				                        <JFXButton fx:id="upd_table_wr" focusTraversable="false" text="Обновить таблицу">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                        <HBox fx:id="hb_btn_wr" prefHeight="59.0" prefWidth="47.0" />
+				                        <JFXButton fx:id="upd_wr" focusTraversable="false" text="Обновить">
+				                           <font>
+				                              <Font name="System Bold" size="12.0" />
+				                           </font>
+				                        </JFXButton>
+				                     </children>
+				                  </HBox>   
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

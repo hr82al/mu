@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>MySQL</name><driver>com.mysql.jdbc.Driver</driver><username>hmmr</username><password>Ro145437</password><savePassword>true</savePassword><url>jdbc:mysql://10.168.150.74/hmmr_mu</url><database></database><serverAddress></serverAddress><classpath>C:\workspase-photon\JavaFX\M&amp;U\lib\mysql-connector-java-5.1.44-bin.jar</classpath></jdbcDataAdapter>

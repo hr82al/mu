@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="sp_sp" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="1865.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.SP_Controller">
+  <content>
+    <AnchorPane fx:id="ap_sp" minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="1864.0">
+         <children>
+            <VBox fx:id="vb_sp" prefHeight="777.0" prefWidth="1864.0">
+               <children>
+                  <HBox fx:id="hb_sp1" alignment="CENTER" prefHeight="50.0" prefWidth="1147.0">
+                     <children>
+                        <ImageView fitHeight="51.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@haval.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_title_sp" alignment="CENTER" prefHeight="20.0" prefWidth="2189.0" text="SP DB - Редактор">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb_sp2" alignment="CENTER" prefHeight="724.0" prefWidth="2417.0">
+                     <children>
+                        <TableView fx:id="table_sp" prefHeight="675.0" prefWidth="1815.0">
+                          <columns>
+                            <TableColumn fx:id="col_id_sp" prefWidth="43.0" text="№ п/п" />
+                            <TableColumn fx:id="col_HMMR_Material_Num" prefWidth="107.0" text="Номер" />
+                              <TableColumn fx:id="col_Manufacturer" prefWidth="75.0" sortable="false" text="Производитель" />
+                              <TableColumn fx:id="col_Model" prefWidth="75.0" sortable="false" text="Модель" />
+                              <TableColumn fx:id="col_Article" prefWidth="57.99993896484375" sortable="false" text="Артикул" />
+                              <TableColumn fx:id="col_Single_Complex_Sub" prefWidth="42.0" sortable="false" text="Тип" />
+                              <TableColumn fx:id="col_SP_MU_Description_RUS" prefWidth="82.0" sortable="false" text="Описание" />
+                              <TableColumn fx:id="col_SP_FD_Description" prefWidth="89.0" sortable="false" text="Описание FD" />
+                              <TableColumn fx:id="col_SP_Supplier_Description" prefWidth="130.0" sortable="false" text="Описание произв." />
+                              <TableColumn prefWidth="215.0" sortable="false" text="Количество">
+                                 <columns>
+                                    <TableColumn fx:id="col_Qty_S" prefWidth="45.0" sortable="false" text="S" />
+                                    <TableColumn fx:id="col_Qty_W" prefWidth="54.0" sortable="false" text="W" />
+                                    <TableColumn fx:id="col_Qty_P" prefWidth="52.0" sortable="false" text="P" />
+                                    <TableColumn fx:id="col_Qty_A" prefWidth="54.0" sortable="false" text="A" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="col_Price" prefWidth="75.0" sortable="false" text="Цена" />
+                              <TableColumn prefWidth="75.0" sortable="false" text="Не ключевое">
+                                 <columns>
+                                    <TableColumn fx:id="col_Key_No_Backup_Yes" prefWidth="44.0" sortable="false" text="Да" />
+                                    <TableColumn fx:id="col_Key_No_Backup_No" prefWidth="53.0" sortable="false" text="Нет" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn prefWidth="75.0" sortable="false" text="Ключевое">
+                                 <columns>
+                                    <TableColumn fx:id="col_Key_Yes_Backup_Yes" prefWidth="43.0" sortable="false" text="Да" />
+                                    <TableColumn fx:id="col_Key_Yes_Backup_No" prefWidth="52.0" sortable="false" text="Нет" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="col_Risk_Breakage" prefWidth="75.0" sortable="false" text="Риск поломки" />
+                              <TableColumn fx:id="col_Delivery_Time" prefWidth="69.0" sortable="false" text="Время доставки" />
+                              <TableColumn fx:id="col_Replacement_Model" prefWidth="75.0" sortable="false" text="Взаимозаменяет" />
+                              <TableColumn fx:id="col_Qty_Interchangeability" prefWidth="75.0" sortable="false" text="Кол-во взаимозаменяемых" />
+                              <TableColumn fx:id="col_Identity_SP" prefWidth="75.0" sortable="false" text="Идентичный" />
+                              <TableColumn fx:id="col_Qty_Identify_SP" prefWidth="75.0" sortable="false" text="Кол-во идентичных" />
+                              <TableColumn fx:id="col_Coefficient" prefWidth="75.0" sortable="false" text="Коэффициент" />
+                              <TableColumn fx:id="col_MIN" prefWidth="41.0" sortable="false" text="MIN" />
+                              <TableColumn fx:id="col_BATCH" prefWidth="57.0" sortable="false" text="BATCH" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hb_sp3" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="91.0" prefWidth="25.0" />
+                        <JFXButton fx:id="btn_add_sp" text="Создать запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_sp" text="Обновить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_del_sp" text="Удалить запись">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_upd_tbl_sp" text="Обновить таблицу">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <JFXButton fx:id="btn_cancel_sp" text="Отмена">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="200.0" />
+                        <Label text="Сортировка:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                        <ComboBox fx:id="sort_manuf" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

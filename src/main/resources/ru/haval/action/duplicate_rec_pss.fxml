@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.dup_rec_controller_pss">
+   <children>
+      <Pane prefHeight="141.0" prefWidth="308.0">
+         <children>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="275.0" text="Количество дублируемых записей">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="52.0" text="Введите количество записей:" />
+            <TextField fx:id="num_rec_ps" layoutX="203.0" layoutY="48.0" prefHeight="25.0" prefWidth="81.0" />
+            <JFXButton fx:id="dup_rec_add" layoutX="14.0" layoutY="97.0" text="Применить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="dup_cancel" layoutX="110.0" layoutY="97.0" text="Отменить">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
