@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -139,6 +136,7 @@ public class apwr_controller {
 	private String _due_date_wo, _instruct_wo, _shop_wo, _lm_wo, _os_wo, _equip_wo, _id_pm_wo, _pmname_wo,_type_wo, _otf_wo, _id_wo, _group_pm_wo, _sql_rez_wo, _group_eq_wo, _pm_exec_wo, _icon_at_wo; 
 	public Stage stage = new Stage();
 	//Thread t, b;
+	private HashMap<String, Image> priorImages = new HashMap<>();
 	private boolean _flag = true;
 	public static ObservableList<TableColumn<hmmr_wr_model, ?>> columns_wr;
 	public static ObservableList<TableColumn<hmmr_ap_model, ?>> columns_ap;
@@ -1135,9 +1133,13 @@ public class apwr_controller {
                  //       String test = data.geticon();
                         BufferedImage bufferedImage;
 						try {
-							if(!data.geticon().equals("1")) {
-								bufferedImage = ImageIO.read(new File(qr._select_prior_img(data.geticon())));
-								Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+							if (!data.geticon().equals("1")) {
+								String tmpIcon = qr._select_prior_img(data.geticon());
+								if (!priorImages.containsKey(tmpIcon)) {
+									bufferedImage = ImageIO.read(new File(tmpIcon));
+									priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
+								}
+								Image image = priorImages.get(tmpIcon);
 								//iv.setImage(image);
 								iv.setGraphic(new ImageView(image));
 							}
@@ -1177,8 +1179,12 @@ public class apwr_controller {
                         BufferedImage bufferedImage;
 						try {
 							if(!data.geticon_at().equals("1")) {
-								bufferedImage = ImageIO.read(new File(qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at())));
-								Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+								String tmpIcon = qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at());
+								if (!priorImages.containsKey(tmpIcon)) {
+									bufferedImage = ImageIO.read(new File(tmpIcon));
+									priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
+								}
+								Image image = priorImages.get(tmpIcon);
 								//iv.setImage(image);
 								iv.setGraphic(new ImageView(image));
 							}
@@ -1218,8 +1224,12 @@ public class apwr_controller {
                         BufferedImage bufferedImage;
 						try {
 							if(!data.geticon_at().equals("1")) {
-								bufferedImage = ImageIO.read(new File(qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at())));
-								Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+								String tmpIcon = qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at());
+								if (!priorImages.containsKey(tmpIcon)) {
+									bufferedImage = ImageIO.read(new File(tmpIcon));
+									priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
+								}
+								Image image = priorImages.get(tmpIcon);
 								//iv.setImage(image);
 								iv.setGraphic(new ImageView(image));
 							}
