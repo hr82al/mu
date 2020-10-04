@@ -59,6 +59,7 @@
                       <Menu fx:id="_rep" mnemonicParsing="false" text="Отчеты">
                         <items>
                           <MenuItem mnemonicParsing="false" text="Work Recording" />
+                            <MenuItem mnemonicParsing="false" text="План-отчёт PM на месяц" fx:id="work_plan" onAction="#openWorkPlan"/>
                         </items>
                       </Menu>
                       <Menu fx:id="_set" mnemonicParsing="false" text="Настройки">

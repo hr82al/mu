@@ -50,4 +50,23 @@
         <delete dir="target"/>
     </target>
 
+    <target name="run" depends="compile-jar">
+        <java jar="target/dist/mu1.003.jar" fork="true"/>
+    </target>
+    <target name="run3">
+        <java jar="target/dist/mu1.003.jar" fork="true">
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"/>
+        </java>
+    </target>
+    <target name="run2" depends="compile-sources">
+        <copy todir="${build}"><fileset dir="src/main/resources" includes="**"/></copy>
+
+        <java dir="${build}" classname="ru.haval.application.Main" fork="true">
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5900"/>
+            <classpath refid="master-classpath"/>
+<!--            <classpath refid="master-classpath2"/>-->
+            <classpath path="${build}"/>
+        </java>
+    </target>
+
 </project>

@@ -1,9 +1,12 @@
 package ru.haval.application;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import net.sf.jasperreports.engine.util.JRStyledText;
 import  ru.haval.application.conn_connector;
 import  ru.haval.db._query;
 import javafx.fxml.FXML;
@@ -741,4 +744,15 @@ public class mu_main_controller
 		public static Stage getPrimaryStage() {
 	        return pStage;
 	    }
+
+	public void openWorkPlan(ActionEvent actionEvent) {
+		String jarLocationUrl = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String jarLocation = new File(jarLocationUrl.toString()).getParent();
+		try {
+			Runtime.getRuntime().exec("javaw.exe -jar \"" + jarLocation + "\\" + "work_plan.jar\"");
+			System.out.println("javaw.exe -jar \"" + jarLocation + "\\" + "work_plan.jar\"");
+		} catch (IOException e) {
+			s_class._AlertDialog(e.getMessage());
+		}
+	}
 }
