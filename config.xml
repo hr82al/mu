@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>MU configuration file.</comment>
+<entry key="password">MTQ1NDM3</entry>
+<entry key="db.user">hmmr</entry>
+<entry key="address">127.0.0.1</entry>
+<entry key="DBPassword">Um8xNDU0Mzc=</entry>
+<entry key="port">3306</entry>
+<entry key="language">1</entry>
+<entry key="user">gw07000209</entry>
+<entry key="db.name">hmmr_mu</entry>
+<entry key="db.params">?serverTimezone=UTC&amp;useSSL=false</entry>
+</properties>

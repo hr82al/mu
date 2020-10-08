@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
 import ru.haval.application.Main;
+import ru.haval.config.Config;
 import ru.haval.db._connect;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRTextElement;
@@ -31,7 +32,9 @@ public class PrintReport extends JFrame {
 //			location = "m:/08.USER/U.14.RG/Blank_Letter_xls.jrxml";
 //			location = "C:\\Report\\Blank_Letter_xls.jrxml";
 //			location = "\\\\hmmr-ds415\\hmmr_share\\Maintenance_and_Utility_Department\\08.USER\\U.14.RG\\Blank_Letter_xls.jrxml";			
-			location = "\\\\10.168.150.74\\MU\\Blank_Letter_xls.jrxml";
+			location = "\\\\" +
+					Config.getInstance().getAddress() +
+					"\\MU\\Blank_Letter_xls.jrxml";
 	        String reportSrcFile = location;//"C:\\Work\\Blank_Letter.jrxml";
 	        
 	        // First, compile jrxml file.

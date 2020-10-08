@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXButton;
 
 import ru.haval.action.apwr_controller;
 import  ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import  ru.haval.db._query;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,7 +40,9 @@ public class addrec_tpm_controller
 	_query qr = new _query();
 	type_pm_controller tpm = new type_pm_controller();
 	
-	private static String pathToPdf = "\\\\10.168.150.74\\MU\\Img";
+	private static String pathToPdf = "\\\\" +
+			Config.getInstance().getAddress() +
+			"\\MU\\Img";
 	
 	public addrec_tpm_controller()
 	{

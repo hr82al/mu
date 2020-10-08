@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 import  ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import  ru.haval.db._query;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,7 +53,9 @@ public class addrec_inst_controller
 	File dataFile = null;
 	Tooltip tip;
 	
-	private static String pathToPdf = "\\\\10.168.150.74\\MU\\Instruction_PDF", pathToPdf1 = "C://";//user.home
+	private static String pathToPdf = "\\\\" +
+			Config.getInstance().getAddress() +
+			"\\MU\\Instruction_PDF", pathToPdf1 = "C://";//user.home
 			
 	@FXML
 	public void initialize()

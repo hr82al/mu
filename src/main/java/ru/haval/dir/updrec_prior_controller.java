@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXTextField;
 
 import ru.haval.action.apwr_controller;
 import  ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import  ru.haval.db._query;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -40,7 +41,9 @@ public class updrec_prior_controller {
 	prior_controller pic = new prior_controller();
 	private Stage stage;
 	
-	private static String pathToPdf = "\\\\10.168.150.74\\MU\\Img";
+	private static String pathToPdf = "\\\\" +
+			Config.getInstance().getAddress() +
+			"\\MU\\Img";
 	
 	@SuppressWarnings("static-access")
 	@FXML

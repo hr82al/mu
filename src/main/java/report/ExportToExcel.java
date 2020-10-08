@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import ru.haval.db._connect;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRTextElement;
@@ -32,7 +33,9 @@ public class ExportToExcel extends JFrame {
 		@SuppressWarnings("unchecked")
 		public void showReport(String str) throws JRException, ClassNotFoundException, SQLException {
 	 
-			location = "\\\\10.168.150.74\\MU\\Blank_Letter_xls.jrxml";
+			location = "\\\\" +
+					Config.getInstance().getAddress() +
+					"\\MU\\Blank_Letter_xls.jrxml";
 	        String reportSrcFile = location;
 	        
 	        // First, compile jrxml file.
@@ -46,16 +49,22 @@ public class ExportToExcel extends JFrame {
 	      	        
 	        JasperPrint print = JasperFillManager.fillReport(jasperReport, map, cn.ConToDb1());
 	        
-	        File outDir = new File("\\\\10.168.150.74\\MU\\jasperoutput");
+	        File outDir = new File("\\\\" +
+					Config.getInstance().getAddress() +
+					"\\MU\\jasperoutput");
 	        outDir.mkdirs();
 	  
 	        JRXlsExporter exporter = new JRXlsExporter();
 	        exporter.setExporterInput(new SimpleExporterInput(print));
-	        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("\\\\10.168.150.74\\MU\\jasperoutput\\Task_Report"+conn_connector.USER_ID+".xls"));
+	        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("\\\\" +
+					Config.getInstance().getAddress() +
+					"\\MU\\jasperoutput\\Task_Report"+conn_connector.USER_ID+".xls"));
             
             exporter.exportReport();
         	try {
-        		File excelFile = new File("\\\\10.168.150.74\\MU\\jasperoutput\\Task_Report"+conn_connector.USER_ID+".xls");
+        		File excelFile = new File("\\\\" +
+						Config.getInstance().getAddress() +
+						"\\MU\\jasperoutput\\Task_Report"+conn_connector.USER_ID+".xls");
         		mn._run_excel(excelFile);
 				
 			} catch (IOException e) {

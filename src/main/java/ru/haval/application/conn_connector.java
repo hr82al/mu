@@ -4,15 +4,15 @@
 package ru.haval.application;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.ResourceBundle;;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -20,6 +20,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 
+import ru.haval.config.Config;
+import ru.haval.db._connect;
 import ru.haval.db._query;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -48,13 +50,14 @@ public class conn_connector
 	@FXML
 	Label l_info, host_err;
 	@FXML
-	JFXButton btn_conn;
+	JFXButton btn_conn, set_btn;
 	
 	@FXML
 	JFXComboBox<String> s_lan;
 	
 	@FXML
 	JFXCheckBox for_pc;
+
 	
 	_query qr = new _query();
 	s_class scl = new s_class();
@@ -133,24 +136,25 @@ public class conn_connector
 			}
 		});
 		//Читаем логин и пароль из файла, кроме техников т.к. у них один комп))
-		
-			Scanner s;
-			String line;
-			int cnt = 0;
-			try {
-				s = new Scanner(new File("C:\\Report\\receipt.txt"));
-				while (s.hasNext()) 
-			      {
-					line = s.nextLine();
-					if(cnt == 0) 
-						login_id.setText(line);
-					else
-						passwd_id.setText(line);
-					cnt = cnt + 1;
-			      }
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} 
+
+		login_id.setText(Config.getInstance().getUser());
+		passwd_id.setText(Config.getInstance().getPassword());
+		/*Scanner s;
+		String line;
+		int cnt = 0;
+		try {
+			s = new Scanner(new File("C:\\Report\\receipt.txt"));
+			while (s.hasNext()) {
+				line = s.nextLine();
+				if (cnt == 0)
+					login_id.setText(line);
+				else
+					passwd_id.setText(line);
+				cnt = cnt + 1;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}*/
 		 
 				
 		//Если расскоментировать, то установится фокус в login_id
@@ -160,6 +164,9 @@ public class conn_connector
 		         s_lan.requestFocus();
 		    }
 		});
+		Platform.runLater(() -> {
+			Image imageOk = new Image(getClass().getResourceAsStream("../action/settings.png"));
+			set_btn.setGraphic(new ImageView(imageOk)); });
 	}
 	
 	
@@ -177,8 +184,10 @@ public class conn_connector
 	//функция авторизации и сохранения начальных данных, для использования далее в программе
 	private void fun_auth()
 	{
+
 		String login, passwd;
-		
+		_connect.init();
+
 		login = login_id.getText().toString();
 		passwd = passwd_id.getText().toString();
 		
@@ -189,6 +198,9 @@ public class conn_connector
 		}
 		else
 		{
+			// В случае успешной авторизации сохранить параметры
+			Config.getInstance().setIsValid(true);
+
 			host_err.setVisible(false);
 			
 			USER_ID = _parser_sql(query_rez, 0);
@@ -215,7 +227,10 @@ public class conn_connector
 		        catch (IOException ex) 
 		        { 
 		        	Logger.getLogger(conn_connector.class.getName()).log(Level.FATAL, null, ex); 
-		        } 
+		        }
+		        //Сохранение логина и пароля в конфигурационном файле ( выполняется тольк в случае успешного подключения)
+				Config.getInstance().setPassword(passwd);
+		        Config.getInstance().setUser(login);
 	        }
 		}
 	}
@@ -272,4 +287,25 @@ public class conn_connector
 	public static Stage getPrimaryStage() {
         return pStage;
     }
+
+	public void changeSettings(ActionEvent actionEvent) {
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/ru/haval/action/change_settings.fxml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Stage stage_set = new Stage();
+		stage_set.initModality(Modality.WINDOW_MODAL);
+		stage_set.initOwner(conn_connector.getPrimaryStage());
+		Scene scene = new Scene(root);
+		stage_set.setTitle("M&U - Настройка параметров");
+		stage_set.setResizable(false);
+
+		//stage.setWidth(primaryScreenBounds.getWidth() - 315);// - 77
+		//stage.setHeight(primaryScreenBounds.getHeight() - 15);// - 77
+		stage_set.setScene(scene);
+
+		stage_set.show();
+	}
 }
