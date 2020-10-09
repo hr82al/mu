@@ -16,6 +16,12 @@ public class Main extends Application {
 	private Stage primaryStage;
 	private AnchorPane rootLayout;
 	public static Stage pStage;
+	public static String jarLocation;
+
+	static {
+		String jarLocationUrl = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarLocation = new File(jarLocationUrl.toString()).getParent();
+	}
 	
 	s_class scl = new s_class();
 	

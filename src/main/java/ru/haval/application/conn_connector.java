@@ -165,7 +165,7 @@ public class conn_connector
 		    }
 		});
 		Platform.runLater(() -> {
-			Image imageOk = new Image(getClass().getResourceAsStream("../action/settings.png"));
+			Image imageOk = new Image(getClass().getResourceAsStream("/ru/haval/action/settings.png"));
 			set_btn.setGraphic(new ImageView(imageOk)); });
 	}
 	
@@ -232,6 +232,9 @@ public class conn_connector
 				Config.getInstance().setPassword(passwd);
 		        Config.getInstance().setUser(login);
 	        }
+	        else {
+	        	Config.getInstance().setPassword("");
+			}
 		}
 	}
 	

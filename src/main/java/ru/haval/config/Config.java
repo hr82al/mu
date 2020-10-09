@@ -1,13 +1,18 @@
 package ru.haval.config;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
+import java.util.Map;
 import java.util.Properties;
+import ru.haval.application.Main;
 
 public class Config {
     private boolean isValid;
-    private static final String CONF_FILE_NAME = "config.xml";
+    private static String confFileName;
     private static volatile Config instance;
     private String user;
     private String password;
@@ -23,6 +28,25 @@ public class Config {
 
     private Config(){
         isValid = false;
+        Map<String, String> env = System.getenv();
+        confFileName = env.get("APPDATA")  + "/config.xml";
+        File file = new File(confFileName);
+        if (!file.exists()) {
+            try {
+                File sourceFile = new File(Main.jarLocation + "/config.xml");
+                if (sourceFile.exists()) {
+                    Path source = Paths.get(Main.jarLocation + "/config.xml");
+                    Path target = Paths.get(confFileName);
+
+                    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+
+                } else {
+                    new FileOutputStream(confFileName).close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         loadState();
         //Save parameters after close the application
         Runtime.getRuntime().addShutdownHook(new Thread(this::saveState));
@@ -43,7 +67,7 @@ public class Config {
     }
 
     private void loadState() {
-        File confFile = new File(CONF_FILE_NAME);
+        File confFile = new File(confFileName);
         try {
             InputStream inputStream = new FileInputStream(confFile);
             props = new Properties();
@@ -70,7 +94,7 @@ public class Config {
     public void saveState() {
         if (!isValid) return;
         try {
-            File configFile = new File(CONF_FILE_NAME);
+            File configFile = new File(confFileName);
             OutputStream outputStream = new FileOutputStream(configFile);
             props.setProperty("user", user);
             props.setProperty("language", String.valueOf(language));

@@ -746,11 +746,9 @@ public class mu_main_controller
 	    }
 
 	public void openWorkPlan(ActionEvent actionEvent) {
-		String jarLocationUrl = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String jarLocation = new File(jarLocationUrl.toString()).getParent();
+
 		try {
-			Runtime.getRuntime().exec("javaw.exe -jar \"" + jarLocation + "\\" + "work_plan.jar\"");
-			System.out.println("javaw.exe -jar \"" + jarLocation + "\\" + "work_plan.jar\"");
+			Runtime.getRuntime().exec("javaw.exe -jar \"" + Main.jarLocation + "\\" + "work_plan.jar\"");
 		} catch (IOException e) {
 			s_class._AlertDialog(e.getMessage());
 		}

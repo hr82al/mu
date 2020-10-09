@@ -96,7 +96,7 @@ public class apwr_controller {
 	ScrollPane sp_wr;
 	
 	@FXML
-	JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp;
+	JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, logistics, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp;
 	
 	@FXML
 	Label from_wr, to_wr, title_wo, title_wr, title_wp;
@@ -159,7 +159,7 @@ public class apwr_controller {
 	_actual_date1,_actual_date2,_actual_date3,_actual_date4, _hours1,_hours1_2,_hours1_3,_hours1_4, _min1, _hours2,_hours2_2,_hours2_3,_hours2_4, _min2, _user_number, _activity_type_wr;
 	public static String before_date, after_date;
 	String _get_text_btn;
-	private String conf_l, inst_l, c_resp, c_oft, c_own, lbl_assembly, lbl_paint, lbl_stamp, lbl_welding, prior_img, at_title;
+	private String conf_l, inst_l, c_resp, c_oft, c_own, lbl_assembly, lbl_logistics, lbl_paint, lbl_stamp, lbl_welding, prior_img, at_title;
 	public static String SHOP_NAME, USER_S;
 	TableColumn<hmmr_wr_model, Button> favoriteColumn = new TableColumn<hmmr_wr_model, Button>(conf_l);
 	TableColumn<hmmr_ap_model, Button> favoriteColumn2 = new TableColumn<hmmr_ap_model, Button>(inst_l);
@@ -297,6 +297,7 @@ public class apwr_controller {
 		if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
 		{
 			assembly.setDisable(false);
+			logistics.setDisable(false);
 			paint.setDisable(false);
 			stamp.setDisable(false);
 			welding.setDisable(false);
@@ -329,6 +330,9 @@ public class apwr_controller {
 		Platform.runLater(() -> {
 			Image imageOk = new Image(getClass().getResourceAsStream("assembly.png"));
 			assembly.setGraphic(new ImageView(imageOk)); });
+		Platform.runLater(() -> {
+			Image imageOk = new Image(getClass().getResourceAsStream("logistics.png"));
+			logistics.setGraphic(new ImageView(imageOk)); });
 		Platform.runLater(() -> {
 			Image imageOk = new Image(getClass().getResourceAsStream("Painting.png"));
 			paint.setGraphic(new ImageView(imageOk)); });
@@ -554,6 +558,7 @@ public class apwr_controller {
 						table_ap.getColumns().get(0).setVisible(false);
 				        table_ap.getColumns().get(0).setVisible(true);
 				        assembly.setDisable(false);
+				        logistics.setDisable(false);
 				        paint.setDisable(false);
 				        stamp.setDisable(false);
 				        welding.setDisable(false);
@@ -1517,6 +1522,7 @@ public class apwr_controller {
 		        if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
 				{
 					assembly.setDisable(false);
+					logistics.setDisable(false);
 					paint.setDisable(false);
 					stamp.setDisable(false);
 					welding.setDisable(false);
@@ -1550,6 +1556,7 @@ public class apwr_controller {
 				if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
 				{
 					assembly.setDisable(false);
+					logistics.setDisable(false);
 					paint.setDisable(false);
 					stamp.setDisable(false);
 					welding.setDisable(false);
@@ -1570,6 +1577,7 @@ public class apwr_controller {
 		        SHOP_NAME_A = "A";
 		        
 		        assembly.setDisable(true);
+		        logistics.setDisable(false);
 		        paint.setDisable(false);
 		        stamp.setDisable(false);
 		        welding.setDisable(false);
@@ -1578,6 +1586,28 @@ public class apwr_controller {
 		        tableCellAlignCenter(dd_ap);
 			}
 		});
+
+		logistics.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				table_ap.setItems(qr._select_data_all_shop("L"));
+				table_ap.getColumns().get(0).setVisible(false);
+				table_ap.getColumns().get(0).setVisible(true);
+
+				SHOP_NAME_A = "L";
+
+				assembly.setDisable(false);
+				logistics.setDisable(true);
+				paint.setDisable(false);
+				stamp.setDisable(false);
+				welding.setDisable(false);
+
+				filtre_apwr.setValue(sort_filter);
+				tableCellAlignCenter(dd_ap);
+			}
+		});
+
 		paint.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -1589,6 +1619,7 @@ public class apwr_controller {
 		        SHOP_NAME_A = "P";
 		        
 		        assembly.setDisable(false);
+		        logistics.setDisable(false);
 		        paint.setDisable(true);
 		        stamp.setDisable(false);
 		        welding.setDisable(false);
@@ -1608,6 +1639,7 @@ public class apwr_controller {
 		        SHOP_NAME_A = "S";
 		        
 		        assembly.setDisable(false);
+		        logistics.setDisable(false);
 		        paint.setDisable(false);
 		        stamp.setDisable(true);
 		        welding.setDisable(false);
@@ -1627,6 +1659,7 @@ public class apwr_controller {
 		        SHOP_NAME_A = "W";
 		        
 		        assembly.setDisable(false);
+		        logistics.setDisable(false);
 		        paint.setDisable(false);
 		        stamp.setDisable(false);
 		        welding.setDisable(true);
@@ -1679,6 +1712,7 @@ public class apwr_controller {
 				if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
 				{
 					assembly.setDisable(false);
+					logistics.setDisable(false);
 					paint.setDisable(false);
 					stamp.setDisable(false);
 					welding.setDisable(false);
@@ -1852,6 +1886,23 @@ public class apwr_controller {
 			}
 		});
 		assembly.setOnMouseExited(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				tip.hide();
+			}
+		});
+
+		logistics.setOnMouseEntered(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				tip = new Tooltip(lbl_logistics);
+				Point2D p = logistics.localToScreen(logistics.getLayoutBounds().getMaxX(), logistics.getLayoutBounds().getMaxY()); //I position the tooltip at bottom right of the node (see below for explanation)
+				tip.show(logistics, p.getX(), p.getY());
+			}
+		});
+		logistics.setOnMouseExited(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
@@ -2078,6 +2129,7 @@ public class apwr_controller {
 		equip_wp.setText(lngBndl.getString("equip_ap"));
 		
 		lbl_assembly = lngBndl.getString("lbl_assembly");
+		lbl_logistics = lngBndl.getString("lbl_logistics");
 		lbl_paint = lngBndl.getString("lbl_paint");
 		lbl_stamp = lngBndl.getString("lbl_stamp");
 		lbl_welding = lngBndl.getString("lbl_welding");

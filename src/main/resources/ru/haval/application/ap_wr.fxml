@@ -102,6 +102,8 @@
                               				</Label>
                               				<JFXButton fx:id="assembly" disable="true" focusTraversable="false" />
 					                        <HBox prefHeight="100.0" prefWidth="17.0" />
+											<JFXButton fx:id="logistics" disable="true" focusTraversable="false" />
+											<HBox prefHeight="100.0" prefWidth="17.0" />
 					                        <JFXButton fx:id="paint" disable="true" focusTraversable="false" />
 					                        <HBox prefHeight="100.0" prefWidth="17.0" />
 					                        <JFXButton fx:id="stamp" disable="true" focusTraversable="false" />

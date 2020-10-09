@@ -1840,8 +1840,8 @@ public class _query
 					ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
 					
 					try {
-						String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where del_rec = 0 AND if( "+"'"+shop+"'"+"='S' || "+"'"+shop+"'"+"='W', hms.Group_S='S,W', hms.Group_S="+"'"+shop+"'"+") ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";//shop = "+"'"+shop+"'"+" AND 
-						
+						String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where del_rec = 0 AND if( "+"'"+shop+"'"+"='S' || "+"'"+shop+"'"+"='W', hms.Group_S='S,W', hms.Group_S="+"'"+shop+"'"+") ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";//shop = "+"'"+shop+"'"+" AND
+						System.out.println(query); //DELME
 						cn.ConToDb();
 						stmt12 = cn.con.createStatement();
 						rs12 = stmt12.executeQuery(query);
