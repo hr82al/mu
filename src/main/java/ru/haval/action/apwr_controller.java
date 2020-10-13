@@ -671,7 +671,33 @@ public class apwr_controller {
 									qr._update_oft_wr("1",data.IdProperty().get().substring(2));
 									qr._update_qty_wr("1",data.IdProperty().get().substring(2));
 									btn.setStyle("-fx-background-color: green");
-									if(flag == 1)
+									switch (flag) {
+										case 0:
+										case 2:
+											table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+											table_wr.getColumns().get(0).setVisible(false);
+											table_wr.getColumns().get(0).setVisible(true);
+											break;
+										case 1:
+											table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
+											break;
+										case 3:
+											table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+											table_wr.getColumns().get(0).setVisible(false);
+											table_wr.getColumns().get(0).setVisible(true);
+											break;
+										case 4:
+											table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+											table_wr.getColumns().get(0).setVisible(false);
+											table_wr.getColumns().get(0).setVisible(true);
+											break;
+										case 5:
+											table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+											table_wr.getColumns().get(0).setVisible(false);
+											table_wr.getColumns().get(0).setVisible(true);
+											break;
+									}
+									/*if(flag == 1)
 										table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
 									if(flag == 0 || flag == 2) 
 										table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
@@ -689,6 +715,12 @@ public class apwr_controller {
 								    	table_wr.getColumns().get(0).setVisible(false);
 								        table_wr.getColumns().get(0).setVisible(true);
 							        }
+							        if (flag == 5) {
+										table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+										table_wr.getColumns().get(0).setVisible(false);
+										table_wr.getColumns().get(0).setVisible(true);
+										break;
+									}*/
 								}
 								
 								//Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
@@ -1494,8 +1526,6 @@ public class apwr_controller {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				//System.out.println("cbd");
-				//table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
 				apply_table_wr_filter_selection();
 				table_wr.getColumns().get(0).setVisible(false);
 		        table_wr.getColumns().get(0).setVisible(true);
@@ -1748,7 +1778,41 @@ public class apwr_controller {
 			@Override
 			public void handle(ActionEvent event) {
 				//0 - без сортировки; 1 - сортировка по номеру задачи; 2 - сортировка по времени
-				if(flag == 1)
+				switch (flag) {
+					case 0:
+						table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+						columns_wr.get(0).setVisible(false);
+						columns_wr.get(0).setVisible(true);
+						upd_wr.setDisable(true);
+						break;
+					case 1:
+						table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
+						table_wr.getColumns().get(0).setVisible(false);
+						table_wr.getColumns().get(0).setVisible(true);
+						break;
+					case 2:
+						table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+						table_wr.getColumns().get(0).setVisible(false);
+						table_wr.getColumns().get(0).setVisible(true);
+						clear_filter.setDisable(false);
+						break;
+					case 3:
+						table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+						table_wr.getColumns().get(0).setVisible(false);
+						table_wr.getColumns().get(0).setVisible(true);
+						break;
+					case 4:
+						table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+						table_wr.getColumns().get(0).setVisible(false);
+						table_wr.getColumns().get(0).setVisible(true);
+						break;
+					case 5:
+						table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+						table_wr.getColumns().get(0).setVisible(false);
+						table_wr.getColumns().get(0).setVisible(true);
+						break;
+				}
+				/*if(flag == 1)
 				{
 					table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
 					table_wr.getColumns().get(0).setVisible(false);
@@ -1779,7 +1843,7 @@ public class apwr_controller {
 		        	table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
 			    	table_wr.getColumns().get(0).setVisible(false);
 			        table_wr.getColumns().get(0).setVisible(true);
-		        }
+		        }*/
 			}
 		});
 		
@@ -2101,7 +2165,7 @@ public class apwr_controller {
 				table_wr.getColumns().get(0).setVisible(false);
 				table_wr.getColumns().get(0).setVisible(true);
 				SORT_RESP = table_wr_filter_state;
-				flag = 4;
+				flag = 5;
 			}
 		}
 	}
