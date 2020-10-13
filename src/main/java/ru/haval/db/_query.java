@@ -350,7 +350,7 @@ public class _query
 		
 		try {
 			String query = "select id,PM_Num,Type,Description,Due_Date,Equipment,Instruction,Otv_For_Task,Otv,Tsk_maker,flag_otv,flag_oft,flag_tm,Icon,Icon_AT from hmmr_action_plan where (Otv_For_Task = "+"'"+oft+"'"+" OR Otv = "+"'"+oft+"'"+" OR Tsk_maker = "+"'"+oft+"'"+") AND del_rec = 0 ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
-						
+
 			cn.ConToDb();
 			stmt12 = cn.con.createStatement();
 			rs12 = stmt12.executeQuery(query);
@@ -798,6 +798,87 @@ public class _query
 	        try { rs16.close(); } catch(SQLException se) { /*can't do anything */ }
 	       }
 		return list;
+	}
+
+	/**
+	 * Сортируем таблицу Work Recording по ID техника -
+	 * Resp1, в результате чего в Work Recording выведутся только те
+	 * записи, кототрые соответствуют записям только этого техника
+	 * @param OFT - ID техника
+	 * @return - Возвращает набор данных типа ObservableList
+	 * 			отсортированных по дате и заполняет ими
+	 * 			таблицу TableView.
+	 */
+	@SuppressWarnings({ "static-access"})
+	public ObservableList<hmmr_wr_model> _select_sort_OFT_wr(String begin_data, String last_data, String OFT)
+	{
+		ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
+		try {
+			String query = "select hwr.id, hwr.Task_Description, hwr.Task_Report, hwr.CM_DownTime, hwr.WR_Work_Time, " +
+					"hwr.WR_End_Date, hwr.Equipment_Full,Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, " +
+					"hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, " +
+					"hap.Otv_For_Task from hmmr_work_recording hwr INNER JOIN hmmr_action_plan hap ON hap.id = " +
+					"hwr.ap_num WHERE WR_End_Date BETWEEN "
+					+ "'" +begin_data+"'" + " AND "+"'"+last_data+"'" + " AND hap.Otv_For_Task = " + "'" + OFT + "'" + ";";
+			//System.out.println(query);
+			cn.ConToDb();
+			stmt16 = cn.con.createStatement();
+			rs16 = stmt16.executeQuery(query);
+
+			while (rs16.next()) {
+				hmmr_wr_model hpm = new hmmr_wr_model();
+				if(rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
+					hpm.Id.set("WR"+rs16.getString(1));
+					hpm.shift_report.set(rs16.getString(2));
+					hpm.req_action.set(rs16.getString(3));
+					hpm.actual_time.set(rs16.getString(4));
+					hpm.actual_time1.set(rs16.getString(5));
+					hpm.data.set(rs16.getString(6));
+					hpm.equip.set(rs16.getString(7));
+					hpm.record_type.set(rs16.getString(8));
+					hpm.resp.set(rs16.getString(9));
+					hpm.status.set(rs16.getString(10));
+					hpm.qtyProperty().set(rs16.getBoolean(11));
+					hpm.ap_num.set(rs16.getString(12));
+					hpm.user_id.set(rs16.getString(13));
+					hpm.userProperty().set(rs16.getBoolean(14));
+					hpm.icon_at.set(rs16.getString(15));
+
+					list.add(hpm);
+				}
+			}
+		}
+		catch (SQLException e) {
+			s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 763!");
+		} finally {
+			//close connection ,stmt and resultset here
+			try { cn.con.close(); } catch(SQLException se) { /*can't do anything */ }
+			try { stmt16.close(); } catch(SQLException se) { /*can't do anything */ }
+			try { rs16.close(); } catch(SQLException se) { /*can't do anything */ }
+		}
+		return list;
+	}
+
+	private String getUserIDByLetters(String oft) {
+		try {
+			String query = "SELECT id_num FROM `hmmr_mu_staff` WHERE ID='" + oft + "';";
+
+			cn.ConToDb();
+			stmt16 = cn.con.createStatement();
+			rs16 = stmt16.executeQuery(query);
+			if (rs16.next()) {
+				return rs16.getString(1);
+			}
+
+		} catch (SQLException e) {
+			s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 763!");
+		} finally {
+			//close connection ,stmt and resultset here
+			try { cn.con.close(); } catch(SQLException se) { /*can't do anything */ }
+			try { stmt16.close(); } catch(SQLException se) { /*can't do anything */ }
+			try { rs16.close(); } catch(SQLException se) { /*can't do anything */ }
+		}
+		return null;
 	}
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
 	/**
@@ -1355,7 +1436,6 @@ public class _query
 		            list.add(group);
 	        	}    
 	        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1344!");
@@ -1365,7 +1445,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 //****************************************************************************************************************************
@@ -1392,7 +1471,6 @@ public class _query
 					            list.add(os);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1381!");
@@ -1402,7 +1480,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 //*****************************************************************************************************************************				
@@ -1427,7 +1504,6 @@ public class _query
 					            list.add(equip);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1416!");
@@ -1437,7 +1513,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 //*************************************************************************************************************************
@@ -1464,7 +1539,6 @@ public class _query
 					            list.add(grp);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1453!");
@@ -1474,7 +1548,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}	
 //****************************************************************************************************************************				
@@ -1499,7 +1572,6 @@ public class _query
 					            list.add(grp);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1488!");
@@ -1509,7 +1581,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 				//Заполняем ComboBox num_instruction для таблицы PM
@@ -1533,7 +1604,6 @@ public class _query
 					            list.add(instr);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1522!");
@@ -1543,7 +1613,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 				//Заполняем ComboBox PM_Name для таблицы PM
@@ -1567,7 +1636,6 @@ public class _query
 					            list.add(pmn);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1556!");
@@ -1577,7 +1645,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 				
@@ -1601,7 +1668,6 @@ public class _query
 					            list.add(pmn);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1591!");
@@ -1611,7 +1677,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 				
@@ -1636,7 +1701,6 @@ public class _query
 					            list.add(pmn);
 				        	}    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1625!");
@@ -1646,7 +1710,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}	
 /////////////////////////////////////////////////////////ACTION PLAN///////////////////////////////////////////////////////////////////////////////////						
@@ -1670,7 +1733,6 @@ public class _query
 				        		pmn = rs6.getString(1);			        					            
 					        }    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1659!");
@@ -1680,7 +1742,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return pmn;
 				}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
@@ -1695,11 +1756,22 @@ public class _query
 					String ln = null;
 					String query = "null";
 					try {
-						if(otv == 1)
-							query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del = 0 ORDER BY IF(Group_S="+"'"+shop+"'"+",Team = 'E',0) DESC, FIELD(Team, 'E', 'T', 'SL', 'SS', 'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
-						else
-							query ="select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del = 0 ORDER BY IF(Group_S="+"'"+shop+"'"+",Team = 'T',0) DESC, FIELD(Team, 'T', 'E', 'SL', 'SS', 'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
-						
+						switch (otv) {
+							case 1:
+								query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del " +
+										"= 0 ORDER BY IF(Group_S="
+										+"'"+shop+"'"+",Team = 'E',0) DESC, FIELD(Team, 'E', 'T', 'SL', 'SS', 'TL', 'GL'" +
+										", 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
+								break;
+							case 3:
+								query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del " +
+										"= 0 AND Position <> 'Technician' ORDER BY FIELD(Team, 'T', 'E', 'SL', 'SS', " +
+										"'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC";
+								break;
+							default:
+								query ="select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del = 0 ORDER BY IF(Group_S="+"'"+shop+"'"+",Team = 'T',0) DESC, FIELD(Team, 'T', 'E', 'SL', 'SS', 'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
+						}
+
 						cn.ConToDb();
 						stmt6 = cn.con.createStatement();
 						rs6 = stmt6.executeQuery(query);
@@ -1713,7 +1785,6 @@ public class _query
 				        		list.add(ln);
 					        }    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1699!");
@@ -1723,7 +1794,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 				
@@ -1750,7 +1820,6 @@ public class _query
 				        		list.add(ln);
 					        }    
 				        }
-				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException sqlEx) {
 						sqlEx.printStackTrace();
@@ -1760,7 +1829,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) {  }
 			            try { rs6.close(); } catch(SQLException se) {  }
 			        }
-					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}*/
 				
@@ -1784,7 +1852,6 @@ public class _query
 				        		pmn = rs14.getString(1)+" - "+rs14.getString(2)+" - "+rs14.getString(3)+" - "+rs14.getString(4)+" - "+rs14.getString(5)+" - "+rs14.getString(6)+" - "+rs14.getString(7);			        					            
 					        }    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1773!");
@@ -1794,7 +1861,6 @@ public class _query
 			            try { stmt14.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs14.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return pmn;
 				}
 //////////////////////////////////////////////////////////////ACTION PLAN/////////////////////////////////////////////////////////////////////////////				
@@ -1817,7 +1883,6 @@ public class _query
 				        		list = rs6.getString(1);			        					            
 					        }    
 				        }
-//				        System.out.println("SELECT WORKED DATA: "+list);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 1807!");
@@ -1827,7 +1892,6 @@ public class _query
 			            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 			            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 			        }
-//					System.out.println("ARRAYLIST: "+list);
 					return list;
 				}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1841,7 +1905,6 @@ public class _query
 					
 					try {
 						String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where del_rec = 0 AND if( "+"'"+shop+"'"+"='S' || "+"'"+shop+"'"+"='W', hms.Group_S='S,W', hms.Group_S="+"'"+shop+"'"+") ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";//shop = "+"'"+shop+"'"+" AND
-						System.out.println(query); //DELME
 						cn.ConToDb();
 						stmt12 = cn.con.createStatement();
 						rs12 = stmt12.executeQuery(query);
@@ -2370,7 +2433,6 @@ public class _query
 	            edate_c = rs2.getString(5);
 	        }
 	        total_rez = type_c+","+pereodic_c+","+hours_c+","+bdate_c+","+edate_c;
-//	        System.out.println("SELECT WORKED: "+total_rez);
 		}
 		catch (SQLException e) {
 			s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2359!");
@@ -2401,7 +2463,6 @@ public class _query
 		            icon_tpm = rs4.getString(4);
 		        }
 		        total_rez_tpm = type_tpm+","+name_tpm+","+desc_tpm+","+icon_tpm;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2391!");
@@ -2432,8 +2493,6 @@ public class _query
 				        				            
 				            _color.add(_info);
 				        }
-				        
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2424!");
@@ -2484,7 +2543,6 @@ public class _query
 				        total_rez_upd_inst = ninst_inst+";"+date_create+";"+date_change+";"+inst_pdf+";"+ver_inst+";"+mtt_inst+";"+pmn_inst+";"+tpm_inst+";"+pmc1_inst+";"+pmc2_inst+";"+ool_inst+";"+oop_inst+";"+pos_inst+";"+
 				                             sinfo_inst+";"+s_doc_inst+";"+qspec_inst+";"+pwt_inst+";"+wt_inst+";"+adm2_inst+";"+adm3_inst+";"+ofit1_inst+";"+
 				        		             ofit2_inst;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2454!");
@@ -2522,7 +2580,6 @@ public class _query
 				        	equip_pm = rs9.getString(11);
 				        }
 				        total_rez_upd_pm = ninst_pm+","+eq_id+","+group_pm+","+pm_resp+","+ool_pm+","+pm_exec+","+shop_pm+","+groupeq_pm+","+lm_pm+","+os_pm+","+equip_pm;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2506!");
@@ -2558,7 +2615,6 @@ public class _query
 				        	icon_at = rs15.getString(9);
 				        }
 				        total_rez_upd_ap = pmnum_ap+";"+type_ap+";"+description_ap+";"+due_date_ap+";"+equip_ap+";"+oft_ap+";"+otv_ap+";"+icon+";"+icon_at;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2543!");
@@ -2588,7 +2644,6 @@ public class _query
 				        	oft_pmplan = rs15.getString(3);
 				        }
 				        total_rez_pmplan = pm_group+";"+data_pmplan+";"+oft_pmplan;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2579!");
@@ -2654,7 +2709,6 @@ public class _query
 				        	activity_type = rs15.getString(39);
 				        }
 				        total_rez_upd_wr = shift_report+";"+req_action+";"+actual_time+";"+actual_time1+";"+actual_time2+";"+actual_time3+";"+actual_time4+";"+data+";"+equip+";"+record_type+";"+resp+";"+resp2+";"+resp3+";"+resp4+";"+status_wr+";"+qty+";"+ap_num+";"+work_time+";"+actual_date+";"+actual_date_2+";"+actual_date_3+";"+actual_date_4+";"+actual_date1+";"+actual_date2+";"+actual_date3+";"+actual_date4+";"+user+";"+hours1+";"+hours1_2+";"+hours1_3+";"+hours1_4+";"+min1+";"+hours2+";"+hours2_2+";"+hours2_3+";"+hours2_4+";"+min2+";"+user_number+";"+activity_type;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2610!");
@@ -2730,7 +2784,6 @@ public class _query
 				        	_mgas_ps = rs17.getString(46);
 				        }
 						total_rez_ps = _num_ps+";"+_company_ps+";"+_plant_ps+";"+_shops_ps+";"+_groups_ps+";"+_lines_ps+";"+_oss_ps+";"+_equips_ps+";"+_shop_ps+";"+_group_eng+";"+_line_ps+";"+_os_ps+";"+_equip_ps+";"+_shop_rus+";"+_group_rus+";"+_linerus_ps+";"+_osrus_ps+";"+_equip_rus+";"+_description_ps+";"+_manual_ps+";"+_group_otv+";"+_inv_num+";"+_os_num+";"+_start_date+";"+_cost_centre+";"+_location_ps+";"+_cham_ps+";"+_coord_ps+";"+_alt_ps+";"+_trcu_ps+";"+_trcul_ps+";"+_hazardous_ps+";"+_keyequip_ps+";"+_stsupplier_ps+";"+_manuf_ps+";"+_type_ps+";"+_sn_ps+";"+_mtc_ps+";"+_respons_ps+";"+_melec_ps+";"+_mair_ps+";"+_mwater_ps+";"+_mcwater_ps+";"+_mhwater_ps+";"+_rowater_ps+";"+_mgas_ps;
-//				        System.out.println("SELECT WORKED: "+total_rez);
 					}
 					catch (SQLException e) {
 						s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 2678!");
@@ -4711,7 +4764,6 @@ public class _query
 		        total_rez_group = pm_group;
 		        if(total_rez_group == null)
 		        	total_rez_group = "0";
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 4683!");
@@ -5209,7 +5261,6 @@ public class _query
 		        		pmn = rs6.getString(1);			        					            
 			        }    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 5160!");
@@ -5219,7 +5270,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return pmn;
 		}
 		/**
@@ -5306,7 +5356,6 @@ public class _query
 			            list.add(pmn);
 		        	}    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 5267!");
@@ -5316,7 +5365,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return list;
 		}	
 		/**
@@ -5344,7 +5392,6 @@ public class _query
 		        	otv_ap = rs15.getString(7); 
 		        }
 		        total_rez_upd_ap = pmnum_ap+";"+type_ap+";"+description_ap+";"+due_date_ap+";"+equip_ap+";"+oft_ap+";"+otv_ap;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 5303!");
@@ -6315,7 +6362,6 @@ public class _query
 		        	
 		        }
 		        total_rez_upd_part = part_type+","+part_type_eng;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 6250!");
@@ -6524,7 +6570,6 @@ public class _query
 		        	
 		        }
 		        total_rez_upd_part = Part_Type+";"+SP_KIND+";"+Part_Sub_Type+";"+Part_Sub_Type_ENG+";"+Part_Characteristic_Name_1+";"+Part_Characteristic_Name_2+";"+Part_Characteristic_Name_3+";"+Part_Characteristic_Name_4;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 6502!");
@@ -6767,7 +6812,6 @@ public class _query
 		        	
 		        }
 		        total_rez_upd_part = part_char+";"+part_char_eng;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 6750!");
@@ -6889,7 +6933,6 @@ public class _query
 		        	Key_Yes_Backup_No = rs9.getString(23);
 		        }
 		        total_rez_upd_part = HMMR_Material_Num+";"+Manufacturer+";"+Model+";"+Article+";"+Single_Complex_Sub+";"+SP_MU_Description_RUS+";"+SP_FD_Description+";"+SP_Supplier_Description+";"+Price+";"+Risk_Breakage+";"+Delivery_Time+";"+Replacement_Model+";"+Identity_SP+";"+Coefficient+";"+ID_Pchar+";"+Qty_S+";"+Qty_W+";"+Qty_P+";"+Qty_A+";"+Key_No_Backup_Yes+";"+Key_No_Backup_No+";"+Key_Yes_Backup_Yes+";"+Key_Yes_Backup_No;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 6849!");
@@ -6988,7 +7031,6 @@ public class _query
 			            list.add(instr);
 		        	}    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 6971!");
@@ -6998,7 +7040,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return list;
 		}
 		@SuppressWarnings("static-access")
@@ -7054,7 +7095,6 @@ public class _query
 		        	
 		        }
 		        total_rez_upd_parts = HMMR_Material_Num+";"+Equipment+";"+Drawing+";"+Position_On_Drawing+";"+Key_No_Backup_Yes+";"+Key_No_Backup_No+";"+Key_Yes_Backup_Yes+";"+Key_Yes_Backup_No;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7030!");
@@ -7345,7 +7385,6 @@ public class _query
 		        	SP_MU_Description_RUS = rs11.getString(1) + " - " + rs11.getString(2);; 
 		        
 		        total_rez_upd_сs = HMMR_Material_Num_Complex+";"+SP_MU_Description_RUS;
-//		        System.out.println("SELECT WORKED: "+total_rez);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7315!");
@@ -7404,8 +7443,7 @@ public class _query
 		        while (rs9.next()) {
 		        	id = rs9.getString(1);
 		        }
-		       
-//		        System.out.println("SELECT WORKED: "+total_rez);
+
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7392!");
@@ -7478,8 +7516,7 @@ public class _query
 		        	
 		        	i = i + 1;
 		        }
-		        
-//		        System.out.println("SELECT WORKED: "+total_rez);
+
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7420!");
@@ -7522,8 +7559,7 @@ public class _query
 		        	String query1 = "UPDATE hmmr_parts_spec3 hp, hmmr_plant_structure hps SET hp.ID_EQUIP = hps.id WHERE hps.FL03_Shop_s = "+"'"+shop+"'"+" AND hps.FL05_Line_s = "+"'"+line+"'"+" AND hps.FL06_Station_s = "+"'"+os+"'"+" AND hps.FL07_Equipment_s = "+"'"+equip+"'"+" AND hp.id = "+"'"+id_id+"'"+";";
 		        	stmt11.executeUpdate(query1);
 		        }
-		        
-//		        System.out.println("SELECT WORKED: "+total_rez);
+
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7496!");
@@ -7562,7 +7598,6 @@ public class _query
 			            list.add(instr);
 		        	}    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7545!");
@@ -7572,7 +7607,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return list;
 		}
 		/**
@@ -7599,7 +7633,6 @@ public class _query
 			            list.add(instr);
 		        	}    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7582!");
@@ -7609,7 +7642,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return list;
 		}
 		/**
@@ -7633,8 +7665,7 @@ public class _query
 		        while (rs9.next()) {
 		        	id = rs9.getString(1);
 		        }
-		       
-//		        System.out.println("SELECT WORKED: "+total_rez);
+
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7621!");
@@ -7806,7 +7837,6 @@ public class _query
 			            list.add(instr);
 		        	}    
 		        }
-//		        System.out.println("SELECT WORKED DATA: "+list);
 			}
 			catch (SQLException e) {
 				s_class._AlertDialog(e.getMessage()+", "+ " ошибка в строке № 7789!");
@@ -7816,7 +7846,6 @@ public class _query
 	            try { stmt6.close(); } catch(SQLException se) { /*can't do anything */ }
 	            try { rs6.close(); } catch(SQLException se) { /*can't do anything */ }
 	        }
-//			System.out.println("ARRAYLIST: "+list);
 			return list;
 		}
 		/**

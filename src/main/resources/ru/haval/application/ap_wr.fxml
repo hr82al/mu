@@ -211,7 +211,7 @@
 				                                    <Image url="@haval.jpg" />
 				                                 </image>
 				                              </ImageView>
-				                              <Label fx:id="title_wr" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="335.0" text="WORK RECORDING">
+				                              <Label fx:id="title_wr" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="220.0" text="WORK RECORDING">
 				                                 <font>
 				                                    <Font name="System Bold Italic" size="18.0" />
 				                                 </font>
@@ -225,6 +225,8 @@
 				                        <HBox prefHeight="70.0" prefWidth="39.0" />
 				                        <JFXRadioButton fx:id="r_shop_wr" selected="true" text="Цех" />
 				                        <HBox prefHeight="70.0" prefWidth="17.0" />
+										<JFXRadioButton fx:id="r_OFT_wr" text="Ответственный" />
+										<HBox prefHeight="70.0" prefWidth="17.0" />
 				                        <JFXRadioButton fx:id="r_resp_wr" text="Сотрудник" />
 				                        <HBox prefHeight="100.0" prefWidth="17.0" />
 				                        <ComboBox fx:id="shop_resp_wr" prefWidth="150.0" />

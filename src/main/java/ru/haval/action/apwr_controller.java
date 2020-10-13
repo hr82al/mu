@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -117,7 +119,7 @@ public class apwr_controller {
 	ComboBox<String> filtre_apwr, shop_resp_wr;
 	
 	@FXML
-	JFXRadioButton r_shop_wr, r_resp_wr;
+	JFXRadioButton r_shop_wr, r_resp_wr, r_OFT_wr;
 	
 	@FXML
 	Tab tab_wp, tab_wo, tab_wr;
@@ -140,6 +142,8 @@ public class apwr_controller {
 	private boolean _flag = true;
 	public static ObservableList<TableColumn<hmmr_wr_model, ?>> columns_wr;
 	public static ObservableList<TableColumn<hmmr_ap_model, ?>> columns_ap;
+
+	private String table_wr_filter_state = null;
 		
 	ObservableList<String> _chk = FXCollections.observableArrayList();
 	ObservableList<String> _chk_color = FXCollections.observableArrayList();
@@ -1490,7 +1494,9 @@ public class apwr_controller {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+				//System.out.println("cbd");
+				//table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+				apply_table_wr_filter_selection();
 				table_wr.getColumns().get(0).setVisible(false);
 		        table_wr.getColumns().get(0).setVisible(true);
 		        clear_filter.setDisable(false);
@@ -2014,6 +2020,7 @@ public class apwr_controller {
 			@Override
 			public void handle(ActionEvent event) {
 				r_resp_wr.setSelected(false);
+				r_OFT_wr.setSelected(false);
 				r_shop_wr.setSelected(true);
 								
 				ObservableList<String> shop_n1 = FXCollections.observableArrayList();
@@ -2028,11 +2035,25 @@ public class apwr_controller {
 				shop_resp_wr.setValue(SHOP_NAME);
 			}
 		});
+
+		r_OFT_wr.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				r_resp_wr.setSelected(false);
+				r_OFT_wr.setSelected(true);
+				r_shop_wr.setSelected(false);
+				shop_resp_wr.setItems(qr._select_fio_for_ap(3, SHOP_NAME));
+				//shop_resp_wr.setValue("Фильтр");
+			}
+		});
+
 		r_resp_wr.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
 				r_resp_wr.setSelected(true);
+				r_OFT_wr.setSelected(false);
 				r_shop_wr.setSelected(false);
 				
 				shop_resp_wr.setItems(qr._select_fio_for_ap(2, SHOP_NAME));
@@ -2043,25 +2064,8 @@ public class apwr_controller {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(newValue != null)
-				{
-					if(r_shop_wr.isSelected()) {
-						table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), newValue));
-				    	table_wr.getColumns().get(0).setVisible(false);
-				        table_wr.getColumns().get(0).setVisible(true);
-				        SORT_SHOP = newValue;
-				        flag = 3;
-					}
-					if(r_resp_wr.isSelected())
-					{
-						table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(newValue, 0)));
-				    	table_wr.getColumns().get(0).setVisible(false);
-				        table_wr.getColumns().get(0).setVisible(true);
-				        SORT_RESP = newValue;
-				       // System.out.println("SORT_RESP = " + SORT_RESP);
-				        flag = 4;
-					}
-				}
+				table_wr_filter_state = shop_resp_wr.getSelectionModel().getSelectedItem();
+				apply_table_wr_filter_selection();
 			}
 		});
 				
@@ -2071,7 +2075,44 @@ public class apwr_controller {
         table_wr.getSelectionModel().selectLast();
         table_wr.scrollTo(table_wr.getItems().size());
 	}
-	
+
+	private void apply_table_wr_filter_selection() {
+		if(table_wr_filter_state != null)
+		{
+			if(r_shop_wr.isSelected()) {
+				table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), table_wr_filter_state));
+				table_wr.getColumns().get(0).setVisible(false);
+				table_wr.getColumns().get(0).setVisible(true);
+				SORT_SHOP = table_wr_filter_state;
+				flag = 3;
+			}
+			if(r_resp_wr.isSelected())
+			{
+				table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(table_wr_filter_state, 0)));
+				table_wr.getColumns().get(0).setVisible(false);
+				table_wr.getColumns().get(0).setVisible(true);
+				SORT_RESP = table_wr_filter_state;
+				flag = 4;
+			}
+			if(r_OFT_wr.isSelected())
+			{
+
+				table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+				table_wr.getColumns().get(0).setVisible(false);
+				table_wr.getColumns().get(0).setVisible(true);
+				SORT_RESP = table_wr_filter_state;
+				flag = 4;
+			}
+		}
+	}
+
+	private String getUserLettersID(String newValue) {
+		Pattern firstLetters = Pattern.compile("^\\S{1,5}");
+		Matcher matcher = firstLetters.matcher(newValue);
+		matcher.find();
+		return matcher.group(0);
+	}
+
 	private void initData()
 	{
 		table_ap.setItems(qr._select_data_ap(USER_S));
@@ -2140,6 +2181,7 @@ public class apwr_controller {
 		sort_clear_filter = lngBndl.getString("sort_clear_filter");
 		r_shop_wr.setText(lngBndl.getString("col_shop_pm"));
 		r_resp_wr.setText(lngBndl.getString("resp_wr"));
+		r_OFT_wr.setText(lngBndl.getString("lbl_oft_ap"));
 				
 		//if(loc1.equals("en") && loc2.equals("EN"))
 		//{
@@ -2213,7 +2255,7 @@ public class apwr_controller {
        // TableColumn<Data, Void> colBtn = new TableColumn("Button Column");
 
 		//Добавляем кнопку в table_wr
-        final ObservableList<TableColumn<hmmr_ap_model, ?>> columns2 = table_ap.getColumns();
+        final ObservableList<TableColumn<hmmr_ap_model, ?>> ap_instr_col = table_ap.getColumns();
 		//final TableColumn<hmmr_ap_model, Button> favoriteColumn2 = new TableColumn<hmmr_ap_model, Button>(inst_l);
         favoriteColumn2.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<hmmr_ap_model, Button>, ObservableValue<Button>>() {
@@ -2289,7 +2331,6 @@ public class apwr_controller {
 							@SuppressWarnings("static-access")
 							@Override
 							public void handle(ActionEvent event) {
-								//System.out.println("RECORD ID = " + table_ap.getSelectionModel().getSelectedItem().getId());
 								try {
 									File inst_path = new File(qr._select_inst_for_ap(data.getId()));//table_ap.getSelectionModel().getSelectedItem()
 									mn._run_excel(inst_path);
@@ -2308,7 +2349,7 @@ public class apwr_controller {
                     }
 
                 });
-        columns2.add(favoriteColumn2);
+        ap_instr_col.add(favoriteColumn2);
     }
 	
 	private void addButtonToTable_wp() {
@@ -2407,8 +2448,7 @@ public class apwr_controller {
                 } else {
                 	//btn.setDisable(false);
                     btn1.setOnAction(event -> {
-                        
-                    	//System.out.println("RECORD ID = " + table_ap.getSelectionModel().getSelectedItem().getId());
+
                     	String inst_path = qr._select_inst_for_ap(table_ap.getSelectionModel().getSelectedItem().getId());
                     });
                     setGraphic(btn1);
@@ -2552,8 +2592,7 @@ public class apwr_controller {
 			//_flag = false;
 			wr_upd();
 			_flag = true;
-			
-			//System.out.println("COLUMNS NAME1: = " + columns_test);
+
 			//t = new Thread(update_table_wr());
     		//t.setDaemon(true);
     		//t.start();
@@ -2686,8 +2725,7 @@ public class apwr_controller {
 	    	                	setStyle("-fx-background-color: "+color_data);
 	    	                //if(qr._select_for_exec_task(i).equals("1"))
 	    	                //	setStyle("-fx-background-color: green");
-	    	                
-	    	            //  System.out.println("ID = " + item);
+
 	    	            }
     	            	_chk_color.removeAll(_chk_color);
     	            }
