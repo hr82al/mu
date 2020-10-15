@@ -9,12 +9,14 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import org.apache.commons.lang3.ArrayUtils;
 import ru.haval.application.Main;
 import  ru.haval.application.conn_connector;
 import  ru.haval.data.FxDatePickerConverter;
@@ -183,15 +185,21 @@ public class apwr_controller {
 	public String ID_WR, SHOP_NAME_A = "A";
 	public static String  SORT_SHOP, SORT_RESP;
 	ObservableList<String> filtre = FXCollections.observableArrayList();
+
+	private JFXButton[] shopButtons;
+
+	final static String[] SHOP_LETTERS = new String[]{"A", "L", "P", "S", "W"};
+
+	private Set<String> availableShops;
 		
 	@SuppressWarnings({ "unchecked" })
 	@FXML
 	public void initialize()
 	{
-		
-		SHOP_NAME = scl.parser_str(qr._select_user(conn_connector.USER_ID), 5);
+		shopButtons = new JFXButton[]{assembly, logistics, paint, stamp, welding};
+		initSops();
+
 		USER_S = scl.parser_str(qr._select_user(conn_connector.USER_ID), 1);//сокращенное имя пользователя из таблицы STAFF
-		
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		Double screen_width = primaryScreenBounds.getWidth();
 		Double screen_hight = primaryScreenBounds.getHeight(); 
@@ -298,15 +306,11 @@ public class apwr_controller {
 			create_ap.setDisable(true);
 		}
 		
-		if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
-		{
-			assembly.setDisable(false);
-			logistics.setDisable(false);
-			paint.setDisable(false);
-			stamp.setDisable(false);
-			welding.setDisable(false);
-		}
-		
+		shopsEnableAll();
+		//sopsSelectInitial();
+
+
+
 		if(conn_connector.LANG_ID == 1)
 			lang_fun("en", "EN");
 		if(conn_connector.LANG_ID == 0)
@@ -561,11 +565,9 @@ public class apwr_controller {
 						table_ap.setItems(qr._select_data_all_shop(SHOP_NAME_A));
 						table_ap.getColumns().get(0).setVisible(false);
 				        table_ap.getColumns().get(0).setVisible(true);
-				        assembly.setDisable(false);
-				        logistics.setDisable(false);
-				        paint.setDisable(false);
-				        stamp.setDisable(false);
-				        welding.setDisable(false);
+						for (JFXButton shop : shopButtons) {
+							shop.setDisable(false);
+						}
 				        tableCellAlignCenter(dd_ap);
 					}
 					else
@@ -1555,14 +1557,7 @@ public class apwr_controller {
 		        private_ap.setDisable(true);
 		        showall_ap.setDisable(false);
 		        chk_btn = true;
-		        if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
-				{
-					assembly.setDisable(false);
-					logistics.setDisable(false);
-					paint.setDisable(false);
-					stamp.setDisable(false);
-					welding.setDisable(false);
-				}
+				shopsEnableAll();
 		        tableCellAlignCenter(dd_ap);
 			}
 		});
@@ -1589,14 +1584,9 @@ public class apwr_controller {
 			        private_ap.setDisable(false);
 			        showall_ap.setDisable(true);
 				//}
-				if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
-				{
-					assembly.setDisable(false);
-					logistics.setDisable(false);
-					paint.setDisable(false);
-					stamp.setDisable(false);
-					welding.setDisable(false);
-				}
+				shopsEnableAll();
+				sopsSelectInitial();
+
 				chk_btn = false;
 				tableCellAlignCenter(dd_ap);
 			}
@@ -1611,12 +1601,8 @@ public class apwr_controller {
 		        table_ap.getColumns().get(0).setVisible(true);
 		        
 		        SHOP_NAME_A = "A";
-		        
-		        assembly.setDisable(true);
-		        logistics.setDisable(false);
-		        paint.setDisable(false);
-		        stamp.setDisable(false);
-		        welding.setDisable(false);
+
+		        shopsSelectOne(assembly);
 		        
 		        filtre_apwr.setValue(sort_filter);
 		        tableCellAlignCenter(dd_ap);
@@ -1633,11 +1619,7 @@ public class apwr_controller {
 
 				SHOP_NAME_A = "L";
 
-				assembly.setDisable(false);
-				logistics.setDisable(true);
-				paint.setDisable(false);
-				stamp.setDisable(false);
-				welding.setDisable(false);
+				shopsSelectOne(logistics);
 
 				filtre_apwr.setValue(sort_filter);
 				tableCellAlignCenter(dd_ap);
@@ -1654,11 +1636,7 @@ public class apwr_controller {
 		        
 		        SHOP_NAME_A = "P";
 		        
-		        assembly.setDisable(false);
-		        logistics.setDisable(false);
-		        paint.setDisable(true);
-		        stamp.setDisable(false);
-		        welding.setDisable(false);
+		        shopsSelectOne(paint);
 		        
 		        filtre_apwr.setValue(sort_filter);
 		        tableCellAlignCenter(dd_ap);
@@ -1674,11 +1652,7 @@ public class apwr_controller {
 		        
 		        SHOP_NAME_A = "S";
 		        
-		        assembly.setDisable(false);
-		        logistics.setDisable(false);
-		        paint.setDisable(false);
-		        stamp.setDisable(true);
-		        welding.setDisable(false);
+		        shopsSelectOne(stamp);
 		        
 		        filtre_apwr.setValue(sort_filter);
 		        tableCellAlignCenter(dd_ap);
@@ -1694,11 +1668,7 @@ public class apwr_controller {
 		        
 		        SHOP_NAME_A = "W";
 		        
-		        assembly.setDisable(false);
-		        logistics.setDisable(false);
-		        paint.setDisable(false);
-		        stamp.setDisable(false);
-		        welding.setDisable(true);
+		        shopsSelectOne(welding);
 		        
 		        filtre_apwr.setValue(sort_filter);
 		        tableCellAlignCenter(dd_ap);
@@ -1728,6 +1698,7 @@ public class apwr_controller {
 			
 			@Override
 			public void handle(ActionEvent event) {
+				initSops();
 				if(chk_btn)
 				{
 					table_ap.setItems(qr._select_data_ap(USER_S));
@@ -1744,16 +1715,9 @@ public class apwr_controller {
 			        private_ap.setDisable(false);
 			        showall_ap.setDisable(true);
 				}
-				
-				if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
-				{
-					assembly.setDisable(false);
-					logistics.setDisable(false);
-					paint.setDisable(false);
-					stamp.setDisable(false);
-					welding.setDisable(false);
-				}
-			    
+
+				shopsEnableAll();
+
 			    add_wr.setDisable(true);
 			    upd_ap.setDisable(true);
 			    print_tsk.setDisable(true);
@@ -2138,6 +2102,56 @@ public class apwr_controller {
         table_wr.getFocusModel().focus(0);
         table_wr.getSelectionModel().selectLast();
         table_wr.scrollTo(table_wr.getItems().size());
+	}
+
+	private void initSops() {
+		SHOP_NAME = scl.parser_str(qr._select_user(conn_connector.USER_ID), 5);
+		if (SHOP_NAME != "S,W") {
+			availableShops = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).collect(Collectors.toSet());
+			SHOP_NAME = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).toArray(String[]::new)[0];
+		} else {
+			availableShops.add(SHOP_NAME);
+		}
+	}
+
+	private void sopsSelectInitial() {
+		if(!(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead") ||
+				conn_connector.USER_ROLE.equals("Technics"))) {
+			//Кнопка выбранного выброанного цеха даложны быть не активной
+			shopButtons[ArrayUtils.indexOf(SHOP_LETTERS, SHOP_NAME)].setDisable(true);
+		}
+	}
+
+	private void shopsSelectOne(JFXButton selectedShop) {
+		shopsEnableAll();
+		selectedShop.setDisable(true);
+		if (!(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead") ||
+				conn_connector.USER_ROLE.equals("Technics"))) {
+			private_ap.setDisable(false);
+			showall_ap.setDisable(false);
+			chk_btn = false;
+		}
+	}
+
+	private void shopsEnableAll() {
+		if(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead"))
+		{
+			for (JFXButton shop : shopButtons) {
+				shop.setDisable(false);
+			}
+		} else if(! conn_connector.USER_ROLE.equals("Technics")) {
+			if (SHOP_NAME == "S,W") {
+				return;
+			}
+			for (int i = 0; i < shopButtons.length; i++) {
+				if (availableShops.contains(SHOP_LETTERS[i])) {
+					shopButtons[i].setDisable(false);
+				} else {
+					shopButtons[i].setDisable(true);
+				}
+			}
+		}
+
 	}
 
 	private void apply_table_wr_filter_selection() {

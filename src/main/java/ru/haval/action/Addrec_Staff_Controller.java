@@ -82,6 +82,7 @@ public class Addrec_Staff_Controller {
 		list_groups.add("S,W");
 		list_groups.add("MU");
 		list_groups.add("UTL");
+		list_groups.add("A,L");
 		
 		list_groups_staff.setItems(list_groups);
 		
