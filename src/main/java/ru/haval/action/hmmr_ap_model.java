@@ -1,11 +1,9 @@
 package ru.haval.action;
 
-import javafx.css.Match;
 import ru.haval.application.Main;
 
 import javafx.event.ActionEvent;
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
@@ -14,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
 import ru.haval.db._query;
 import ru.haval.share_class.s_class;
@@ -27,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class hmmr_ap_model {
+    private static int BUTTON_WIDTH = 50;
 
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty PM_Num = new SimpleStringProperty();
@@ -44,26 +44,86 @@ public class hmmr_ap_model {
 	public SimpleStringProperty icon = new SimpleStringProperty();
 	public SimpleStringProperty icon_at = new SimpleStringProperty();
 
+	public Button otv = null;
+	public Button oft = null;
+	public Button tm = null;
 	public JFXButton prior = null;
 	public JFXButton at = null;
 	public Button apInstr = null;
 
-    Main mn = new Main();
+    private static Main mn = new Main();
 
-    private Image document = new Image(getClass().getResourceAsStream("document.png"));
-
-
-	private static _query qr = new _query();
+    private static _query qr = new _query();
 	private static s_class scl = new s_class();
 
-    private HashMap<String, Image> priorImages = new HashMap<>();
-    private HashMap<String, String> pathToPriorImg = new HashMap<>();
-    private HashMap<String, Image> atImages = new HashMap<>();
-    private HashMap<String, String>  pathToAtImg = new HashMap<>();
-    private HashMap<String, String> priorDescriptions = new HashMap<>();
-    private HashMap<String, String> pathToInstrs = new HashMap<>();
+    private static HashMap<String, Image> priorImages = new HashMap<>();
+    private static HashMap<String, String> pathToPriorImg = new HashMap<>();
+    private static HashMap<String, Image> atImages = new HashMap<>();
+    private static HashMap<String, String>  pathToAtImg = new HashMap<>();
+    private static HashMap<String, String> priorDescriptions = new HashMap<>();
 
     public void init() {
+        //init tm owner
+        if (tm == null) {
+            Button bTm = new Button();
+            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+            bTm.setFocusTraversable(false);
+            //устанавливаем номер ар в текст кнопки
+            bTm.setText("");
+            bTm.setPrefWidth(BUTTON_WIDTH);
+            bTm.setPrefHeight(35);
+            bTm.setText(gettsk_maker());
+
+            //Подтверждать задачу может только тот кто ее создал
+            if (qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID)) //|| qr._select_oft(data.getId().substring(2)).equals(USER_S))
+                bTm.setDisable(false);
+            else
+                bTm.setDisable(true);
+
+            setTm(bTm);
+        }
+        //init oft
+        if (oft == null) {
+            Button bOft = new Button();
+            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+            bOft.setFocusTraversable(false);
+            //устанавливаем номер ар в текст кнопки
+            bOft.setText("");
+            bOft.setPrefWidth(BUTTON_WIDTH);
+            bOft.setPrefHeight(35);
+            bOft.setText(getOFT());
+
+
+            //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
+            if (qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID) || qr._select_oft(getId().substring(2)).equals(apwr_controller.USER_S))
+                bOft.setDisable(false);
+            else
+                bOft.setDisable(true);
+
+            //qr._update_calc_field(data.getId().substring(2));
+            setOft(bOft);
+        }
+        //init otv
+        if (otv == null) {
+            Button bOtv = new Button();
+            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+            bOtv.setFocusTraversable(false);
+            //устанавливаем номер ар в текст кнопки
+            bOtv.setText("");
+            bOtv.setPrefWidth(BUTTON_WIDTH);
+            bOtv.setPrefHeight(35);
+            bOtv.setText(getOTV());
+
+            //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
+            if(qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID) || qr._select_oft(getId().substring(2)).equals(apwr_controller.USER_S))
+                bOtv.setDisable(false);
+            else
+                bOtv.setDisable(true);
+
+            qr._update_calc_field(getId().substring(2));
+            setOtv(bOtv);
+        }
+
         //init Prior
         if(prior == null) {
             Tooltip tooltip = new Tooltip();
@@ -161,9 +221,8 @@ public class hmmr_ap_model {
                     btn.setDisable(true);
                 }
             }
-            Platform.runLater(() -> {
-                btn.setGraphic(new ImageView(document));
-            });
+
+            btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("document.png"))));
 
             //устанавливаем checkbox если в базе в этом поле стоит 1
             //     btn.setText(data.getap_num());
@@ -204,6 +263,57 @@ public class hmmr_ap_model {
             return "//" + Config.getInstance().getAddress() + "/" + path.substring(matcher.end());
         }
         return path;
+    }
+
+    public Button getTm() {
+        if (tm == null) {
+            init();
+        }
+        System.out.println(getflag_tm());
+        //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на владельце за задачу зеленой
+        if (getflag_tm().equals("2"))
+            tm.setStyle("-fx-background-color: green");
+        else if (getflag_tm().equals("1"))
+            tm.setStyle("-fx-background-color: yellow");
+        return tm;
+    }
+
+    public void setTm(Button tm) {
+
+        this.tm = tm;
+    }
+
+    public Button getOft() {
+        if (oft == null) {
+            init();
+        }
+        //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на ответственном за задачу желтой
+        if (getflag_oft().equals("2"))
+            oft.setStyle("-fx-background-color: green");
+        else if (getflag_oft().equals("1"))
+            oft.setStyle("-fx-background-color: yellow");
+        return oft;
+    }
+
+    public void setOft(Button oft) {
+        this.oft = oft;
+    }
+
+    public Button getOtv() {
+        if (otv == null) {
+            init();
+        }
+        // Check if the button changed color
+        //Если Все записи в WR по этой задаче подтверждены то ставим кнопку в AP на исполнителе желтой
+        if (getflag_otv().equals("2"))
+            otv.setStyle("-fx-background-color: green");
+        else if (getflag_otv().equals("1"))
+            otv.setStyle("-fx-background-color: yellow");
+        return otv;
+    }
+
+    public void setOtv(Button otv) {
+        this.otv = otv;
     }
 
     public JFXButton getPrior() {
@@ -455,6 +565,12 @@ public class hmmr_ap_model {
     
     public void seticon_at(String icon_at) {
         this.icon_at.set(icon_at);
+    }
+    public void update(){
+        tm = null;
+        otv = null;
+        oft = null;
+        init();
     }
     
     @Override

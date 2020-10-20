@@ -7215,7 +7215,6 @@ public class _query {
         synchronized (_query.class) {
             try {
                 String query = "UPDATE hmmr_action_plan SET Status = flag_otv+flag_oft+flag_tm where id = " + id + ";";
-
                 cn.ConToDb();
                 stmt = cn.con.createStatement();
                 stmt.executeUpdate(query);
