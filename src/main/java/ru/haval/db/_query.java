@@ -58,6 +58,12 @@ public class _query {
     private String del_rec = "0";
     public static boolean _flag_error = true;
 
+    private static final String HAP_HEAD = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap." +
+            "Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm," +
+            "hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON " +
+            "hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name ";
+
+
     public _query() {
 
     }
@@ -392,7 +398,9 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_ap(String oft) {
-        String query = "select id,PM_Num,Type,Description,Due_Date,Equipment,Instruction,Otv_For_Task,Otv,Tsk_maker,flag_otv,flag_oft,flag_tm,Icon,Icon_AT from hmmr_action_plan where (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" + " OR Tsk_maker = " + "'" + oft + "'" + ") AND del_rec = 0 ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
+        String query = HAP_HEAD + "where hat.del_rec = 0 AND (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" +
+                " OR Tsk_maker = " + "'" + oft + "'" + ") AND hap.del_rec = 0 ORDER BY FIELD(hap.Icon, '1S', '2Q', " +
+                "'3P', '4M', '1') ASC;";
         return fillAPModel(query);
     }
 
@@ -424,6 +432,9 @@ public class _query {
                         hpm.flag_tm.set(rs12.getString(13));
                         hpm.icon.set(rs12.getString(14));
                         hpm.icon_at.set(rs12.getString(15));
+                        hpm.user_id.set(rs12.getString(16));
+                        hpm.prior_img.set(rs12.getString(17));
+                        hpm.AT_img.set(rs12.getString(18));
 
                         list.add(hpm);
                     }
@@ -935,7 +946,6 @@ public class _query {
                         "hap.Otv_For_Task from hmmr_work_recording hwr INNER JOIN hmmr_action_plan hap ON hap.id = " +
                         "hwr.ap_num WHERE WR_End_Date BETWEEN "
                         + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "'" + ";";
-                //System.out.println(query);
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
                 rs16 = stmt16.executeQuery(query);
@@ -2211,7 +2221,9 @@ public class _query {
     //Показываем все задачи по цеху, можно перегрузить нижнюю функцию или наоборот
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_all_shop(String shop) {
-        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ") ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";//shop = "+"'"+shop+"'"+" AND
+        String query =  HAP_HEAD + " INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where hat.del_rec = 0 AND  hap.del_rec = 0 AND if( " + "'"
+                + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop +
+                "'" + ") ORDER BY FIELD(hap.Icon, '1S', '2Q', '3P', '4M', '1') ASC;";//shop = "+"'"+shop+"'"+" AND
         return fillAPModel(query);
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2220,7 +2232,10 @@ public class _query {
     //Показываем все задачи по цеху
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_ap_shop(String shop, String oft) {
-        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where del_rec = 0 AND (if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ") OR Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" + " OR Tsk_maker = " + "'" + oft + "'" + ") ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
+        String query = HAP_HEAD + " INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID where hat.del_rec = 0 AND .del_rec = 0 AND (if( " + "'"
+                + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop +
+                "'" + ") OR Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" + " OR Tsk_maker = " +
+                "'" + oft + "'" + ") ORDER BY FIELD(hap.Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
         return fillAPModel(query);
     }
 
@@ -2229,7 +2244,7 @@ public class _query {
     //Показываем все выполненные задачи по цеху
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_exectsk(String shop) {
-        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID AND hap.flag_otv = 2 AND hap.flag_oft = 2 AND hap.flag_tm = 2 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID AND hap.flag_otv = 2 AND hap.flag_oft = 2 AND hap.flag_tm = 2 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
         return fillAPModel(query);
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2239,7 +2254,7 @@ public class _query {
     //Показываем все задачи по цеху
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_ap_sw(String oft) {
-        String query = "select id,PM_Num,Type,Description,Due_Date,Equipment,Instruction,Otv_For_Task,Otv,Tsk_maker,flag_otv,flag_oft,flag_tm,Icon from hmmr_action_plan where del_rec = 0 AND ((shop = 'S' OR shop = 'W') OR (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" + " OR Tsk_maker = " + "'" + oft + "'" + ")) ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
+        String query = "select id,PM_Num,Type,Description,Due_Date,Equipment,Instruction,Otv_For_Task,Otv,Tsk_maker,flag_otv,flag_oft,flag_tm,Icon, user_id from hmmr_action_plan where del_rec = 0 AND ((shop = 'S' OR shop = 'W') OR (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "'" + " OR Tsk_maker = " + "'" + oft + "'" + ")) ORDER BY FIELD(Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
         return fillAPModelWitoutOtv(query);
     }
 
@@ -6388,7 +6403,7 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_without_otv(String shop) {
-        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID WHERE hap.Otv = 'need select' AND del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon, hap.user_id from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID WHERE hap.Otv = 'need select' AND del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
         return fillAPModelWitoutOtv(query);
     }
 
@@ -6419,6 +6434,7 @@ public class _query {
                         hpm.flag_oft.set(rs12.getString(12));
                         hpm.flag_tm.set(rs12.getString(13));
                         hpm.icon.set(rs12.getString(14));
+                        hpm.user_id.set(rs12.getString(15));
 
                         list.add(hpm);
                     }

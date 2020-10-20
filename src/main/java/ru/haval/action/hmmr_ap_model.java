@@ -43,6 +43,9 @@ public class hmmr_ap_model {
 	public SimpleStringProperty flag_tm = new SimpleStringProperty();
 	public SimpleStringProperty icon = new SimpleStringProperty();
 	public SimpleStringProperty icon_at = new SimpleStringProperty();
+    public SimpleStringProperty user_id = new SimpleStringProperty();
+    public SimpleStringProperty prior_img = new SimpleStringProperty();
+    public SimpleStringProperty AT_img = new SimpleStringProperty();
 
 	public Button otv = null;
 	public Button oft = null;
@@ -57,9 +60,9 @@ public class hmmr_ap_model {
 	private static s_class scl = new s_class();
 
     private static HashMap<String, Image> priorImages = new HashMap<>();
-    private static HashMap<String, String> pathToPriorImg = new HashMap<>();
+    //private static HashMap<String, String> pathToPriorImg = new HashMap<>();
     private static HashMap<String, Image> atImages = new HashMap<>();
-    private static HashMap<String, String>  pathToAtImg = new HashMap<>();
+    //private static HashMap<String, String>  pathToAtImg = new HashMap<>();
     private static HashMap<String, String> priorDescriptions = new HashMap<>();
 
     public void init() {
@@ -75,7 +78,7 @@ public class hmmr_ap_model {
             bTm.setText(gettsk_maker());
 
             //Подтверждать задачу может только тот кто ее создал
-            if (qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID)) //|| qr._select_oft(data.getId().substring(2)).equals(USER_S))
+            if (user_id.get().equals(conn_connector.USER_ID)) //|| qr._select_oft(data.getId().substring(2)).equals(USER_S))
                 bTm.setDisable(false);
             else
                 bTm.setDisable(true);
@@ -95,7 +98,7 @@ public class hmmr_ap_model {
 
 
             //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
-            if (qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID) || qr._select_oft(getId().substring(2)).equals(apwr_controller.USER_S))
+            if (user_id.get().equals(conn_connector.USER_ID) || OFT.get().equals(apwr_controller.USER_S))
                 bOft.setDisable(false);
             else
                 bOft.setDisable(true);
@@ -115,12 +118,12 @@ public class hmmr_ap_model {
             bOtv.setText(getOTV());
 
             //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
-            if(qr._select_userid(getId().substring(2)).equals(conn_connector.USER_ID) || qr._select_oft(getId().substring(2)).equals(apwr_controller.USER_S))
+            if(user_id.get().equals(conn_connector.USER_ID) || OFT.get().equals(apwr_controller.USER_S))
                 bOtv.setDisable(false);
             else
                 bOtv.setDisable(true);
 
-            qr._update_calc_field(getId().substring(2));
+            //qr._update_calc_field(getId().substring(2));
             setOtv(bOtv);
         }
 
@@ -136,16 +139,21 @@ public class hmmr_ap_model {
             BufferedImage bufferedImage;
             try {
                 if (!geticon().equals("1")) {
-                    if (!pathToPriorImg.containsKey(geticon())) {
+                    /*if (!pathToPriorImg.containsKey(geticon())) {
                         pathToPriorImg.put(geticon(), qr._select_prior_img(geticon()));
                     }
                     String tmpIcon = pathToPriorImg.get(geticon());
-                    //System.out.println(tmpIcon);
                     if (!priorImages.containsKey(tmpIcon)) {
                         bufferedImage = ImageIO.read(new File(tmpIcon));
                         priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
+                    }*/
+                    String pathPrior = correctPathToInstr(getPrior_img());
+                    if (!priorImages.containsKey(pathPrior)) {
+                        bufferedImage = ImageIO.read(new File(pathPrior));
+                        priorImages.put(pathPrior, SwingFXUtils.toFXImage(bufferedImage, null));
                     }
-                    Image image = priorImages.get(tmpIcon);
+                    Image image = priorImages.get(pathPrior);
+
                     //iv.setImage(image);
                     iv.setGraphic(new ImageView(image));
                 }
@@ -178,17 +186,22 @@ public class hmmr_ap_model {
             BufferedImage bufferedImage2;
             try {
                 if (!geticon_at().equals("1")) {
-                    if (!pathToAtImg.containsKey(geticon())) {
+                    /*if (!pathToAtImg.containsKey(geticon())) {
                         pathToAtImg.put(geticon_at(), qr._select_recStr("hmmr_activity_type", "Icon",
                                 "del_rec", "Name", geticon_at()));
                         String tmpIcon = pathToAtImg.get(geticon_at());
+
                         if (!atImages.containsKey(tmpIcon)) {
                             bufferedImage2 = ImageIO.read(new File(tmpIcon));
                             atImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage2, null));
                         }
+                    }*/
+                    String pathAT = correctPathToInstr(AT_img.get());
+                    if (!atImages.containsKey(pathAT)) {
+                        bufferedImage2 = ImageIO.read(new File(pathAT));
+                        atImages.put(pathAT, SwingFXUtils.toFXImage(bufferedImage2, null));
                     }
-
-                    Image image = atImages.get(pathToAtImg.get(geticon_at()));
+                    Image image = atImages.get(pathAT);
                     iv2.setGraphic(new ImageView(image));
                 }
             } catch (IOException e) {
@@ -210,7 +223,7 @@ public class hmmr_ap_model {
         if (apInstr == null) {
             Button btn = new Button();
             setinst_btn(correctPathToInstr(getinst_btn()));
-            //System.out.println(getinst_btn());
+
             if (getinst_btn().equals("-") || getinst_btn().equals("null"))
                 btn.setDisable(true);
             else {
@@ -254,9 +267,9 @@ public class hmmr_ap_model {
         if (path.length() < 2) {
             return path;
         }
-        if (path.charAt(1) == ':') {
+/*        if (path.charAt(1) == ':') {
             return "//" + Config.getInstance().getAddress() + "/mu/" + path.substring(3);
-        }
+        }*/
         Pattern pattern = Pattern.compile("^//\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/");
         Matcher matcher = pattern.matcher(path);
         if (matcher.find()) {
@@ -269,7 +282,7 @@ public class hmmr_ap_model {
         if (tm == null) {
             init();
         }
-        System.out.println(getflag_tm());
+
         //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на владельце за задачу зеленой
         if (getflag_tm().equals("2"))
             tm.setStyle("-fx-background-color: green");
@@ -371,8 +384,32 @@ public class hmmr_ap_model {
 		this.icon.set(icon);
 		this.icon_at.set(icon_at);
 	}
-	
-	public String getId() {
+
+    public String getPrior_img() {
+        return prior_img.get();
+    }
+
+    public SimpleStringProperty prior_imgProperty() {
+        return prior_img;
+    }
+
+    public void setPrior_img(String prior_img) {
+        this.prior_img.set(prior_img);
+    }
+
+    public String getUser_id() {
+        return user_id.get();
+    }
+
+    public SimpleStringProperty user_idProperty() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id.set(user_id);
+    }
+
+    public String getId() {
         return Id.get();
     }
 

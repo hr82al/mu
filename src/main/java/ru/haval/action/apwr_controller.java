@@ -771,9 +771,6 @@ public class apwr_controller {
                                 if (qr._select_confirm(qr._select_apnum(data.IdProperty().get().substring(2))).equals("YES")) {
                                     Platform.runLater(() -> {
                                         qr._update_delrec_ap(qr._select_apnum(data.IdProperty().get().substring(2)));
-                                        //table_ap.getItems()
-                                        System.out.println("Зеленим");
-
                                         //tableAPSetOft(qr._select_apnum(data.IdProperty().get().substring(2)), "2");
                                         setTableAPItems(qr._select_data_ap(USER_S));
                                         table_ap.getColumns().get(0).setVisible(false);
@@ -2024,10 +2021,10 @@ public class apwr_controller {
     private void setTableAPItems(ObservableList<hmmr_ap_model> select_data_exectsk) {
         table_ap.setItems(select_data_exectsk);
         updateTableAPInBackground();
-        System.out.println("update ap");
+       /* System.out.println("update ap");
         Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
                 "\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s
-                        .getLineNumber() + ")"));
+                        .getLineNumber() + ")"));*/
     }
 
     private void initSops() {
@@ -2812,7 +2809,7 @@ public class apwr_controller {
     public void updateTableAPInBackground() {
         //init table in a background thread
         tabeAPUpdateStop.set(true);
-        Thread tread = new Thread(() -> {
+        Thread thread = new Thread(() -> {
             synchronized (apwr_controller.class) {
                 tabeAPUpdateStop.set(false);
                 for (hmmr_ap_model item : table_ap.getItems()) {
@@ -2822,7 +2819,24 @@ public class apwr_controller {
                 }
             }
         });
-        tread.setPriority(Thread.MIN_PRIORITY);
-        tread.start();
+        AtomicBoolean updateDBAPStatusRuns = new AtomicBoolean(false);
+        Thread thread1 = new Thread(() -> {
+
+            synchronized (apwr_controller.class) {
+                updateDBAPStatusRuns.set(true);
+                for (hmmr_ap_model item : table_ap.getItems()) {
+                    qr._update_calc_field(item.getId().substring(2));
+                }
+                updateDBAPStatusRuns.set(false);
+            }
+        });
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread1.setPriority(Thread.MIN_PRIORITY);
+        thread.setDaemon(true);
+        thread1.setDaemon(true);
+        if (!updateDBAPStatusRuns.get()) {
+            thread1.start();
+        }
+        thread.start();
     }
 }
