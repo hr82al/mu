@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import javafx.scene.control.*;
 import org.apache.commons.lang3.ArrayUtils;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
@@ -40,18 +41,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SingleSelectionModel;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -126,6 +115,9 @@ public class apwr_controller {
 
     @FXML
     Tab tab_wp, tab_wo, tab_wr;
+
+    @FXML
+    CheckBox chBNotConfirmed;
 
     _query qr = new _query();
     s_class scl = new s_class();
@@ -406,6 +398,14 @@ public class apwr_controller {
         scl._style(upd_tbl_wp);
         scl._style(upd_rec_wp);
 
+        chBNotConfirmed.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                _query.setOnlyNotConfirmed(newValue);
+                updateTableWr();
+            }
+        });
+
         rus_btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -635,7 +635,7 @@ public class apwr_controller {
                         btn.setText("");
                         btn.setPrefWidth(30);
                         btn.setPrefHeight(30);
-                        favoriteColumn.setStyle("-fx-alignment: CENTER;");
+
 
                         //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
                         if (qr._select_userid(data.getap_num()).equals(conn_connector.USER_ID) || qr._select_oft(data.getap_num()).equals(USER_S))
@@ -785,7 +785,7 @@ public class apwr_controller {
                     }
 
                 });
-
+        favoriteColumn.setStyle("-fx-alignment: CENTER;");
         columns.add(favoriteColumn);
 
         //Добавляем кнопку в table_wr
@@ -1637,76 +1637,10 @@ public class apwr_controller {
         scl._style(upd_table_wr);
 
         upd_table_wr.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
+                        @Override
             public void handle(ActionEvent event) {
-                //0 - без сортировки; 1 - сортировка по номеру задачи; 2 - сортировка по времени
-                switch (flag) {
-                    case 0:
-                        table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                        columns_wr.get(0).setVisible(false);
-                        columns_wr.get(0).setVisible(true);
-                        upd_wr.setDisable(true);
-                        break;
-                    case 1:
-                        table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
-                        table_wr.getColumns().get(0).setVisible(false);
-                        table_wr.getColumns().get(0).setVisible(true);
-                        break;
-                    case 2:
-                        table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                        table_wr.getColumns().get(0).setVisible(false);
-                        table_wr.getColumns().get(0).setVisible(true);
-                        clear_filter.setDisable(false);
-                        break;
-                    case 3:
-                        table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-                        table_wr.getColumns().get(0).setVisible(false);
-                        table_wr.getColumns().get(0).setVisible(true);
-                        break;
-                    case 4:
-                        table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-                        table_wr.getColumns().get(0).setVisible(false);
-                        table_wr.getColumns().get(0).setVisible(true);
-                        break;
-                    case 5:
-                        table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
-                        table_wr.getColumns().get(0).setVisible(false);
-                        table_wr.getColumns().get(0).setVisible(true);
-                        break;
-                }
-				/*if(flag == 1)
-				{
-					table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
-					table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-				}
-				else if(flag == 2)
-				{
-					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-					table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-			        clear_filter.setDisable(false);
-				}
-				else if(flag == 0)
-				{
-					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-					columns_wr.get(0).setVisible(false);
-				    columns_wr.get(0).setVisible(true);
-				    upd_wr.setDisable(true);
-				}
-				else if(flag == 3)
-		        {
-		        	table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-			    	table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-		        }
-				else if(flag == 4)
-		        {
-		        	table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-			    	table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-		        }*/
+                updateTableWr();
+
             }
         });
 
@@ -2006,6 +1940,76 @@ public class apwr_controller {
         table_wr.getSelectionModel().selectLast();
         table_wr.scrollTo(table_wr.getItems().size());
 
+    }
+
+    private void updateTableWr() {
+        //0 - без сортировки; 1 - сортировка по номеру задачи; 2 - сортировка по времени
+        switch (flag) {
+            case 0:
+                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                columns_wr.get(0).setVisible(false);
+                columns_wr.get(0).setVisible(true);
+                upd_wr.setDisable(true);
+                break;
+            case 1:
+                table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
+                table_wr.getColumns().get(0).setVisible(false);
+                table_wr.getColumns().get(0).setVisible(true);
+                break;
+            case 2:
+                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                table_wr.getColumns().get(0).setVisible(false);
+                table_wr.getColumns().get(0).setVisible(true);
+                clear_filter.setDisable(false);
+                break;
+            case 3:
+                table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+                table_wr.getColumns().get(0).setVisible(false);
+                table_wr.getColumns().get(0).setVisible(true);
+                break;
+            case 4:
+                table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+                table_wr.getColumns().get(0).setVisible(false);
+                table_wr.getColumns().get(0).setVisible(true);
+                break;
+            case 5:
+                table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+                table_wr.getColumns().get(0).setVisible(false);
+                table_wr.getColumns().get(0).setVisible(true);
+                break;
+        }
+				/*if(flag == 1)
+				{
+					table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
+					table_wr.getColumns().get(0).setVisible(false);
+			        table_wr.getColumns().get(0).setVisible(true);
+				}
+				else if(flag == 2)
+				{
+					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+					table_wr.getColumns().get(0).setVisible(false);
+			        table_wr.getColumns().get(0).setVisible(true);
+			        clear_filter.setDisable(false);
+				}
+				else if(flag == 0)
+				{
+					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+					columns_wr.get(0).setVisible(false);
+				    columns_wr.get(0).setVisible(true);
+				    upd_wr.setDisable(true);
+				}
+				else if(flag == 3)
+		        {
+		        	table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+			    	table_wr.getColumns().get(0).setVisible(false);
+			        table_wr.getColumns().get(0).setVisible(true);
+		        }
+				else if(flag == 4)
+		        {
+		        	table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+			    	table_wr.getColumns().get(0).setVisible(false);
+			        table_wr.getColumns().get(0).setVisible(true);
+		        }*/
     }
 
     private void tableAPSetOft(String id, String s) {

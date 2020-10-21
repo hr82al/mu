@@ -5,18 +5,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
-import ru.haval.action.Hmmr_CS_Model;
-import ru.haval.action.Hmmr_PartS_Model;
-import ru.haval.action.Hmmr_SP_Model;
-import ru.haval.action.Hmmr_Stuff_Model;
-import ru.haval.action.hmmr_ap_model;
-import ru.haval.action.hmmr_inst_model;
-import ru.haval.action.hmmr_pm_model;
-import ru.haval.action.hmmr_pmplan_model;
-import ru.haval.action.hmmr_ps_model;
-import ru.haval.action.hmmr_wp_model;
-import ru.haval.action.hmmr_wr_model;
+import ru.haval.action.*;
 import ru.haval.application.conn_connector;
 import ru.haval.dir.Cycle;
 import ru.haval.dir.Hmmr_OrderType_Model;
@@ -57,6 +48,7 @@ public class _query {
     private String name_ot, desc_ot, total_rez_ot;
     private String del_rec = "0";
     public static boolean _flag_error = true;
+    private static boolean onlyNotConfirmed = false;
 
     private static final String HAP_HEAD = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap." +
             "Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm," +
@@ -407,9 +399,12 @@ public class _query {
     private ObservableList<hmmr_ap_model> fillAPModel(String query) {
         synchronized (_query.class) {
             ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
-
             try {
-
+                /*System.out.println(query);
+                System.out.println("update ap");
+                Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
+                        "\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s
+                                .getLineNumber() + ")"));*/
                 cn.ConToDb();
                 stmt12 = cn.con.createStatement();
                 rs12 = stmt12.executeQuery(query);
@@ -440,7 +435,7 @@ public class _query {
                     }
                 }
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 352!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[2].getLineNumber() + "!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
@@ -631,7 +626,11 @@ public class _query {
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
 
             try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording where WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + ";";
+                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording where WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'";// + ";";
+                if (onlyNotConfirmed) {
+                    query += " AND WR_Host_Confirmed = 0";
+                }
+                query += ";";
 
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
@@ -748,7 +747,11 @@ public class _query {
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
 
             try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE ap_num = " + "'" + apnum + "'" + ";";
+                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE ap_num = " + "'" + apnum + "'";// + ";";
+                if (onlyNotConfirmed) {
+                    query += " AND WR_Host_Confirmed = 0";
+                }
+                query += ";";
 
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
@@ -814,7 +817,11 @@ public class _query {
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
 
             try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND FL_WSH = " + "'" + shop + "'" + ";";
+                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND FL_WSH = " + "'" + shop + "'";// + ";";
+                if (onlyNotConfirmed) {
+                    query += " AND WR_Host_Confirmed = 0";
+                }
+                query += ";";
 
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
@@ -879,7 +886,11 @@ public class _query {
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
 
             try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND Task_Resp_ID = " + "'" + resp + "'" + ";";
+                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND Task_Resp_ID = " + "'" + resp + "'";// + ";";
+                if (onlyNotConfirmed) {
+                    query += " AND WR_Host_Confirmed = 0";
+                }
+                query += ";";
 
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
@@ -925,6 +936,10 @@ public class _query {
         }
     }
 
+    public static void setOnlyNotConfirmed(boolean onlyNotConfirmed) {
+        _query.onlyNotConfirmed = onlyNotConfirmed;
+    }
+
     /**
      * Сортируем таблицу Work Recording по ID техника -
      * Resp1, в результате чего в Work Recording выведутся только те
@@ -945,7 +960,11 @@ public class _query {
                         "hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, " +
                         "hap.Otv_For_Task from hmmr_work_recording hwr INNER JOIN hmmr_action_plan hap ON hap.id = " +
                         "hwr.ap_num WHERE WR_End_Date BETWEEN "
-                        + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "'" + ";";
+                        + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "' ";// + ";";
+                if (onlyNotConfirmed) {
+                    query += " AND WR_Host_Confirmed = 0";
+                }
+                query += ";";
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
                 rs16 = stmt16.executeQuery(query);
@@ -2244,7 +2263,13 @@ public class _query {
     //Показываем все выполненные задачи по цеху
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_exectsk(String shop) {
-        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID AND hap.flag_otv = 2 AND hap.flag_oft = 2 AND hap.flag_tm = 2 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+        String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap." +
+                "Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm," +
+                "hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon " +
+                "from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID INNER JOIN hmmr_mu_prior" +
+                " hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name  WHERE " +
+                "hap.flag_otv = 2 AND hap.flag_oft = 2 AND hap.flag_tm = 2 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+        //String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID AND hap.flag_otv = 2 AND hap.flag_oft = 2 AND hap.flag_tm = 2 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
         return fillAPModel(query);
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6440,7 +6465,7 @@ public class _query {
                     }
                 }
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 352!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 6457!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {

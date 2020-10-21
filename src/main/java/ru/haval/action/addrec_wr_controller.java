@@ -1457,7 +1457,6 @@ public class addrec_wr_controller {
 		int time_rezult = Math.abs((int) m_between);
 		
 		wt_rezult1 = data_rezult*24*60 + time_rezult;
-		//System.out.println("HOURS_B = "+hours_b+" MIN_B = "+min_b+" HOURS_E = "+hours_e+" MIN_E = "+min_e+" TIME REZUL = "+time_rezult+" WT REZULT = "+wt_rezult1);
 		return wt_rezult1;
 	}
 }
