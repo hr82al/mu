@@ -194,6 +194,7 @@ public class apwr_controller {
         initSops();
 
         USER_S = scl.parser_str(qr._select_user(conn_connector.USER_ID), 1);//сокращенное имя пользователя из таблицы STAFF
+        System.out.println(USER_S);
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         Double screen_width = primaryScreenBounds.getWidth();
         Double screen_hight = primaryScreenBounds.getHeight();
@@ -1214,6 +1215,7 @@ public class apwr_controller {
         //addButtonToTable();
         addButtonToTable_wp();
 
+        //выгрузка создание и удаление новый записей
         //Получаем текущую дату
         LocalDate date_cur = LocalDate.now();
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1256,6 +1258,7 @@ public class apwr_controller {
                             _activity_type = scl.parser_str(_get_field.get(j), 13);
                             _type = "PM";
                             //if(_record.equals("0")) _insert_ap
+                            //Добавление новых записей в work plan
                             qr._insert_wp(_id_pm, _type, _pmname, _due_date, _shop + "." + _group_eq + "." + _lm + "." + _os + "." + _equip, _instruct, _otf, qr._select_userid_(_otf), _shop, "4M", _pm_exec, _activity_type);
                             //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
                             qr._update_hpy_record(_id, "1");
@@ -1327,7 +1330,7 @@ public class apwr_controller {
             _icon_at_wo = scl.parser_str(_get_data_dly.get(j), 13);
             _type_wo = "PM";
             //На выходных ППР не добавляем в WO
-            if (!date_cur.getDayOfWeek().toString().equals("SATURDAY") && !date_cur.getDayOfWeek().toString().equals("SUNDAY")) //_insert_ap
+            //if (!date_cur.getDayOfWeek().toString().equals("SATURDAY") && !date_cur.getDayOfWeek().toString().equals("SUNDAY")) //_insert_ap
                 qr._insert_ap(_id_pm_wo, _type_wo, _pmname_wo, fx_dp.fromString(_due_date_wo), _shop_wo + "." + _group_eq_wo + "." + _lm_wo + "." + _os_wo + "." + _equip_wo, _instruct_wo, _otf_wo, qr._select_userid_(_otf_wo), _shop_wo, "4M", _pm_exec_wo, _icon_at_wo);
             //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
             qr._update_hpy_record(_id_wo, "1");
