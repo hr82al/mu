@@ -164,7 +164,7 @@ public class apwr_controller {
     TableColumn<hmmr_ap_model, Button> favoriteColumn2 = new TableColumn<hmmr_ap_model, Button>(inst_l);
     TableColumn<hmmr_ap_model, Button> otv = new TableColumn<hmmr_ap_model, Button>(c_resp);
     TableColumn<hmmr_ap_model, Button> oft = new TableColumn<hmmr_ap_model, Button>(c_oft);
-    TableColumn<hmmr_ap_model, Button> tm = new TableColumn<hmmr_ap_model, Button>(c_own);
+    TableColumn<hmmr_ap_model, Button> tm = new TableColumn<hmmr_ap_model, Button>(c_own);//Хозяин задачи
     TableColumn<hmmr_ap_model, JFXButton> prior = new TableColumn<hmmr_ap_model, JFXButton>(prior_img);
     TableColumn<hmmr_ap_model, JFXButton> at = new TableColumn<hmmr_ap_model, JFXButton>(at_title);
     TableColumn<hmmr_wr_model, JFXButton> at_wr = new TableColumn<hmmr_wr_model, JFXButton>(at_title);
@@ -184,7 +184,8 @@ public class apwr_controller {
     final static String[] SHOP_LETTERS = new String[]{"A", "L", "P", "S", "W"};
 
     private Set<String> availableShops;
-    private AtomicBoolean tabeAPUpdateStop = new AtomicBoolean(false);
+    private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
+    private AtomicBoolean updateDBAPStatusRuns = new AtomicBoolean(false);
 
 
     @SuppressWarnings({"unchecked"})
@@ -194,7 +195,6 @@ public class apwr_controller {
         initSops();
 
         USER_S = scl.parser_str(qr._select_user(conn_connector.USER_ID), 1);//сокращенное имя пользователя из таблицы STAFF
-        System.out.println(USER_S);
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         Double screen_width = primaryScreenBounds.getWidth();
         Double screen_hight = primaryScreenBounds.getHeight();
@@ -664,6 +664,7 @@ public class apwr_controller {
 
                             @Override
                             public void handle(ActionEvent event) {
+                                Platform.runLater(() -> {
                                 //Если задачу подтверждает ответственный за задачу
                                 if (qr._select_oft(data.getap_num()).equals(USER_S) && qr._select_status(data.IdProperty().get().substring(2)).equals("Confirmed WR") && !data.getqty()) {
                                     qr._update_oft_wr("1", data.IdProperty().get().substring(2));
@@ -673,28 +674,22 @@ public class apwr_controller {
                                         case 0:
                                         case 2:
                                             table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                                            table_wr.getColumns().get(0).setVisible(false);
-                                            table_wr.getColumns().get(0).setVisible(true);
                                             break;
                                         case 1:
                                             table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
                                             break;
                                         case 3:
                                             table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-                                            table_wr.getColumns().get(0).setVisible(false);
-                                            table_wr.getColumns().get(0).setVisible(true);
                                             break;
                                         case 4:
                                             table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-                                            table_wr.getColumns().get(0).setVisible(false);
-                                            table_wr.getColumns().get(0).setVisible(true);
                                             break;
                                         case 5:
                                             table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
-                                            table_wr.getColumns().get(0).setVisible(false);
-                                            table_wr.getColumns().get(0).setVisible(true);
                                             break;
                                     }
+                                    table_wr.getColumns().get(0).setVisible(false);
+                                    table_wr.getColumns().get(0).setVisible(true);
 									/*if(flag == 1)
 										table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
 									if(flag == 0 || flag == 2) 
@@ -730,19 +725,14 @@ public class apwr_controller {
                                         table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
                                     if (flag == 0 || flag == 2)
                                         table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                                    table_wr.getColumns().get(0).setVisible(false);
-                                    table_wr.getColumns().get(0).setVisible(true);
-
                                     if (flag == 3) {
                                         table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-                                        table_wr.getColumns().get(0).setVisible(false);
-                                        table_wr.getColumns().get(0).setVisible(true);
                                     }
                                     if (flag == 4) {
                                         table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-                                        table_wr.getColumns().get(0).setVisible(false);
-                                        table_wr.getColumns().get(0).setVisible(true);
                                     }
+                                    table_wr.getColumns().get(0).setVisible(false);
+                                    table_wr.getColumns().get(0).setVisible(true);
                                 }
 
                                 //Если задачу подтвердил ее хозяин и если хозяин задачи не совпадает с ответственным за задачу
@@ -753,34 +743,40 @@ public class apwr_controller {
                                         table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
                                     if (flag == 0 || flag == 2)
                                         table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                                    table_wr.getColumns().get(0).setVisible(false);
-                                    table_wr.getColumns().get(0).setVisible(true);
-
                                     if (flag == 3) {
                                         table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-                                        table_wr.getColumns().get(0).setVisible(false);
-                                        table_wr.getColumns().get(0).setVisible(true);
                                     }
                                     if (flag == 4) {
                                         table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-                                        table_wr.getColumns().get(0).setVisible(false);
-                                        table_wr.getColumns().get(0).setVisible(true);
                                     }
+                                    table_wr.getColumns().get(0).setVisible(false);
+                                    table_wr.getColumns().get(0).setVisible(true);
                                 }
 
                                 //Зеленим исполнителя и желтим ответственного таблицы AP, если все подтверждено в WR
                                 if (qr._select_confirm(qr._select_apnum(data.IdProperty().get().substring(2))).equals("YES")) {
-                                    Platform.runLater(() -> {
+
                                         qr._update_delrec_ap(qr._select_apnum(data.IdProperty().get().substring(2)));
                                         //tableAPSetOft(qr._select_apnum(data.IdProperty().get().substring(2)), "2");
+                                        //если хозяин задачи и ответсвенный за задачу одно лицо подтвердить задачу и убрать из ap
+                                        hmmr_ap_model currentAPItem = getAPById(data.ap_numProperty().get());
+
+                                        if (currentAPItem != null && currentAPItem.OFTProperty().get().equals(USER_S)) {
+                                            currentAPItem.setflag_otv("2");
+                                            oftConfirm(currentAPItem);
+                                            if (currentAPItem.tsk_makerProperty().get().equals(USER_S)) {
+                                                currentAPItem.setflag_oft("2");
+                                                tmConfirm(currentAPItem);
+                                            }
+                                        }
                                         setTableAPItems(qr._select_data_ap(USER_S));
                                         table_ap.getColumns().get(0).setVisible(false);
                                         table_ap.getColumns().get(0).setVisible(true);
-                                    });
-
                                 }
+                                });
                             }
                         });
+
                         qr._update_calc_field(data.getId().substring(2));
                         return new SimpleObjectProperty<Button>(btn);
                     }
@@ -971,45 +967,7 @@ public class apwr_controller {
 
                             @Override
                             public void handle(ActionEvent event) {
-                                if (!data.getflag_otv().equals("0") && !data.getflag_otv().equals("1")) {
-                                    //Если задачу подтверждает ответственный за задачу в поле ответственный AP
-                                    if (qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                                        btn.setStyle("-fx-background-color: green");
-                                        //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
-                                        //CECKME
-                                        setTableAPItems(qr._select_data_ap(USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-
-                                    //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
-                                    if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                                        btn.setStyle("-fx-background-color: green");
-                                        //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
-                                        setTableAPItems(qr._select_data_ap(USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-
-                                    //Владелец задачи может ее подтвердить в любом случае
-                                    if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                                        btn.setStyle("-fx-background-color: green");
-                                        //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
-                                        setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-
-                                }
+                                oftConfirm(data);
                             }
                         });
                         return new SimpleObjectProperty<Button>(btn);
@@ -1030,41 +988,7 @@ public class apwr_controller {
                             hmmr_ap_model data = param.getValue();
                             @Override
                             public void handle(ActionEvent event) {
-
-                                if (!data.getflag_otv().equals("0") && !data.getflag_oft().equals("0")) {
-                                    //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
-                                    if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
-                                        btn.setStyle("-fx-background-color: green");
-
-                                        setTableAPItems(qr._select_data_ap(USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-
-                                    //Владелец задачи может ее подтвердить в любом случае
-                                    if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
-                                        btn.setStyle("-fx-background-color: green");
-
-                                        setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-
-                                    //Владелец задачи может ее подтвердить в любом случае, даже если она только подтверждена из WR
-                                    if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_otv().equals("2") || qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_oft().equals("1") || qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_oft().equals("2")) {
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
-                                        qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                                        btn.setStyle("-fx-background-color: green");
-                                        //qr._update_calc_field(getId().substring(2));
-                                        qr._update_deleterec_ap(data.getId().substring(2));
-                                        setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
-                                    }
-                                }
+                                tmConfirm(data);
                             }
                         });
                         return new SimpleObjectProperty<>(btn);
@@ -2815,18 +2739,18 @@ public class apwr_controller {
 				}*/
     public void updateTableAPInBackground() {
         //init table in a background thread
-        tabeAPUpdateStop.set(true);
+        tableAPUpdateStop.set(true);
         Thread thread = new Thread(() -> {
             synchronized (apwr_controller.class) {
-                tabeAPUpdateStop.set(false);
+                tableAPUpdateStop.set(false);
                 for (hmmr_ap_model item : table_ap.getItems()) {
-                    if (tabeAPUpdateStop.get())
+                    if (tableAPUpdateStop.get())
                         break;
                     item.init();
                 }
             }
         });
-        AtomicBoolean updateDBAPStatusRuns = new AtomicBoolean(false);
+
         Thread thread1 = new Thread(() -> {
 
             synchronized (apwr_controller.class) {
@@ -2840,10 +2764,98 @@ public class apwr_controller {
         thread.setPriority(Thread.MIN_PRIORITY);
         thread1.setPriority(Thread.MIN_PRIORITY);
         thread.setDaemon(true);
-        thread1.setDaemon(true);
         if (!updateDBAPStatusRuns.get()) {
             thread1.start();
         }
         thread.start();
+    }
+
+    public void oftConfirm(hmmr_ap_model data) {
+        Button btn = data.getOft();
+        if (!data.getflag_otv().equals("0") && !data.getflag_otv().equals("1")) {
+            //Если задачу подтверждает ответственный за задачу в поле ответственный AP
+            if (qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
+                qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
+                btn.setStyle("-fx-background-color: green");
+                //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
+                //CECKME
+                setTableAPItems(qr._select_data_ap(USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+
+            //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
+            if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
+                qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
+                btn.setStyle("-fx-background-color: green");
+                //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
+                setTableAPItems(qr._select_data_ap(USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+
+            //Владелец задачи может ее подтвердить в любом случае
+            if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
+                qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
+                btn.setStyle("-fx-background-color: green");
+                //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
+                setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+        }
+    }
+
+    public void tmConfirm(hmmr_ap_model data) {
+        Button btn = data.getTm();
+        if (!data.getflag_otv().equals("0") && !data.getflag_oft().equals("0")) {
+            //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
+            if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
+                btn.setStyle("-fx-background-color: green");
+
+                setTableAPItems(qr._select_data_ap(USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+
+            //Владелец задачи может ее подтвердить в любом случае
+            if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
+                btn.setStyle("-fx-background-color: green");
+
+                setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+
+            //Владелец задачи может ее подтвердить в любом случае, даже если она только подтверждена из WR
+            if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_otv().equals("2") || qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_oft().equals("1") || qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && data.getflag_oft().equals("2")) {
+                qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
+                qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
+                qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
+                btn.setStyle("-fx-background-color: green");
+                qr._update_calc_field(data.getId().substring(2));
+                qr._update_deleterec_ap(data.getId().substring(2));
+                setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+                table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);
+            }
+        }
+    }
+
+    public hmmr_ap_model getAPById(String findID) {
+        for (hmmr_ap_model item : table_ap.getItems()) {
+            if (item.IdProperty().get().substring(2).equals(findID)) {
+                return item;
+            }
+        }
+        return null;
     }
 }
