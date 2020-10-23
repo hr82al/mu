@@ -46,6 +46,8 @@ public class hmmr_ap_model {
     public SimpleStringProperty user_id = new SimpleStringProperty();
     public SimpleStringProperty prior_img = new SimpleStringProperty();
     public SimpleStringProperty AT_img = new SimpleStringProperty();
+    public SimpleStringProperty priorDescription = new SimpleStringProperty();
+    public SimpleStringProperty ATDescription = new SimpleStringProperty();
 
 	public Button otv = null;
 	public Button oft = null;
@@ -64,6 +66,7 @@ public class hmmr_ap_model {
     private static HashMap<String, Image> atImages = new HashMap<>();
     //private static HashMap<String, String>  pathToAtImg = new HashMap<>();
     private static HashMap<String, String> priorDescriptions = new HashMap<>();
+
 
     public void init() {
         //init tm owner
@@ -160,16 +163,12 @@ public class hmmr_ap_model {
             } catch (IOException e) {
                 scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
             }
-            String tmpID = getId().substring(2);
-            if (!priorDescriptions.containsKey(tmpID)) {
-                priorDescriptions.put(tmpID, qr._select_prior_desc(tmpID));
-            }
 
             iv.setOnMouseEntered(new EventHandler<Event>() {
 
                 @Override
                 public void handle(Event event) {
-                    tooltip.setText(priorDescriptions.get(tmpID));
+                    tooltip.setText(priorDescriptionProperty().get());
                     tooltip.setStyle("-fx-font-size: 14px");
                     Tooltip.install(iv, tooltip);
                 }
@@ -212,6 +211,7 @@ public class hmmr_ap_model {
                 @Override
                 public void handle(Event event) {
                     tooltip2.setText(qr._select_at_desc(getId().substring(2)));
+                    tooltip2.setText(ATDescriptionProperty().get());
                     tooltip2.setStyle("-fx-font-size: 14px");
                     Tooltip.install(iv2, tooltip2);
                 }
@@ -599,7 +599,31 @@ public class hmmr_ap_model {
     {
     	return icon_at;
     }
-    
+
+    public String getPriorDescription() {
+        return priorDescription.get();
+    }
+
+    public SimpleStringProperty priorDescriptionProperty() {
+        return priorDescription;
+    }
+
+    public void setPriorDescription(String priorDescription) {
+        this.priorDescription.set(priorDescription);
+    }
+
+    public String getATDescription() {
+        return ATDescription.get();
+    }
+
+    public SimpleStringProperty ATDescriptionProperty() {
+        return ATDescription;
+    }
+
+    public void setATDescription(String ATDescription) {
+        this.ATDescription.set(ATDescription);
+    }
+
     public void seticon_at(String icon_at) {
         this.icon_at.set(icon_at);
     }

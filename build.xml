@@ -4,7 +4,7 @@
     <property name="src" value="src"/>
     <property name="build" value="target/build"/>
     <property name="dist" value="target/dist"/>
-    <property name = "project.version" value="1.008"/>
+    <property name = "project.version" value="1.009"/>
     <property name="jar.name" value="mu${project.version}"/>
     <property name="jar.lib" value="lib"/>
     <property name="jar.manifest.libs" value="lib"/>
