@@ -5,9 +5,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ru.haval.action.*;
 import ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import ru.haval.dir.Cycle;
 import ru.haval.dir.Hmmr_OrderType_Model;
 import ru.haval.dir.Hmmr_PartCharDir_Model;
@@ -396,6 +399,7 @@ public class _query {
     }
 
     private ObservableList<hmmr_ap_model> fillAPModel(String query) {
+
         synchronized (_query.class) {
             ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
             try {
@@ -427,7 +431,7 @@ public class _query {
                         hpm.icon.set(rs12.getString(14));
                         hpm.icon_at.set(rs12.getString(15));
                         hpm.user_id.set(rs12.getString(16));
-                        hpm.prior_img.set(rs12.getString(17));
+                        hpm.prior_img.set(correctPathToInstr(rs12.getString(17)));
                         hpm.AT_img.set(rs12.getString(18));
                         hpm.priorDescription.set(rs12.getString(19));
 
@@ -1994,6 +1998,7 @@ public class _query {
             ObservableList<String> list = FXCollections.observableArrayList();
             try {
                 //String query = "select hpy.data, hpy.OFT, pi.Src_Doc, hp.Shop, hp.Line_Machine, hp.Operation_Station, hp.Equipment, hp.id, hp.PM_Name, hpy.record_del, hpy.id, hp.Group_PM from hmmr_pm_year hpy INNER JOIN hmmr_pm hp ON hpy.PM = hp.id INNER JOIN pm_inst pi ON hp.num_instruction = pi.num_instruction;";
+                //Для новой записи в Work Plan
                 String query = "select hpy.data, hpy.OFT, pi.Link_instruction_PDF, hp.id, hp.PM_Group, pi.PM_name, hps.FL03_Shop_s, hps.FL04_Group_s, hps.FL05_Line_s, hps.FL06_Station_s, hps.FL07_Equipment_s, hpy.id, hp.PM_Executor, pi.Type_PM from hmmr_pm_year hpy INNER JOIN hmmr_pm hp ON hp.PM_Group = hpy.PM_Group INNER JOIN hmmr_plant_structure hps ON hps.id = hp.Eq_ID INNER JOIN pm_inst pi ON hp.Instruction_num = pi.num_instruction INNER JOIN hmmr_group_cycle hgc ON hgc.PM_Group = hpy.PM_Group where hpy.record_del = 0 AND hgc.PM_Duration <> 0 AND hgc.Date_Beforehand <> 0 AND hpy.data = " + "'" + data + "'" + " GROUP BY hp.id;";
 
                 cn.ConToDb();
@@ -6425,9 +6430,12 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_without_otv(String shop) {
-        String query   = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hpm.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID WHERE hap.Otv = 'need select' AND hap.del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+        String query   = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hmp.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID WHERE hap.Otv = 'need select' AND hap.del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
         //String query = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon, hap.user_id                                 from hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID WHERE hap.Otv = 'need select' AND del_rec = 0 AND if( " + "'" + shop + "'" + "='S' || " + "'" + shop + "'" + "='W', hms.Group_S='S,W', hms.Group_S=" + "'" + shop + "'" + ");";
+
         return fillAPModel(query);
+
+        //INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK
     }
 
     private ObservableList<hmmr_ap_model> fillAPModelWithoutOtv(String query) {
@@ -9501,5 +9509,19 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
             }
         }
+    }
+    private static String correctPathToInstr(String path) {
+        if (path.length() < 2) {
+            return path;
+        }
+/*        if (path.charAt(1) == ':') {
+            return "//" + Config.getInstance().getAddress() + "/mu/" + path.substring(3);
+        }*/
+        Pattern pattern = Pattern.compile("^//\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/");
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            return "//" + Config.getInstance().getAddress() + "/" + path.substring(matcher.end());
+        }
+        return path;
     }
 }

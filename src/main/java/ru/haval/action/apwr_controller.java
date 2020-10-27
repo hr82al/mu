@@ -133,7 +133,7 @@ public class apwr_controller {
     private String _due_date_wo, _instruct_wo, _shop_wo, _lm_wo, _os_wo, _equip_wo, _id_pm_wo, _pmname_wo, _type_wo, _otf_wo, _id_wo, _group_pm_wo, _sql_rez_wo, _group_eq_wo, _pm_exec_wo, _icon_at_wo;
     public Stage stage = new Stage();
     //Thread t, b;
-    private HashMap<String, Image> priorImages = new HashMap<>();
+    private static HashMap<String, Image> priorImages = new HashMap<>();
     private boolean _flag = true;
     public static ObservableList<TableColumn<hmmr_wr_model, ?>> columns_wr;
     public static ObservableList<TableColumn<hmmr_ap_model, ?>> columns_ap;
@@ -1003,7 +1003,38 @@ public class apwr_controller {
 			prior.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton>, ObservableValue<JFXButton>>() {
 				@Override
 				public ObservableValue<JFXButton> call(TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton> param) {
-					return new SimpleObjectProperty<>(param.getValue().getPrior());
+				    hmmr_ap_model data = param.getValue();
+                    Tooltip tooltip = new Tooltip();
+                    JFXButton iv = new JFXButton();
+                    //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                    iv.setFocusTraversable(false);
+
+
+
+                    BufferedImage bufferedImage;
+                    try {
+                        if (!data.geticon().equals("1")) {
+                            if (!priorImages.containsKey(data.getPrior_img())) {
+                                bufferedImage = ImageIO.read(new File(data.getPrior_img()));
+                                priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
+                            }
+                            Image image = priorImages.get(data.getPrior_img());;
+                            iv.setGraphic(new ImageView(image));
+                        }
+                    } catch (IOException e) {
+                        scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
+                    }
+
+                    iv.setOnMouseEntered(new EventHandler<Event>() {
+
+                        @Override
+                        public void handle(Event event) {
+                            tooltip.setText(data.priorDescriptionProperty().get());
+                            tooltip.setStyle("-fx-font-size: 14px");
+                            Tooltip.install(iv, tooltip);
+                        }
+                    });
+					return new SimpleObjectProperty<>(iv);
 				}
 			});
 
@@ -1142,6 +1173,7 @@ public class apwr_controller {
         //выгрузка создание и удаление новый записей
         //Получаем текущую дату
         LocalDate date_cur = LocalDate.now();
+        //date_cur = LocalDate.of(2020, 10, 25);
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         _chk.addAll(qr._select_pmplan());
         for (int i = 0; i < _chk.size(); i++) {
@@ -1231,6 +1263,7 @@ public class apwr_controller {
             table_wp.setItems(qr._select_data_wp(USER_S));
             table_wp.getColumns().get(0).setVisible(false);
             table_wp.getColumns().get(0).setVisible(true);
+
         }
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Ежедневный ППР добавляем напрямую в WO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1258,6 +1291,7 @@ public class apwr_controller {
                 qr._insert_ap(_id_pm_wo, _type_wo, _pmname_wo, fx_dp.fromString(_due_date_wo), _shop_wo + "." + _group_eq_wo + "." + _lm_wo + "." + _os_wo + "." + _equip_wo, _instruct_wo, _otf_wo, qr._select_userid_(_otf_wo), _shop_wo, "4M", _pm_exec_wo, _icon_at_wo);
             //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
             qr._update_hpy_record(_id_wo, "1");
+
         }
         _get_data_dly.removeAll(_get_data_dly);
         table_ap.getColumns().get(0).setVisible(false);

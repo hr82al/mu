@@ -52,7 +52,6 @@ public class hmmr_ap_model {
 	public Button otv = null;
 	public Button oft = null;
 	public Button tm = null;
-	public JFXButton prior = null;
 	public JFXButton at = null;
 	public Button apInstr = null;
 
@@ -61,7 +60,7 @@ public class hmmr_ap_model {
     private static _query qr = new _query();
 	private static s_class scl = new s_class();
 
-    private static HashMap<String, Image> priorImages = new HashMap<>();
+
     //private static HashMap<String, String> pathToPriorImg = new HashMap<>();
     private static HashMap<String, Image> atImages = new HashMap<>();
     //private static HashMap<String, String>  pathToAtImg = new HashMap<>();
@@ -128,52 +127,6 @@ public class hmmr_ap_model {
 
             //qr._update_calc_field(getId().substring(2));
             setOtv(bOtv);
-        }
-
-        //init Prior
-        if(prior == null) {
-            Tooltip tooltip = new Tooltip();
-            JFXButton iv = new JFXButton();
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            iv.setFocusTraversable(false);
-
-
-            //       String test = data.geticon();
-            BufferedImage bufferedImage;
-            try {
-                if (!geticon().equals("1")) {
-                    /*if (!pathToPriorImg.containsKey(geticon())) {
-                        pathToPriorImg.put(geticon(), qr._select_prior_img(geticon()));
-                    }
-                    String tmpIcon = pathToPriorImg.get(geticon());
-                    if (!priorImages.containsKey(tmpIcon)) {
-                        bufferedImage = ImageIO.read(new File(tmpIcon));
-                        priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
-                    }*/
-                    String pathPrior = correctPathToInstr(getPrior_img());
-                    if (!priorImages.containsKey(pathPrior)) {
-                        bufferedImage = ImageIO.read(new File(pathPrior));
-                        priorImages.put(pathPrior, SwingFXUtils.toFXImage(bufferedImage, null));
-                    }
-                    Image image = priorImages.get(pathPrior);
-
-                    //iv.setImage(image);
-                    iv.setGraphic(new ImageView(image));
-                }
-            } catch (IOException e) {
-                scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
-            }
-
-            iv.setOnMouseEntered(new EventHandler<Event>() {
-
-                @Override
-                public void handle(Event event) {
-                    tooltip.setText(priorDescriptionProperty().get());
-                    tooltip.setStyle("-fx-font-size: 14px");
-                    Tooltip.install(iv, tooltip);
-                }
-            });
-            setPrior(iv);
         }
 
         //init At
