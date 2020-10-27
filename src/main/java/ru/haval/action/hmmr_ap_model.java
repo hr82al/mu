@@ -2,7 +2,6 @@ package ru.haval.action;
 
 import ru.haval.application.Main;
 
-import javafx.event.ActionEvent;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -49,11 +48,8 @@ public class hmmr_ap_model {
     public SimpleStringProperty priorDescription = new SimpleStringProperty();
     public SimpleStringProperty ATDescription = new SimpleStringProperty();
 
-	public Button otv = null;
 	public Button oft = null;
 	public Button tm = null;
-	public JFXButton at = null;
-	public Button apInstr = null;
 
     private static Main mn = new Main();
 
@@ -62,9 +58,9 @@ public class hmmr_ap_model {
 
 
     //private static HashMap<String, String> pathToPriorImg = new HashMap<>();
-    private static HashMap<String, Image> atImages = new HashMap<>();
+
     //private static HashMap<String, String>  pathToAtImg = new HashMap<>();
-    private static HashMap<String, String> priorDescriptions = new HashMap<>();
+    //private static HashMap<String, String> priorDescriptions = new HashMap<>();
 
 
     public void init() {
@@ -107,112 +103,6 @@ public class hmmr_ap_model {
 
             //qr._update_calc_field(data.getId().substring(2));
             setOft(bOft);
-        }
-        //init otv
-        if (otv == null) {
-            Button bOtv = new Button();
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            bOtv.setFocusTraversable(false);
-            //устанавливаем номер ар в текст кнопки
-            bOtv.setText("");
-            bOtv.setPrefWidth(BUTTON_WIDTH);
-            bOtv.setPrefHeight(35);
-            bOtv.setText(getOTV());
-
-            //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
-            if(user_id.get().equals(conn_connector.USER_ID) || OFT.get().equals(apwr_controller.USER_S))
-                bOtv.setDisable(false);
-            else
-                bOtv.setDisable(true);
-
-            //qr._update_calc_field(getId().substring(2));
-            setOtv(bOtv);
-        }
-
-        //init At
-        if (at == null) {
-            Tooltip tooltip2 = new Tooltip();
-            JFXButton iv2 = new JFXButton();
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            iv2.setFocusTraversable(false);
-            BufferedImage bufferedImage2;
-            try {
-                if (!geticon_at().equals("1")) {
-                    /*if (!pathToAtImg.containsKey(geticon())) {
-                        pathToAtImg.put(geticon_at(), qr._select_recStr("hmmr_activity_type", "Icon",
-                                "del_rec", "Name", geticon_at()));
-                        String tmpIcon = pathToAtImg.get(geticon_at());
-
-                        if (!atImages.containsKey(tmpIcon)) {
-                            bufferedImage2 = ImageIO.read(new File(tmpIcon));
-                            atImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage2, null));
-                        }
-                    }*/
-                    String pathAT = correctPathToInstr(AT_img.get());
-                    if (!atImages.containsKey(pathAT)) {
-                        bufferedImage2 = ImageIO.read(new File(pathAT));
-                        atImages.put(pathAT, SwingFXUtils.toFXImage(bufferedImage2, null));
-                    }
-                    Image image = atImages.get(pathAT);
-                    iv2.setGraphic(new ImageView(image));
-                }
-            } catch (IOException e) {
-                scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
-            }
-            iv2.setOnMouseEntered(new EventHandler<Event>() {
-
-                @Override
-                public void handle(Event event) {
-                    tooltip2.setText(qr._select_at_desc(getId().substring(2)));
-                    tooltip2.setText(ATDescriptionProperty().get());
-                    tooltip2.setStyle("-fx-font-size: 14px");
-                    Tooltip.install(iv2, tooltip2);
-                }
-            });
-            setAt(iv2);
-        }
-
-        //init apInstr
-        if (apInstr == null) {
-            Button btn = new Button();
-            setinst_btn(correctPathToInstr(getinst_btn()));
-
-            if (getinst_btn().equals("-") || getinst_btn().equals("null"))
-                btn.setDisable(true);
-            else {
-                File file = new File(getinst_btn());
-                if (file.exists()) {
-                    btn.setDisable(false);
-                } else {
-                    btn.setDisable(true);
-                }
-            }
-
-            btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("document.png"))));
-
-            //устанавливаем checkbox если в базе в этом поле стоит 1
-            //     btn.setText(data.getap_num());
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            //btn.setFocusTraversable(false);
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-
-                @SuppressWarnings("static-access")
-                @Override
-                public void handle(ActionEvent event) {
-                    //FIXME Need to change other cells
-                    try {
-                        File inst_path = new File(qr._select_inst_for_ap(getId()));//table_ap.getSelectionModel().getSelectedItem()
-                        mn._run_excel(inst_path);
-                    } catch (Exception e) {
-                        scl._AlertDialog("Сначала выделите строку!", "Ошибка!");
-                    }
-//			                    	Runtime runtime = Runtime.getRuntime();
-//			                    	if(inst_path.length() != 0)
-//										runtime.exec("excel " + inst_path);
-                    //btn.setDisable(true);
-                }
-            });
-            setApInstr(btn);
         }
     }
 
@@ -263,56 +153,6 @@ public class hmmr_ap_model {
 
     public void setOft(Button oft) {
         this.oft = oft;
-    }
-
-    public Button getOtv() {
-        if (otv == null) {
-            init();
-        }
-        // Check if the button changed color
-        //Если Все записи в WR по этой задаче подтверждены то ставим кнопку в AP на исполнителе желтой
-        if (getflag_otv().equals("2"))
-            otv.setStyle("-fx-background-color: green");
-        else if (getflag_otv().equals("1"))
-            otv.setStyle("-fx-background-color: yellow");
-        return otv;
-    }
-
-    public void setOtv(Button otv) {
-        this.otv = otv;
-    }
-
-    public JFXButton getPrior() {
-        if (prior == null) {
-            init();
-        }
-        return prior;
-    }
-
-    public void setPrior(JFXButton prior) {
-        this.prior = prior;
-    }
-
-    public JFXButton getAt() {
-        if (at == null) {
-            init();
-        }
-        return at;
-    }
-
-    public void setAt(JFXButton at) {
-        this.at = at;
-    }
-
-    public Button getApInstr() {
-        if (apInstr == null) {
-            init();
-        }
-        return apInstr;
-    }
-
-    public void setApInstr(Button apInstr) {
-        this.apInstr = apInstr;
     }
 
     public hmmr_ap_model()
@@ -582,7 +422,6 @@ public class hmmr_ap_model {
     }
     public void update(){
         tm = null;
-        otv = null;
         oft = null;
         init();
     }

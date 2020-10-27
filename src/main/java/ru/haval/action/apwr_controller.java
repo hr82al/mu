@@ -134,6 +134,7 @@ public class apwr_controller {
     public Stage stage = new Stage();
     //Thread t, b;
     private static HashMap<String, Image> priorImages = new HashMap<>();
+    private static HashMap<String, Image> atImages = new HashMap<>();
     private boolean _flag = true;
     public static ObservableList<TableColumn<hmmr_wr_model, ?>> columns_wr;
     public static ObservableList<TableColumn<hmmr_ap_model, ?>> columns_ap;
@@ -182,6 +183,7 @@ public class apwr_controller {
     private JFXButton[] shopButtons;
 
     final static String[] SHOP_LETTERS = new String[]{"A", "L", "P", "S", "W"};
+    private static int BUTTON_WIDTH = 50;
 
     private Set<String> availableShops;
     private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
@@ -948,7 +950,31 @@ public class apwr_controller {
 
                     @Override
                     public ObservableValue<Button> call(TableColumn.CellDataFeatures<hmmr_ap_model, Button> param) {
-                        return new SimpleObjectProperty<Button>(param.getValue().getOtv());
+                        hmmr_ap_model data = param.getValue();
+                        Button bOtv = new Button();
+
+                        // Check if the button changed color
+                        //Если Все записи в WR по этой задаче подтверждены то ставим кнопку в AP на исполнителе желтой
+                        if (data.getflag_otv().equals("2"))
+                            bOtv.setStyle("-fx-background-color: green");
+                        else if (data.getflag_otv().equals("1"))
+                            bOtv.setStyle("-fx-background-color: yellow");
+
+                        //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                        bOtv.setFocusTraversable(false);
+                        //устанавливаем номер ар в текст кнопки
+                        bOtv.setText("");
+                        bOtv.setPrefWidth(BUTTON_WIDTH);
+                        bOtv.setPrefHeight(35);
+                        bOtv.setText(data.getOTV());
+
+                        //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
+                        if(data.user_id.get().equals(conn_connector.USER_ID) || data.OFT.get().equals(apwr_controller.USER_S))
+                            bOtv.setDisable(false);
+                        else
+                            bOtv.setDisable(true);
+
+                        return new SimpleObjectProperty<Button>(bOtv);
                     }
 
                 });
@@ -1043,55 +1069,39 @@ public class apwr_controller {
         //columns_prior.add(prior);
 
         final ObservableList<TableColumn<hmmr_ap_model, ?>> columns_at = table_ap.getColumns();
-        /*at.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton>, ObservableValue<JFXButton>>() {
-                    Tooltip tooltip = new Tooltip();
-
-                    @SuppressWarnings("static-access")
-                    @Override
-                    public ObservableValue<JFXButton> call(TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton> arg0) {
-                        hmmr_ap_model data = arg0.getValue();
-                        JFXButton iv = new JFXButton();
-                        //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-                        iv.setFocusTraversable(false);
-
-
-                        // String test = data.geticon_at();
-                        BufferedImage bufferedImage;
-                        try {
-                            if (!data.geticon_at().equals("1")) {
-                                String tmpIcon = qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at());
-                                if (!priorImages.containsKey(tmpIcon)) {
-                                    bufferedImage = ImageIO.read(new File(tmpIcon));
-                                    priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
-                                }
-                                Image image = priorImages.get(tmpIcon);
-                                //iv.setImage(image);
-                                iv.setGraphic(new ImageView(image));
-                            }
-                        } catch (IOException e) {
-                            scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
-                        }
-                        iv.setOnMouseEntered(new EventHandler<Event>() {
-
-                            @Override
-                            public void handle(Event event) {
-                                tooltip.setText(qr._select_at_desc(data.getId().substring(2)));
-                                tooltip.setStyle("-fx-font-size: 14px");
-                                Tooltip.install(iv, tooltip);
-                            }
-                        });
-
-                        return new SimpleObjectProperty<JFXButton>(iv);
-                    }
-
-                });*/
 		at.setStyle("-fx-alignment: CENTER;");
-
 			at.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton>, ObservableValue<JFXButton>>() {
 				@Override
 				public ObservableValue<JFXButton> call(TableColumn.CellDataFeatures<hmmr_ap_model, JFXButton> param) {
-					return new SimpleObjectProperty<>(param.getValue().getAt());
+				    hmmr_ap_model data = param.getValue();
+                    Tooltip tooltip2 = new Tooltip();
+                    JFXButton iv2 = new JFXButton();
+                    //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                    iv2.setFocusTraversable(false);
+                    BufferedImage bufferedImage2;
+                    try {
+                        if (!data.geticon_at().equals("1")) {
+                            if (!atImages.containsKey(data.AT_img.get())) {
+                                bufferedImage2 = ImageIO.read(new File(data.AT_img.get()));
+                                atImages.put(data.AT_img.get(), SwingFXUtils.toFXImage(bufferedImage2, null));
+                            }
+                            Image image = atImages.get(data.AT_img.get());
+                            iv2.setGraphic(new ImageView(image));
+                        }
+                    } catch (IOException e) {
+                        scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
+                    }
+                    iv2.setOnMouseEntered(new EventHandler<Event>() {
+
+                        @Override
+                        public void handle(Event event) {
+                            tooltip2.setText(qr._select_at_desc(data.getId().substring(2)));
+                            tooltip2.setText(data.ATDescriptionProperty().get());
+                            tooltip2.setStyle("-fx-font-size: 14px");
+                            Tooltip.install(iv2, tooltip2);
+                        }
+                    });
+					return new SimpleObjectProperty<>(iv2);
 				}
 			});
 
@@ -1104,7 +1114,37 @@ public class apwr_controller {
                     new Callback<TableColumn.CellDataFeatures<hmmr_ap_model, Button>, ObservableValue<Button>>() {
                         @Override
                         public ObservableValue<Button> call(TableColumn.CellDataFeatures<hmmr_ap_model, Button> param) {
-                            return new SimpleObjectProperty<Button>(param.getValue().getApInstr());
+                            hmmr_ap_model data = param.getValue();
+                            Button btn = new Button();
+
+
+                            if (data.getinst_btn().equals("-") || data.getinst_btn().equals("null"))
+                                btn.setDisable(true);
+                            else {
+                                btn.setDisable(false);
+                            }
+
+                            btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("document.png"))));
+
+                            //устанавливаем checkbox если в базе в этом поле стоит 1
+                            //     btn.setText(data.getap_num());
+                            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                            //btn.setFocusTraversable(false);
+                            btn.setOnAction(new EventHandler<ActionEvent>() {
+
+                                @SuppressWarnings("static-access")
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    //FIXME Need to change other cells
+                                    try {
+                                        File inst_path = new File(qr._select_inst_for_ap(data.getId()));//table_ap.getSelectionModel().getSelectedItem()
+                                        mn._run_excel(inst_path);
+                                    } catch (Exception e) {
+                                        scl._AlertDialog("Сначала выделите строку!", "Ошибка!");
+                                    }
+                                }
+                            });
+                            return new SimpleObjectProperty<Button>(btn);
                         }
                     });
 

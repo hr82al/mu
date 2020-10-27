@@ -1,5 +1,6 @@
 package ru.haval.db;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -421,7 +422,7 @@ public class _query {
                         hpm.Desc.set(rs12.getString(4));
                         hpm.Due_Date.set(rs12.getString(5));
                         hpm.Equip.set(rs12.getString(6));
-                        hpm.inst_btn.set(rs12.getString(7));
+                        hpm.inst_btn.set(correctPathToInstr(rs12.getString(7)));
                         hpm.OFT.set(rs12.getString(8));
                         hpm.OTV.set(rs12.getString(9));
                         hpm.tsk_maker.set(rs12.getString(10));
@@ -432,7 +433,7 @@ public class _query {
                         hpm.icon_at.set(rs12.getString(15));
                         hpm.user_id.set(rs12.getString(16));
                         hpm.prior_img.set(correctPathToInstr(rs12.getString(17)));
-                        hpm.AT_img.set(rs12.getString(18));
+                        hpm.AT_img.set(correctPathToInstr(rs12.getString(18)));
                         hpm.priorDescription.set(rs12.getString(19));
 
                         list.add(hpm);
@@ -9511,6 +9512,7 @@ public class _query {
         }
     }
     private static String correctPathToInstr(String path) {
+        String out = "-";
         if (path.length() < 2) {
             return path;
         }
@@ -9520,8 +9522,12 @@ public class _query {
         Pattern pattern = Pattern.compile("^//\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/");
         Matcher matcher = pattern.matcher(path);
         if (matcher.find()) {
-            return "//" + Config.getInstance().getAddress() + "/" + path.substring(matcher.end());
+            out = "//" + Config.getInstance().getAddress() + "/" + path.substring(matcher.end());
         }
-        return path;
+        File file = new File(path);
+        if (!file.exists()) {
+            out = "-";
+        }
+        return out;
     }
 }
