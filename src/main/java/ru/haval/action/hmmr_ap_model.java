@@ -1,15 +1,9 @@
 package ru.haval.action;
 
-import ru.haval.application.Main;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
-import ru.haval.application.conn_connector;
-import ru.haval.config.Config;
-import ru.haval.db._query;
-import ru.haval.share_class.s_class;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class hmmr_ap_model {
     private static int BUTTON_WIDTH = 50;

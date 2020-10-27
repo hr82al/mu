@@ -545,7 +545,7 @@ public class apwr_controller {
                         setTableAPItems(qr._select_data_without_otv(SHOP_NAME_A));
                         tableCellAlignCenter_green(dd_ap);
                     } else {
-                        setTableAPItems(qr._select_data_without_otv(SHOP_NAME));
+                        setTableAPItems(qr._select_data_without_otv(scl.parser_str(qr._select_user(conn_connector.USER_ID), 5)));
                         tableCellAlignCenter_green(dd_ap);
                     }
 
@@ -975,6 +975,14 @@ public class apwr_controller {
                         hmmr_ap_model data = param.getValue();
 
                         Button bOft = new Button();
+
+                        // Check if the button changed color
+                        //Если Все записи в WR по этой задаче подтверждены то ставим кнопку в AP на исполнителе желтой
+                        if (data.getflag_oft().equals("2"))
+                            bOft.setStyle("-fx-background-color: green");
+                        else if (data.getflag_oft().equals("1"))
+                            bOft.setStyle("-fx-background-color: yellow");
+
                         //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                         bOft.setFocusTraversable(false);
                         //устанавливаем номер ар в текст кнопки
@@ -1016,9 +1024,9 @@ public class apwr_controller {
 
                         //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на владельце за задачу зеленой
                         if (data.getflag_tm().equals("2"))
-                            tm.setStyle("-fx-background-color: green");
+                            bTm.setStyle("-fx-background-color: green");
                         else if (data.getflag_tm().equals("1"))
-                            tm.setStyle("-fx-background-color: yellow");
+                            bTm.setStyle("-fx-background-color: yellow");
 
                         //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                         bTm.setFocusTraversable(false);
@@ -1239,7 +1247,7 @@ public class apwr_controller {
         //выгрузка создание и удаление новый записей
         //Получаем текущую дату
         LocalDate date_cur = LocalDate.now();
-        //date_cur = LocalDate.of(2020, 10, 25);
+        //date_cur = LocalDate.of(2020, 11, 3);
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         _chk.addAll(qr._select_pmplan());
         for (int i = 0; i < _chk.size(); i++) {
