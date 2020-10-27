@@ -2,25 +2,12 @@ package ru.haval.action;
 
 import ru.haval.application.Main;
 
-import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
 import ru.haval.db._query;
 import ru.haval.share_class.s_class;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,111 +35,23 @@ public class hmmr_ap_model {
     public SimpleStringProperty priorDescription = new SimpleStringProperty();
     public SimpleStringProperty ATDescription = new SimpleStringProperty();
 
-	public Button oft = null;
-	public Button tm = null;
-
-    private static Main mn = new Main();
-
-    private static _query qr = new _query();
-	private static s_class scl = new s_class();
-
-
-    //private static HashMap<String, String> pathToPriorImg = new HashMap<>();
-
-    //private static HashMap<String, String>  pathToAtImg = new HashMap<>();
-    //private static HashMap<String, String> priorDescriptions = new HashMap<>();
-
-
-    public void init() {
-        //init tm owner
-        if (tm == null) {
-            Button bTm = new Button();
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            bTm.setFocusTraversable(false);
-            //устанавливаем номер ар в текст кнопки
-            bTm.setText("");
-            bTm.setPrefWidth(BUTTON_WIDTH);
-            bTm.setPrefHeight(35);
-            bTm.setText(gettsk_maker());
-
-            //Подтверждать задачу может только тот кто ее создал
-            if (user_id.get().equals(conn_connector.USER_ID)) //|| qr._select_oft(data.getId().substring(2)).equals(USER_S))
-                bTm.setDisable(false);
-            else
-                bTm.setDisable(true);
-
-            setTm(bTm);
-        }
-        //init oft
-        if (oft == null) {
-            Button bOft = new Button();
-            //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-            bOft.setFocusTraversable(false);
-            //устанавливаем номер ар в текст кнопки
-            bOft.setText("");
-            bOft.setPrefWidth(BUTTON_WIDTH);
-            bOft.setPrefHeight(35);
-            bOft.setText(getOFT());
-
-
-            //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
-            if (user_id.get().equals(conn_connector.USER_ID) || OFT.get().equals(apwr_controller.USER_S))
-                bOft.setDisable(false);
-            else
-                bOft.setDisable(true);
-
-            //qr._update_calc_field(data.getId().substring(2));
-            setOft(bOft);
-        }
-    }
-
-    private String correctPathToInstr(String path) {
-        if (path.length() < 2) {
-            return path;
-        }
-/*        if (path.charAt(1) == ':') {
-            return "//" + Config.getInstance().getAddress() + "/mu/" + path.substring(3);
-        }*/
-        Pattern pattern = Pattern.compile("^//\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/");
-        Matcher matcher = pattern.matcher(path);
-        if (matcher.find()) {
-            return "//" + Config.getInstance().getAddress() + "/" + path.substring(matcher.end());
-        }
-        return path;
-    }
-
-    public Button getTm() {
-        if (tm == null) {
-            init();
-        }
-
-        //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на владельце за задачу зеленой
-        if (getflag_tm().equals("2"))
-            tm.setStyle("-fx-background-color: green");
-        else if (getflag_tm().equals("1"))
-            tm.setStyle("-fx-background-color: yellow");
-        return tm;
-    }
-
-    public void setTm(Button tm) {
-
-        this.tm = tm;
-    }
+    private Button oft;
+	private Button tm;
 
     public Button getOft() {
-        if (oft == null) {
-            init();
-        }
-        //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на ответственном за задачу желтой
-        if (getflag_oft().equals("2"))
-            oft.setStyle("-fx-background-color: green");
-        else if (getflag_oft().equals("1"))
-            oft.setStyle("-fx-background-color: yellow");
         return oft;
     }
 
     public void setOft(Button oft) {
         this.oft = oft;
+    }
+
+    public Button getTm() {
+        return tm;
+    }
+
+    public void setTm(Button tm) {
+        this.tm = tm;
     }
 
     public hmmr_ap_model()
@@ -419,11 +318,6 @@ public class hmmr_ap_model {
 
     public void seticon_at(String icon_at) {
         this.icon_at.set(icon_at);
-    }
-    public void update(){
-        tm = null;
-        oft = null;
-        init();
     }
     
     @Override

@@ -187,7 +187,6 @@ public class apwr_controller {
 
     private Set<String> availableShops;
     private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
-    private AtomicBoolean updateDBAPStatusRuns = new AtomicBoolean(false);
 
 
     @SuppressWarnings({"unchecked"})
@@ -534,13 +533,9 @@ public class apwr_controller {
                 if (filtre_apwr.getSelectionModel().getSelectedIndex() == 1) {
                     if (conn_connector.USER_ROLE.equals("Administrator")) {
                         setTableAPItems(qr._select_data_exectsk(SHOP_NAME_A));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         tableCellAlignCenter_green(dd_ap);
                     } else {
                         setTableAPItems(qr._select_data_exectsk(SHOP_NAME));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         tableCellAlignCenter_green(dd_ap);
                     }
 
@@ -548,13 +543,9 @@ public class apwr_controller {
                 if (filtre_apwr.getSelectionModel().getSelectedIndex() == 2) {
                     if (conn_connector.USER_ROLE.equals("Administrator")) {
                         setTableAPItems(qr._select_data_without_otv(SHOP_NAME_A));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         tableCellAlignCenter_green(dd_ap);
                     } else {
                         setTableAPItems(qr._select_data_without_otv(SHOP_NAME));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         tableCellAlignCenter_green(dd_ap);
                     }
 
@@ -562,16 +553,12 @@ public class apwr_controller {
                 if (filtre_apwr.getSelectionModel().getSelectedIndex() == 3) {
                     if (conn_connector.USER_ROLE.equals("Administrator")) {
                         setTableAPItems(qr._select_data_all_shop(SHOP_NAME_A));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         for (JFXButton shop : shopButtons) {
                             shop.setDisable(false);
                         }
                         tableCellAlignCenter(dd_ap);
                     } else {
                         setTableAPItems(qr._select_data_all_shop(SHOP_NAME));
-                        table_ap.getColumns().get(0).setVisible(false);
-                        table_ap.getColumns().get(0).setVisible(true);
                         tableCellAlignCenter(dd_ap);
                     }
                 }
@@ -772,8 +759,6 @@ public class apwr_controller {
                                             }
                                         }
                                         setTableAPItems(qr._select_data_ap(USER_S));
-                                        table_ap.getColumns().get(0).setVisible(false);
-                                        table_ap.getColumns().get(0).setVisible(true);
                                 }
                                 });
                             }
@@ -988,17 +973,34 @@ public class apwr_controller {
                     @Override
                     public ObservableValue<Button> call(TableColumn.CellDataFeatures<hmmr_ap_model, Button> param) {
                         hmmr_ap_model data = param.getValue();
-                        Button btn = param.getValue().getOft();
-                        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+                        Button bOft = new Button();
+                        //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                        bOft.setFocusTraversable(false);
+                        //устанавливаем номер ар в текст кнопки
+                        bOft.setText("");
+                        bOft.setPrefWidth(BUTTON_WIDTH);
+                        bOft.setPrefHeight(35);
+                        bOft.setText(data.getOFT());
+
+
+                        //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
+                        if (data.user_id.get().equals(conn_connector.USER_ID) || data.OFT.get().equals(apwr_controller.USER_S))
+                            bOft.setDisable(false);
+                        else
+                            bOft.setDisable(true);
+
+                        //qr._update_calc_field(data.getId().substring(2));
+                        bOft.setOnAction(new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent event) {
                                 oftConfirm(data);
                             }
                         });
-                        return new SimpleObjectProperty<Button>(btn);
+                        data.setOft(bOft);
+                        return new SimpleObjectProperty<Button>(bOft);
                     }
-
                 });
         oft.setStyle("-fx-alignment: CENTER;");
         columns_oft.add(oft);
@@ -1009,15 +1011,39 @@ public class apwr_controller {
 
                     @Override
                     public ObservableValue<Button> call(TableColumn.CellDataFeatures<hmmr_ap_model, Button> param) {
-                        Button btn = param.getValue().getTm();
-                        btn.setOnAction(new EventHandler<ActionEvent>() {
+                        hmmr_ap_model data = param.getValue();
+                        Button bTm = new Button();
+
+                        //Если ответственный или владелец по этой задаче ее подтверждает то ставим кнопку в AP на владельце за задачу зеленой
+                        if (data.getflag_tm().equals("2"))
+                            tm.setStyle("-fx-background-color: green");
+                        else if (data.getflag_tm().equals("1"))
+                            tm.setStyle("-fx-background-color: yellow");
+
+                        //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
+                        bTm.setFocusTraversable(false);
+                        //устанавливаем номер ар в текст кнопки
+                        bTm.setText("");
+                        bTm.setPrefWidth(BUTTON_WIDTH);
+                        bTm.setPrefHeight(35);
+                        bTm.setText(data.gettsk_maker());
+
+                        //Подтверждать задачу может только тот кто ее создал
+                        if (data.user_id.get().equals(conn_connector.USER_ID)) //|| qr._select_oft(data.getId().substring(2)).equals(USER_S))
+                            bTm.setDisable(false);
+                        else
+                            bTm.setDisable(true);
+
+
+                        bTm.setOnAction(new EventHandler<ActionEvent>() {
                             hmmr_ap_model data = param.getValue();
                             @Override
                             public void handle(ActionEvent event) {
                                 tmConfirm(data);
                             }
                         });
-                        return new SimpleObjectProperty<>(btn);
+                        data.setTm(bTm);
+                        return new SimpleObjectProperty<>(bTm);
                     }
 
                 });
@@ -1263,8 +1289,6 @@ public class apwr_controller {
                         _get_field.removeAll(_get_field);
                         _chk.addAll(qr._select_pmplan());
                         //setTableAPItems(qr._select_data_ap(USER_S));
-                        //table_ap.getColumns().get(0).setVisible(false);
-                        //table_ap.getColumns().get(0).setVisible(true);
                         table_wp.setItems(qr._select_data_wp(USER_S));
                         table_wp.getColumns().get(0).setVisible(false);
                         table_wp.getColumns().get(0).setVisible(true);
@@ -1298,8 +1322,6 @@ public class apwr_controller {
             qr._update_wp_record(_id);
 
             //setTableAPItems(qr._select_data_ap(USER_S));
-            //table_ap.getColumns().get(0).setVisible(false);
-            //table_ap.getColumns().get(0).setVisible(true);
             table_wp.setItems(qr._select_data_wp(USER_S));
             table_wp.getColumns().get(0).setVisible(false);
             table_wp.getColumns().get(0).setVisible(true);
@@ -1455,8 +1477,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_ap(USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
                 private_ap.setDisable(true);
                 showall_ap.setDisable(false);
                 chk_btn = true;
@@ -1474,16 +1494,12 @@ public class apwr_controller {
                 //if (SHOP_NAME.equals("S,W"))
                 //{
                 //	setTableAPItems(qr._select_data_ap_sw(USER_S));
-                //	table_ap.getColumns().get(0).setVisible(false);
-                //   table_ap.getColumns().get(0).setVisible(true);
                 //  private_ap.setDisable(false);
                 //  showall_ap.setDisable(true);
                 //}
                 //else
                 //{
                 setTableAPItems(qr._select_data_ap_shop(SHOP_NAME, USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
                 private_ap.setDisable(false);
                 showall_ap.setDisable(true);
                 //}
@@ -1500,8 +1516,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_all_shop("A"));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
 
                 SHOP_NAME_A = "A";
 
@@ -1517,8 +1531,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_all_shop("L"));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
 
                 SHOP_NAME_A = "L";
 
@@ -1534,8 +1546,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_all_shop("P"));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
 
                 SHOP_NAME_A = "P";
 
@@ -1550,8 +1560,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_all_shop("S"));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
 
                 SHOP_NAME_A = "S";
 
@@ -1566,8 +1574,6 @@ public class apwr_controller {
             @Override
             public void handle(ActionEvent event) {
                 setTableAPItems(qr._select_data_all_shop("W"));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
 
                 SHOP_NAME_A = "W";
 
@@ -1604,14 +1610,10 @@ public class apwr_controller {
                 initSops();
                 if (chk_btn) {
                     setTableAPItems(qr._select_data_ap(USER_S));
-                    columns_ap.get(0).setVisible(false);
-                    columns_ap.get(0).setVisible(true);
                     private_ap.setDisable(true);
                     showall_ap.setDisable(false);
                 } else {
                     setTableAPItems(qr._select_data_ap_shop(SHOP_NAME, USER_S));
-                    table_ap.getColumns().get(0).setVisible(false);
-                    table_ap.getColumns().get(0).setVisible(true);
                     private_ap.setDisable(false);
                     showall_ap.setDisable(true);
                 }
@@ -1833,8 +1835,6 @@ public class apwr_controller {
             @Override
             public void onChanged(Change<? extends hmmr_ap_model> c) {
                 setTableAPItems(qr._select_data_ap(USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
             }
         });
         _table_update_wp.addListener(new ListChangeListener<hmmr_wp_model>() {
@@ -2017,7 +2017,6 @@ public class apwr_controller {
         for (hmmr_ap_model item : table_ap.getItems()) {
             if (item.getId().equals(id)) {
                 item.flag_otvProperty().setValue(s);
-                item.update();
                 break;
             }
         }
@@ -2025,6 +2024,8 @@ public class apwr_controller {
 
     private void setTableAPItems(ObservableList<hmmr_ap_model> select_data_exectsk) {
         table_ap.setItems(select_data_exectsk);
+        table_ap.getColumns().get(0).setVisible(false);
+        table_ap.getColumns().get(0).setVisible(true);
         updateTableAPInBackground();
        /* System.out.println("update ap");
         Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
@@ -2820,27 +2821,12 @@ public class apwr_controller {
                 for (hmmr_ap_model item : table_ap.getItems()) {
                     if (tableAPUpdateStop.get())
                         break;
-                    item.init();
-                }
-            }
-        });
-
-        Thread thread1 = new Thread(() -> {
-
-            synchronized (apwr_controller.class) {
-                updateDBAPStatusRuns.set(true);
-                for (hmmr_ap_model item : table_ap.getItems()) {
                     qr._update_calc_field(item.getId().substring(2));
                 }
-                updateDBAPStatusRuns.set(false);
             }
         });
         thread.setPriority(Thread.MIN_PRIORITY);
-        thread1.setPriority(Thread.MIN_PRIORITY);
         thread.setDaemon(true);
-        if (!updateDBAPStatusRuns.get()) {
-            thread1.start();
-        }
         thread.start();
     }
 
