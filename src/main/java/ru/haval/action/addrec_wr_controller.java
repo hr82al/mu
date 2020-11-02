@@ -791,7 +791,7 @@ public class addrec_wr_controller {
 					pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
 				if(pic.flag == 4)
 					pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
-									
+
 				stage = (Stage) add_wr_add.getScene().getWindow();
 				stage.close();
 				//}

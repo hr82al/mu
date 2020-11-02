@@ -1244,125 +1244,7 @@ public class apwr_controller {
         //addButtonToTable();
         addButtonToTable_wp();
 
-        //выгрузка создание и удаление новый записей
-        //Получаем текущую дату
-        LocalDate date_cur = LocalDate.now();
-        //date_cur = LocalDate.of(2020, 11, 3);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        _chk.addAll(qr._select_pmplan());
-        for (int i = 0; i < _chk.size(); i++) {
-            _date = scl.parser_str(_chk.get(i), 0); //Дата окончания
-            _count = scl.parser_str(_chk.get(i), 1);//За сколько дней предупреждать техника до даты окончания
-            _duration = Integer.parseInt(scl.parser_str(_chk.get(i), 2));//сколько надо прибавить к дате из PM Plana чтобы получить дату окончания(due date)
-            if (!_count.equals("0") && _duration != 0) {
-                int day_edate = fx_dp.fromString(_date).getDayOfMonth();
-                int month_edate = fx_dp.fromString(_date).getMonthValue();
-                int year_edate = fx_dp.fromString(_date).getYear();
-
-                int _count1 = Integer.parseInt(_count);
-                for (int k = -1; k >= _count1; k--) {
-                    LocalDate days = LocalDate.of(year_edate, month_edate, day_edate).plusDays(k);//Расчитываем дату начиная с которой помещаем заявку в Action Plan
-
-                    //Переводим даты в Стринг
-                    String _chk_cur_date = fx_dp.toString(date_cur);
-                    String _chk_new_date = fx_dp.toString(days);
-
-                    //Проверяем на совпадение расчетной даты с текущей и если совпадает создаем запись в Action Plan
-                    if (_chk_cur_date.equals(_chk_new_date)) {
-                        //Получаем поля необходимые для инсерта в Work Plan
-                        _get_field.addAll(qr._select_getfield_for_ap(_date));
-                        for (int j = 0; j < _get_field.size(); j++) {  //new
-                            _due_date = scl.parser_str(_get_field.get(j), 0);
-                            _otf = scl.parser_str(_get_field.get(j), 1);
-                            _instruct = scl.parser_str(_get_field.get(j), 2);
-                            _id_pm = scl.parser_str(_get_field.get(j), 3);
-                            _group_pm = scl.parser_str(_get_field.get(j), 4);
-                            _pmname = scl.parser_str(_get_field.get(j), 5);
-                            _shop = scl.parser_str(_get_field.get(j), 6);
-                            _group_eq = scl.parser_str(_get_field.get(j), 7);
-                            _lm = scl.parser_str(_get_field.get(j), 8);
-                            _os = scl.parser_str(_get_field.get(j), 9);
-                            _equip = scl.parser_str(_get_field.get(j), 10);
-                            _id = scl.parser_str(_get_field.get(j), 11);
-                            _pm_exec = scl.parser_str(_get_field.get(j), 12);
-                            _activity_type = scl.parser_str(_get_field.get(j), 13);
-                            _type = "PM";
-                            //if(_record.equals("0")) _insert_ap
-                            //Добавление новых записей в work plan
-                            qr._insert_wp(_id_pm, _type, _pmname, _due_date, _shop + "." + _group_eq + "." + _lm + "." + _os + "." + _equip, _instruct, _otf, qr._select_userid_(_otf), _shop, "4M", _pm_exec, _activity_type);
-                            //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
-                            qr._update_hpy_record(_id, "1");
-                        }
-                        _chk.removeAll(_chk);
-                        _get_field.removeAll(_get_field);
-                        _chk.addAll(qr._select_pmplan());
-                        //setTableAPItems(qr._select_data_ap(USER_S));
-                        table_wp.setItems(qr._select_data_wp(USER_S));
-                        table_wp.getColumns().get(0).setVisible(false);
-                        table_wp.getColumns().get(0).setVisible(true);
-                    }
-                }
-            }
-        }
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!Теперь проверяем все даты в Work Plane на совпадение с текущей и если совпадает эту запись из Work Plana удаляем и добавляем ее в Work Order!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        _get_data_from_wp.addAll(qr._select_date_wp(fx_dp.toString(date_cur)));
-        for (int l = 0; l < _get_data_from_wp.size(); l++) {
-
-            String _id = scl.parser_str(_get_data_from_wp.get(l), 0);
-            String _pm_num = scl.parser_str(_get_data_from_wp.get(l), 1);
-            String _type = scl.parser_str(_get_data_from_wp.get(l), 2);
-            String _desc = scl.parser_str(_get_data_from_wp.get(l), 3);
-            String _dd = scl.parser_str(_get_data_from_wp.get(l), 4);
-            //	LocalDate test_dd = fx_dp.fromString(_dd).plusDays(_duration);
-            String _equip = scl.parser_str(_get_data_from_wp.get(l), 5);
-            String _inst = scl.parser_str(_get_data_from_wp.get(l), 6);
-            String _oft = scl.parser_str(_get_data_from_wp.get(l), 7);
-            String _otv = scl.parser_str(_get_data_from_wp.get(l), 8);
-            //String _tm = scl.parser_str(_get_data_from_wp.get(l), 9);
-            String _icon = scl.parser_str(_get_data_from_wp.get(l), 13);
-            String _shop = scl.parser_str(_get_data_from_wp.get(l), 14);
-            String _act_type = scl.parser_str(_get_data_from_wp.get(l), 15);
-
-            qr._insert_ap(_pm_num, _type, _desc, fx_dp.fromString(_dd).plusDays(_duration), _equip, _inst, _oft, qr._select_userid_(_oft), _shop, _icon, _otv, _act_type);
-            //Удаляем PM из WP
-            qr._update_wp_record(_id);
-
-            //setTableAPItems(qr._select_data_ap(USER_S));
-            table_wp.setItems(qr._select_data_wp(USER_S));
-            table_wp.getColumns().get(0).setVisible(false);
-            table_wp.getColumns().get(0).setVisible(true);
-
-        }
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Ежедневный ППР добавляем напрямую в WO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        _get_data_dly.addAll(qr._select_dly_wo(fx_dp.toString(date_cur)));
-        for (int j = 0; j < _get_data_dly.size(); j++) {  //new
-            _due_date_wo = scl.parser_str(_get_data_dly.get(j), 0);
-            _otf_wo = scl.parser_str(_get_data_dly.get(j), 1);
-            _instruct_wo = scl.parser_str(_get_data_dly.get(j), 2);
-            _id_pm_wo = scl.parser_str(_get_data_dly.get(j), 3);
-            _group_pm_wo = scl.parser_str(_get_data_dly.get(j), 4);
-            _pmname_wo = scl.parser_str(_get_data_dly.get(j), 5);
-            _shop_wo = scl.parser_str(_get_data_dly.get(j), 6);
-            _group_eq_wo = scl.parser_str(_get_data_dly.get(j), 7);
-            _lm_wo = scl.parser_str(_get_data_dly.get(j), 8);
-            _os_wo = scl.parser_str(_get_data_dly.get(j), 9);
-            _equip_wo = scl.parser_str(_get_data_dly.get(j), 10);
-            _id_wo = scl.parser_str(_get_data_dly.get(j), 11);
-            _pm_exec_wo = scl.parser_str(_get_data_dly.get(j), 12);
-            _icon_at_wo = scl.parser_str(_get_data_dly.get(j), 13);
-            _type_wo = "PM";
-            //На выходных ППР не добавляем в WO
-            //if (!date_cur.getDayOfWeek().toString().equals("SATURDAY") && !date_cur.getDayOfWeek().toString().equals("SUNDAY")) //_insert_ap
-                qr._insert_ap(_id_pm_wo, _type_wo, _pmname_wo, fx_dp.fromString(_due_date_wo), _shop_wo + "." + _group_eq_wo + "." + _lm_wo + "." + _os_wo + "." + _equip_wo, _instruct_wo, _otf_wo, qr._select_userid_(_otf_wo), _shop_wo, "4M", _pm_exec_wo, _icon_at_wo);
-            //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
-            qr._update_hpy_record(_id_wo, "1");
-
-        }
+        newPWAPTasks();
         _get_data_dly.removeAll(_get_data_dly);
         table_ap.getColumns().get(0).setVisible(false);
         table_ap.getColumns().get(0).setVisible(true);
@@ -1951,6 +1833,131 @@ public class apwr_controller {
 
     }
 
+    private void newPWAPTasks() {
+        //выгрузка создание и удаление новый записей
+        //Получаем текущую дату
+        LocalDate date_cur = LocalDate.now();
+        for (int dateCounter = 0; dateCounter < 4; dateCounter++, date_cur = date_cur.minusDays(1)) {
+            //date_cur = LocalDate.of(2020, 11, 3);
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            _chk.addAll(qr._select_pmplan());
+            for (int i = 0; i < _chk.size(); i++) {
+                _date = scl.parser_str(_chk.get(i), 0); //Дата окончания
+                _count = scl.parser_str(_chk.get(i), 1);//За сколько дней предупреждать техника до даты окончания
+                _duration = Integer.parseInt(scl.parser_str(_chk.get(i), 2));//сколько надо прибавить к дате из PM Plana чтобы получить дату окончания(due date)
+                if (!_count.equals("0") && _duration != 0) {
+                    int day_edate = fx_dp.fromString(_date).getDayOfMonth();
+                    int month_edate = fx_dp.fromString(_date).getMonthValue();
+                    int year_edate = fx_dp.fromString(_date).getYear();
+
+                    int _count1 = Integer.parseInt(_count);
+                    for (int k = -1; k >= _count1; k--) {
+                        LocalDate days = LocalDate.of(year_edate, month_edate, day_edate).plusDays(k);//Расчитываем дату начиная с которой помещаем заявку в Action Plan
+
+                        //Переводим даты в Стринг
+                        String _chk_cur_date = fx_dp.toString(date_cur);
+                        String _chk_new_date = fx_dp.toString(days);
+
+                        //Проверяем на совпадение расчетной даты с текущей и если совпадает создаем запись в Action Plan
+                        if (_chk_cur_date.equals(_chk_new_date)) {
+                            //Получаем поля необходимые для инсерта в Work Plan
+                            _get_field.addAll(qr._select_getfield_for_ap(_date));
+                            for (int j = 0; j < _get_field.size(); j++) {  //new
+                                _due_date = scl.parser_str(_get_field.get(j), 0);
+                                _otf = scl.parser_str(_get_field.get(j), 1);
+                                _instruct = scl.parser_str(_get_field.get(j), 2);
+                                _id_pm = scl.parser_str(_get_field.get(j), 3);
+                                _group_pm = scl.parser_str(_get_field.get(j), 4);
+                                _pmname = scl.parser_str(_get_field.get(j), 5);
+                                _shop = scl.parser_str(_get_field.get(j), 6);
+                                _group_eq = scl.parser_str(_get_field.get(j), 7);
+                                _lm = scl.parser_str(_get_field.get(j), 8);
+                                _os = scl.parser_str(_get_field.get(j), 9);
+                                _equip = scl.parser_str(_get_field.get(j), 10);
+                                _id = scl.parser_str(_get_field.get(j), 11);
+                                _pm_exec = scl.parser_str(_get_field.get(j), 12);
+                                _activity_type = scl.parser_str(_get_field.get(j), 13);
+                                _type = "PM";
+                                //if(_record.equals("0")) _insert_ap
+                                //Добавление новых записей в work plan
+                                qr._insert_wp(_id_pm, _type, _pmname, _due_date, _shop + "." + _group_eq + "." + _lm + "." + _os + "." + _equip, _instruct, _otf, qr._select_userid_(_otf), _shop, "4M", _pm_exec, _activity_type);
+                                //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
+                                qr._update_hpy_record(_id, "1");
+                            }
+                            _chk.removeAll(_chk);
+                            _get_field.removeAll(_get_field);
+                            _chk.addAll(qr._select_pmplan());
+                            //setTableAPItems(qr._select_data_ap(USER_S));
+                            table_wp.setItems(qr._select_data_wp(USER_S));
+                            table_wp.getColumns().get(0).setVisible(false);
+                            table_wp.getColumns().get(0).setVisible(true);
+                        }
+                    }
+                }
+            }
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!Теперь проверяем все даты в Work Plane на совпадение с текущей и если совпадает эту запись из Work Plana удаляем и добавляем ее в Work Order!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            _get_data_from_wp.addAll(qr._select_date_wp(fx_dp.toString(date_cur)));
+            for (int l = 0; l < _get_data_from_wp.size(); l++) {
+
+                String _id = scl.parser_str(_get_data_from_wp.get(l), 0);
+                String _pm_num = scl.parser_str(_get_data_from_wp.get(l), 1);
+                String _type = scl.parser_str(_get_data_from_wp.get(l), 2);
+                String _desc = scl.parser_str(_get_data_from_wp.get(l), 3);
+                String _dd = scl.parser_str(_get_data_from_wp.get(l), 4);
+                //	LocalDate test_dd = fx_dp.fromString(_dd).plusDays(_duration);
+                String _equip = scl.parser_str(_get_data_from_wp.get(l), 5);
+                String _inst = scl.parser_str(_get_data_from_wp.get(l), 6);
+                String _oft = scl.parser_str(_get_data_from_wp.get(l), 7);
+                String _otv = scl.parser_str(_get_data_from_wp.get(l), 8);
+                //String _tm = scl.parser_str(_get_data_from_wp.get(l), 9);
+                String _icon = scl.parser_str(_get_data_from_wp.get(l), 13);
+                String _shop = scl.parser_str(_get_data_from_wp.get(l), 14);
+                String _act_type = scl.parser_str(_get_data_from_wp.get(l), 15);
+
+                qr._insert_ap(_pm_num, _type, _desc, fx_dp.fromString(_dd).plusDays(_duration), _equip, _inst, _oft, qr._select_userid_(_oft), _shop, _icon, _otv, _act_type);
+                //Удаляем PM из WP
+                qr._update_wp_record(_id);
+
+                //setTableAPItems(qr._select_data_ap(USER_S));
+                table_wp.setItems(qr._select_data_wp(USER_S));
+                table_wp.getColumns().get(0).setVisible(false);
+                table_wp.getColumns().get(0).setVisible(true);
+
+            }
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Ежедневный ППР добавляем напрямую в WO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            _get_data_dly.addAll(qr._select_dly_wo(fx_dp.toString(date_cur)));
+            for (int j = 0; j < _get_data_dly.size(); j++) {  //new
+                _due_date_wo = scl.parser_str(_get_data_dly.get(j), 0);
+                _otf_wo = scl.parser_str(_get_data_dly.get(j), 1);
+                _instruct_wo = scl.parser_str(_get_data_dly.get(j), 2);
+                _id_pm_wo = scl.parser_str(_get_data_dly.get(j), 3);
+                _group_pm_wo = scl.parser_str(_get_data_dly.get(j), 4);
+                _pmname_wo = scl.parser_str(_get_data_dly.get(j), 5);
+                _shop_wo = scl.parser_str(_get_data_dly.get(j), 6);
+                _group_eq_wo = scl.parser_str(_get_data_dly.get(j), 7);
+                _lm_wo = scl.parser_str(_get_data_dly.get(j), 8);
+                _os_wo = scl.parser_str(_get_data_dly.get(j), 9);
+                _equip_wo = scl.parser_str(_get_data_dly.get(j), 10);
+                _id_wo = scl.parser_str(_get_data_dly.get(j), 11);
+                _pm_exec_wo = scl.parser_str(_get_data_dly.get(j), 12);
+                _icon_at_wo = scl.parser_str(_get_data_dly.get(j), 13);
+                _type_wo = "PM";
+                //На выходных ППР не добавляем в WO
+                //if (!date_cur.getDayOfWeek().toString().equals("SATURDAY") && !date_cur.getDayOfWeek().toString().equals("SUNDAY")) //_insert_ap
+                qr._insert_ap(_id_pm_wo, _type_wo, _pmname_wo, fx_dp.fromString(_due_date_wo), _shop_wo + "." + _group_eq_wo + "." + _lm_wo + "." + _os_wo + "." + _equip_wo, _instruct_wo, _otf_wo, qr._select_userid_(_otf_wo), _shop_wo, "4M", _pm_exec_wo, _icon_at_wo);
+                //Чтобы задача не добавлясь в WP каждый раз с запуском приложения, поэтому ставим признак - 1, после первого заполнения
+                qr._update_hpy_record(_id_wo, "1");
+
+            }
+        }
+
+    }
+
     private void updateTableWr() {
         //0 - без сортировки; 1 - сортировка по номеру задачи; 2 - сортировка по времени
         switch (flag) {
@@ -2034,7 +2041,7 @@ public class apwr_controller {
         table_ap.setItems(select_data_exectsk);
         table_ap.getColumns().get(0).setVisible(false);
         table_ap.getColumns().get(0).setVisible(true);
-        updateTableAPInBackground();
+        //updateTableAPInBackground();
        /* System.out.println("update ap");
         Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
                 "\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s
@@ -2835,7 +2842,7 @@ public class apwr_controller {
         });
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.setDaemon(true);
-        thread.start();
+        //thread.start();
     }
 
     public void oftConfirm(hmmr_ap_model data) {

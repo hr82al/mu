@@ -92,12 +92,4 @@
         </java>
     </target>
 
-    <target name="deploy">
-        <copy todir="file:\\\\127.0.0.1\mu\">
-
-                <file file="${dist}/${jar.name}.jar"/>
-
-        </copy>
-    </target>
-
 </project>
