@@ -773,7 +773,30 @@ public class addrec_wr_controller {
 					String at = qr._select_b_hours(id_wr, "_Actual_Time9");
 					wt_rezult = 0;
 						
-					qr._insert_wr(numap_wr_add.getText().substring(2), conn_connector.USER_ID, sclass.parser_str(shop_wr_add.getValue(), 0), group_wr_add.getValue(), sclass.parser_str(lm_wr_add.getValue(), 0), sclass.parser_str(os_wr_add.getValue(), 0), sclass.parser_str(equip_wr_add.getValue(), 0), sclass.parser_str(shop_wr_add.getValue(), 0)+"."+group_wr_add.getValue()+"."+sclass.parser_str(lm_wr_add.getValue(), 0)+"."+sclass.parser_str(os_wr_add.getValue(), 0)+"."+sclass.parser_str(equip_wr_add.getValue(), 0), record_type_wr_add.getValue(), wt_rezult, sclass.parser_str(qr._select_resp(id_wr, "_Resp9"), 0), "0", "0", "0", status_wr_add.getValue(), shift_report_wr_add.getText(), req_action_wr_add.getText(), b_data, w_data_begin.getValue(), w_data_begin2.getValue(), w_data_begin3.getValue(), actual_time_wr_add.getText(), e_data, w_data_end.getValue(), w_data_end2.getValue(), w_data_end3.getValue(), at, "0", "0", "0", b_time, b_picker.getValue(), b_picker2.getValue(), b_picker3.getValue(), e_time, e_picker.getValue(), e_picker2.getValue(), e_picker3.getValue(), b_gdw, e_gdw, b_gtw, e_gtw, sclass.parser_str(list_at_wr.getValue(), 0), sclass.parser_str(resp_wr_add4.getValue(), 0), sclass.parser_str(resp_wr_add5.getValue(), 0), sclass.parser_str(resp_wr_add6.getValue(), 0), sclass.parser_str(resp_wr_add7.getValue(), 0), sclass.parser_str(resp_wr_add8.getValue(), 0), w_data_begin4.getValue(), w_data_begin5.getValue(), w_data_begin6.getValue(), w_data_begin7.getValue(), w_data_begin8.getValue(), w_data_end4.getValue(), w_data_end5.getValue(), w_data_end6.getValue(), w_data_end7.getValue(), w_data_end8.getValue(), actual_time1_wr_add4.getText(), actual_time1_wr_add5.getText(), actual_time1_wr_add6.getText(), actual_time1_wr_add7.getText(), actual_time1_wr_add8.getText(), b_picker4.getValue(), b_picker5.getValue(), b_picker6.getValue(), b_picker7.getValue(), b_picker8.getValue(), e_picker4.getValue(), e_picker5.getValue(), e_picker6.getValue(), e_picker7.getValue(), e_picker8.getValue());
+					qr._insert_wr(numap_wr_add.getText().substring(2),
+							conn_connector.USER_ID,
+							sclass.parser_str(shop_wr_add.getValue(), 0),
+							group_wr_add.getValue(),
+							sclass.parser_str(lm_wr_add.getValue(), 0),
+							sclass.parser_str(os_wr_add.getValue(), 0),
+							sclass.parser_str(equip_wr_add.getValue(), 0),
+							sclass.parser_str(shop_wr_add.getValue(), 0)+"."+group_wr_add.getValue()+"."+sclass.parser_str(lm_wr_add.getValue(), 0)+"."+sclass.parser_str(os_wr_add.getValue(), 0)+"."+sclass.parser_str(equip_wr_add.getValue(), 0),
+							record_type_wr_add.getValue(),
+							wt_rezult,
+							sclass.parser_str(qr._select_resp(id_wr, "_Resp9"), 0),
+							"0",
+							"0",
+							"0",
+							status_wr_add.getValue(),
+							shift_report_wr_add.getText(),
+							req_action_wr_add.getText(),
+							b_data,
+							w_data_begin.getValue(),
+							w_data_begin2.getValue(),
+							w_data_begin3.getValue(),
+							actual_time_wr_add.getText(),
+							e_data, w_data_end.getValue(),
+							w_data_end2.getValue(), w_data_end3.getValue(), at, "0", "0", "0", b_time, b_picker.getValue(), b_picker2.getValue(), b_picker3.getValue(), e_time, e_picker.getValue(), e_picker2.getValue(), e_picker3.getValue(), b_gdw, e_gdw, b_gtw, e_gtw, sclass.parser_str(list_at_wr.getValue(), 0), sclass.parser_str(resp_wr_add4.getValue(), 0), sclass.parser_str(resp_wr_add5.getValue(), 0), sclass.parser_str(resp_wr_add6.getValue(), 0), sclass.parser_str(resp_wr_add7.getValue(), 0), sclass.parser_str(resp_wr_add8.getValue(), 0), w_data_begin4.getValue(), w_data_begin5.getValue(), w_data_begin6.getValue(), w_data_begin7.getValue(), w_data_begin8.getValue(), w_data_end4.getValue(), w_data_end5.getValue(), w_data_end6.getValue(), w_data_end7.getValue(), w_data_end8.getValue(), actual_time1_wr_add4.getText(), actual_time1_wr_add5.getText(), actual_time1_wr_add6.getText(), actual_time1_wr_add7.getText(), actual_time1_wr_add8.getText(), b_picker4.getValue(), b_picker5.getValue(), b_picker6.getValue(), b_picker7.getValue(), b_picker8.getValue(), e_picker4.getValue(), e_picker5.getValue(), e_picker6.getValue(), e_picker7.getValue(), e_picker8.getValue());
 					qr._update_r_wr(id_wr, "_Resp9", "0");
 					qr._update_r_wr(id_wr, "_Actual_Time9", "0");
 				}

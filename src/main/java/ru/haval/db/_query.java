@@ -404,11 +404,6 @@ public class _query {
         synchronized (_query.class) {
             ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
             try {
-                /*System.out.println(query);
-                System.out.println("update ap");
-                Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
-                        "\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s
-                                .getLineNumber() + ")"));*/
                 cn.ConToDb();
                 stmt12 = cn.con.createStatement();
                 rs12 = stmt12.executeQuery(query);
@@ -2403,9 +2398,6 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
                 try {
                     stmt.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs.close();
                 } catch (SQLException se) { /*can't do anything */ }
             }
         }
