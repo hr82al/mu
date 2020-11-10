@@ -1163,7 +1163,7 @@ public class apwr_controller {
                             //устанавливаем checkbox если в базе в этом поле стоит 1
                             //     btn.setText(data.getap_num());
                             //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-                            //btn.setFocusTraversable(false);
+                            btn.setFocusTraversable(false);
                             btn.setOnAction(new EventHandler<ActionEvent>() {
 
                                 @SuppressWarnings("static-access")
@@ -2287,12 +2287,7 @@ public class apwr_controller {
                         if (data.getinst_btn().equals("-") || data.getinst_btn().equals("null"))
                             btn.setDisable(true);
                         else {
-                            File file = new File(data.getinst_btn());
-                            if (file.exists()) {
-                                btn.setDisable(false);
-                            } else {
-                                btn.setDisable(true);
-                            }
+                            btn.setDisable(false);
                         }
 
                         {
@@ -2307,7 +2302,7 @@ public class apwr_controller {
                         //устанавливаем checkbox если в базе в этом поле стоит 1
                         //     btn.setText(data.getap_num());
                         //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
-                        //btn.setFocusTraversable(false);
+                        btn.setFocusTraversable(false);
                         btn.setOnAction(new EventHandler<ActionEvent>() {
 
                             @SuppressWarnings("static-access")
@@ -2351,12 +2346,7 @@ public class apwr_controller {
                         if (data.getinst_btn().equals("-") || data.getinst_btn().equals("null"))
                             btn1.setDisable(true);
                         else {
-                            File file = new File(data.getinst_btn());
-                            if (file.exists()) {
-                                btn1.setDisable(false);
-                            } else {
-                                btn1.setDisable(true);
-                            }
+                            btn1.setDisable(false);
                         }
 
                         {
