@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane fx:id="sp_pm" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="884.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_controller">
+<ScrollPane fx:id="sp_pm" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="935.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_controller">
    <content>
       <Pane fx:id="pane_pm" layoutX="-41.0" prefHeight="828.0" prefWidth="885.0">
          <children>
@@ -36,14 +30,16 @@
                   <HBox fx:id="hb2" prefHeight="666.0" prefWidth="697.0">
                      <children>
                         <HBox prefHeight="664.0" prefWidth="27.0" />
-                        <TableView fx:id="table_pm" prefHeight="663.0" prefWidth="788.0">
+                        <TableView fx:id="table_pm" prefHeight="663.0" prefWidth="828.0">
                           <columns>
                             <TableColumn fx:id="col_id_pm" prefWidth="49.0" text="№ PM" />
                             <TableColumn fx:id="col_ninst_pm" prefWidth="163.0" text="№ инструкции" />
                               <TableColumn fx:id="col_group_pm" prefWidth="91.0" text="Группа" />
-                              <TableColumn fx:id="col_otv_pm" minWidth="0.0" prefWidth="99.0" sortable="false" text="Ответственный" />
-                              <TableColumn fx:id="col_isp_pm" prefWidth="102.0" sortable="false" text="Отв. Исполнитель" />
-                              <TableColumn fx:id="col_ool_pm" prefWidth="77.0" sortable="false" text="On/Off Line" />
+                             <TableColumn fx:id="col_period" prefWidth="60.0" text="Период" />
+                              <TableColumn fx:id="col_otv_pm" minWidth="0.0" prefWidth="99.0" text="Ответственный" />
+                              <TableColumn fx:id="col_isp_pm" prefWidth="102.0" text="Отв. Исполнитель" />
+                              <TableColumn fx:id="col_ool_pm" prefWidth="77.0" text="On/Off Line" />
+                             <TableColumn fx:id="col_eq_id" text="Оборудоваине" />
                           </columns>
                            <HBox.margin>
                               <Insets left="25.0" />

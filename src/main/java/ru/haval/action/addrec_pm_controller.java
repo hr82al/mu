@@ -332,7 +332,7 @@ public class addrec_pm_controller {
 				_last_id = qr._select_last_id("hmmr_pm");
 				qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Создал запись № = " + _last_id + " в таблице PM");
 					
-				pc._table_update_pm.addAll(qr._select_data_pm());
+				pc._table_update_pm.addAll(qr._select_data_pm2());
 				
 				pc._num_inst_last = sclass.parser_str(ninst_pm.getValue(), 0);
 				

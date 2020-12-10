@@ -1,5 +1,5 @@
 package ru.haval.action;
-
+//Pm instructions
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Locale;
@@ -45,7 +45,7 @@ public class pm_controller {
 	TableView<hmmr_pm_model> table_pm;
 	
 	@FXML
-	TableColumn<hmmr_pm_model, String> col_id_pm, col_ninst_pm, col_group_pm, col_ool_pm, col_otv_pm, col_isp_pm; //col_group_eq, col_lm_pm, col_os_pm, col_equip_pm, col_pmn_pm, col_pmc_pm, col_pmtype_pm, 
+	TableColumn<hmmr_pm_model, String> col_id_pm, col_ninst_pm, col_group_pm, col_ool_pm, col_otv_pm, col_isp_pm, col_eq_id, col_period; //col_group_eq, col_lm_pm, col_os_pm, col_equip_pm, col_pmn_pm, col_pmc_pm, col_pmtype_pm,
 	
 	@FXML
 	JFXButton add_ap_pm, add_pm, upd_pm, del_pm, close_pm, upd_table_pm, dup_rec_pm;
@@ -71,7 +71,7 @@ public class pm_controller {
 	public static ObservableList<TableColumn<hmmr_pm_model, ?>> columns_pm;
 	private String name_col = "Оборудование";
 	public static ObservableList<hmmr_pm_model> _table_update_pm = FXCollections.observableArrayList();
-	TableColumn<hmmr_pm_model, String> col_eq_id = new TableColumn<hmmr_pm_model, String>(name_col);
+	//TableColumn<hmmr_pm_model, String> col_eq_id = new TableColumn<hmmr_pm_model, String>(name_col);
 	
 	public static int _Id_Dup_Pm = 0;
 	public static String _num_inst_last = "NULL"; //Номер последней выбранной инструкции
@@ -207,6 +207,8 @@ public class pm_controller {
 			
 		col_id_pm.setCellValueFactory(CellData -> CellData.getValue().IdProperty());
 		col_ninst_pm.setCellValueFactory(CellData -> CellData.getValue().num_instProperty());
+		col_eq_id.setCellValueFactory(CellData -> CellData.getValue().EquipProperty());
+		col_period.setCellValueFactory(CellData -> CellData.getValue().PMCProperty());
 //		col_eq_id.setCellValueFactory(CellData -> CellData.getValue().eq_idProperty());
 		col_group_pm.setCellValueFactory(CellData -> CellData.getValue().Group_PMProperty());
 //		col_lm_pm.setCellValueFactory(CellData -> CellData.getValue().L_MProperty());
@@ -233,24 +235,24 @@ public class pm_controller {
 //		col_pmn_pm.setSortable(false);
 //		col_pmc_pm.setSortable(false);
 //		col_pmtype_pm.setSortable(false);
-		col_ool_pm.setSortable(false);
-		col_otv_pm.setSortable(false);
+//		col_ool_pm.setSortable(false);
+//		col_otv_pm.setSortable(false);
 //		col_days_exp.setSortable(false);
 		
 		table_pm.setEditable(true);
 		final ObservableList<TableColumn<hmmr_pm_model, ?>> columns = table_pm.getColumns();
-		col_eq_id.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<hmmr_pm_model, String>, ObservableValue<String>>() {
-
-                    @Override
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<hmmr_pm_model, String> arg0) {
-                        hmmr_pm_model data = arg0.getValue();
-                        return new SimpleObjectProperty<String>(qr._select_fillpm_equip(data.geteq_id(), "hmmr_pm"));
-                    }
-
-                });
+//		col_eq_id.setCellValueFactory(
+//                new Callback<TableColumn.CellDataFeatures<hmmr_pm_model, String>, ObservableValue<String>>() {
+//
+//                    @Override
+//                    public ObservableValue<String> call(TableColumn.CellDataFeatures<hmmr_pm_model, String> arg0) {
+//                        hmmr_pm_model data = arg0.getValue();
+//                        return new SimpleObjectProperty<String>(qr._select_fillpm_equip(data.geteq_id(), "hmmr_pm"));
+//                    }
+//
+//                });
         
-        columns.add(col_eq_id);
+        //columns.add(col_eq_id);
 		
 		//Вызываем окно обновления по двойному клику на строке
 		table_pm.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -416,7 +418,7 @@ public class pm_controller {
 				
 				@Override
 				public void handle(ActionEvent event) {
-					table_pm.setItems(qr._select_data_pm());
+					table_pm.setItems(qr._select_data_pm2());
 					columns_pm.get(0).setVisible(false);
 				    columns_pm.get(0).setVisible(true);
 				}
@@ -424,7 +426,7 @@ public class pm_controller {
 	        _table_update_pm.addListener(new ListChangeListener<hmmr_pm_model>() {
 			    @Override
 				public void onChanged(Change<? extends hmmr_pm_model> c) {
-					table_pm.setItems(qr._select_data_pm());
+					table_pm.setItems(qr._select_data_pm2());
 			    	table_pm.getColumns().get(0).setVisible(false);
 			        table_pm.getColumns().get(0).setVisible(true);
 			    }
@@ -450,7 +452,7 @@ public class pm_controller {
 	
 	private void initData()
 	{
-		table_pm.setItems(qr._select_data_pm());
+		table_pm.setItems(qr._select_data_pm2());
 	}
 	
 	private void func_upd(String str)
@@ -482,7 +484,7 @@ public class pm_controller {
 		qr._update_rec_pm_del(str);
 		qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Удалил запись № = " + str + " в таблице PM");
 		_id_pm = str;
-		_table_update_pm.addAll(qr._select_data_pm());
+		_table_update_pm.addAll(qr._select_data_pm2());
 	}
 	
 	//Вызываем окно добавления записи к PM

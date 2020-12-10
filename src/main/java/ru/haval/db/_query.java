@@ -355,7 +355,53 @@ public class _query {
                         hpm.OnOff_Line.set(rs11.getString(6));
                         hpm.Otv_Isp.set(rs11.getString(7));
 
+                        //System.out.println(hpm);
+                        list.add(hpm);
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 301!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt11.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs11.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return list;
+        }
+    }
+    //new version
+    public ObservableList<hmmr_pm_model> _select_data_pm2() {
+        synchronized (_query.class) {
+            ObservableList<hmmr_pm_model> list = FXCollections.observableArrayList();
 
+            try {
+                //String query = "select pm.id,Instruction_num,Eq_ID,PM_Group,PM_Resp,OnOff_Line,PM_Executor, concat(hps.FL03_Shop_s,'.',hps.FL04_Group_s,'.',hps.FL05_Line_s,'.',hps.FL06_Station_s,'.',hps.FL07_Equipment_s) as Equipment from hmmr_pm pm LEFT JOIN hmmr_plant_structure hps ON pm.Eq_ID = hps.id where del_rec = 0;";
+                //String query = "select id,Instruction_num,Eq_ID,PM_Group,PM_Resp,OnOff_Line,PM_Executor from hmmr_pm where del_rec = 0;";
+                String query = "select pm.id,Instruction_num,Eq_ID, pm.PM_Group,PM_Resp,OnOff_Line,PM_Executor, concat(hps.FL03_Shop_s,'.',hps.FL04_Group_s,'.',hps.FL05_Line_s,'.',hps.FL06_Station_s,'.',hps.FL07_Equipment_s) as Equipment, gcl.PM_Cycle from hmmr_pm pm LEFT JOIN hmmr_plant_structure hps ON pm.Eq_ID = hps.id INNER JOIN hmmr_group_cycle gcl ON pm.PM_Group = gcl.PM_Group where pm.del_rec = 0;";
+                cn.ConToDb();
+                stmt11 = cn.con.createStatement();
+                rs11 = stmt11.executeQuery(query);
+
+                while (rs11.next()) {
+                    hmmr_pm_model hpm = new hmmr_pm_model();
+                    if (rs11.getString(1) != null && rs11.getString(2) != null && rs11.getString(3) != null) {
+                        hpm.Id.set(rs11.getString(1));
+                        hpm.num_instruction.set(rs11.getString(2));
+                        hpm.eq_id.set(rs11.getString(3));
+                        hpm.Group_PM.set(rs11.getString(4));
+                        hpm.Otv.set(rs11.getString(5));
+                        hpm.OnOff_Line.set(rs11.getString(6));
+                        hpm.Otv_Isp.set(rs11.getString(7));
+                        hpm.Equipment.set(rs11.getString(8));
+                        hpm.PM_Cycle.set(rs11.getString(9));
+                        //System.out.println(hpm);
                         list.add(hpm);
                     }
                 }
@@ -5440,7 +5486,7 @@ public class _query {
 
             try {
                 String query = "select concat(hps.FL03_Shop_s,'.',hps.FL04_Group_s,'.',hps.FL05_Line_s,'.',hps.FL06_Station_s,'.',hps.FL07_Equipment_s) from " + tbl_name + " hpm INNER JOIN hmmr_plant_structure hps ON del_rec = 0 AND hps.id = " + "'" + id + "'" + ";";
-
+                System.out.println(query);
                 cn.ConToDb();
                 stmt11 = cn.con.createStatement();
                 rs11 = stmt11.executeQuery(query);

@@ -1,8 +1,7 @@
 package ru.haval.action;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -2922,5 +2921,73 @@ public class apwr_controller {
             }
         }
         return null;
+    }
+
+
+// Functions for uploadin new tasks
+    public static void writeDate(String date, String lastDateFile) {
+        File file = new File(lastDateFile);
+        file.delete();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(lastDateFile));
+                bufferedWriter.write(date);
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static String getLastDateFromFile() {
+        Map<String, String> env = System.getenv();
+        String localLastDateFile = env.get("APPDATA")  + "\\last_date.txt";
+        String remoteLastDateFile = "\\\\10.168.150.74\\mu\\updates\\last_date.txt";
+        File localFile = new File(localLastDateFile);
+        String localLastDate = null;
+        if (localFile.exists()) {
+            try {
+                Scanner localScanner = new Scanner(localFile);
+                if (localScanner.hasNext()) {
+                    localLastDate = localScanner.nextLine();
+                }
+                localScanner.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        String remoteLastDate = null;
+        File remoteFile = new File(remoteLastDateFile);
+        if (remoteFile.exists()) {
+            try {
+                Scanner remoteScanner = new Scanner(remoteFile);
+                if (remoteScanner.hasNext()) {
+                    remoteLastDate = remoteScanner.nextLine();
+                }
+                remoteScanner.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //if remote file do not exsists
+            return null;
+        }
+        if (localLastDate == null && remoteLastDate != null) {
+            return remoteLastDate;
+        }
+        if (remoteLastDate == null) {
+            return null;
+        }
+        LocalDate localLocalDate = LocalDate.parse(localLastDate);
+        LocalDate remoteLocalDate = LocalDate.parse(remoteLastDate);
+        if (localLocalDate.isBefore(remoteLocalDate)){
+            return remoteLastDate;
+        } else {
+            return localLastDate;
+        }
     }
 }

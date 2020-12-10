@@ -417,7 +417,7 @@ public class updrec_pm_controller {
 							
 						qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Обновиле запись № = " + pc._id_pm + " в таблице PM");
 							
-						pc._table_update_pm.addAll(qr._select_data_pm());
+						pc._table_update_pm.addAll(qr._select_data_pm2());
 							
 						stage = (Stage) confirm_pm_upd.getScene().getWindow();
 						stage.close();

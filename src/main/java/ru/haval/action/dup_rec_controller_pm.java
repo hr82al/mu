@@ -68,7 +68,7 @@ public class dup_rec_controller_pm {
 				catch (Exception e) {
 					
 				}
-				pc._table_update_pm.addAll(qr._select_data_pm());
+				pc._table_update_pm.addAll(qr._select_data_pm2());
 				stage = (Stage) dup_rec_add.getScene().getWindow();
 				stage.close();
 			}
