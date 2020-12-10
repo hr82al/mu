@@ -463,7 +463,8 @@ public class _query {
                         hpm.Desc.set(rs12.getString(4));
                         hpm.Due_Date.set(rs12.getString(5));
                         hpm.Equip.set(rs12.getString(6));
-                        hpm.inst_btn.set(correctPathToInstr(rs12.getString(7)));
+                        hpm.inst_btn.set(rs12.getString(7));
+                        //hpm.inst_btn.set(correctPathToInstr(rs12.getString(7)));
                         hpm.OFT.set(rs12.getString(8));
                         hpm.OTV.set(rs12.getString(9));
                         hpm.tsk_maker.set(rs12.getString(10));
@@ -473,8 +474,10 @@ public class _query {
                         hpm.icon.set(rs12.getString(14));
                         hpm.icon_at.set(rs12.getString(15));
                         hpm.user_id.set(rs12.getString(16));
-                        hpm.prior_img.set(correctPathToInstr(rs12.getString(17)));
-                        hpm.AT_img.set(correctPathToInstr(rs12.getString(18)));
+                        hpm.prior_img.set(rs12.getString(17));
+                        //hpm.prior_img.set(correctPathToInstr(rs12.getString(17)));
+                        hpm.AT_img.set(rs12.getString(18));
+//                        hpm.AT_img.set(correctPathToInstr(rs12.getString(18)));
                         hpm.priorDescription.set(rs12.getString(19));
 
                         list.add(hpm);
@@ -6100,7 +6103,8 @@ public class _query {
                         hpm.Desc.set(rs12.getString(4));
                         hpm.Due_Date.set(rs12.getString(5));
                         hpm.Equip.set(rs12.getString(6));
-                        hpm.inst_btn.set(correctPathToInstr(rs12.getString(7)));
+//                        hpm.inst_btn.set(correctPathToInstr(rs12.getString(7)));
+                        hpm.inst_btn.set(rs12.getString(7));
                         hpm.OFT.set(rs12.getString(8));
                         hpm.OTV.set(rs12.getString(9));
                         hpm.tsk_maker.set(rs12.getString(10));

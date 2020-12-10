@@ -1834,9 +1834,17 @@ public class apwr_controller {
 
     private void newPWAPTasks() {
         //выгрузка создание и удаление новый записей
+        //uploading new tasks
         //Получаем текущую дату
-        LocalDate date_cur = LocalDate.now();
-        for (int dateCounter = 0; dateCounter < 4; dateCounter++, date_cur = date_cur.minusDays(1)) {
+        //LocalDate date_cur = LocalDate.now();
+
+        String sLastDate = getLastDateFromFile();
+        if (sLastDate == null) {
+            return;
+        }
+        LocalDate lastDate = LocalDate.parse(sLastDate);
+        lastDate = lastDate.plusDays(1);
+        for (LocalDate date_cur = lastDate; date_cur.isBefore(LocalDate.now()) || date_cur.equals(LocalDate.now()); date_cur = date_cur.plusDays(1)) {
             //date_cur = LocalDate.of(2020, 11, 3);
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Проверяем есть ли что-то, что можно добавить в hmmr_work_plan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             _chk.addAll(qr._select_pmplan());
@@ -1955,6 +1963,13 @@ public class apwr_controller {
             }
         }
 
+        //After save current date
+        Map<String, String> env = System.getenv();
+        String localLastDateFile = env.get("APPDATA")  + "\\last_date.txt";
+        String remoteLastDateFile = "\\\\10.168.150.74\\mu\\updates\\last_date.txt";
+        String currentDate = LocalDate.now().toString();
+        writeDate(currentDate, remoteLastDateFile);
+        writeDate(currentDate, localLastDateFile);
     }
 
     private void updateTableWr() {
@@ -2924,7 +2939,7 @@ public class apwr_controller {
     }
 
 
-// Functions for uploadin new tasks
+// Functions for uploading new tasks
     public static void writeDate(String date, String lastDateFile) {
         File file = new File(lastDateFile);
         file.delete();
@@ -2984,10 +2999,18 @@ public class apwr_controller {
         }
         LocalDate localLocalDate = LocalDate.parse(localLastDate);
         LocalDate remoteLocalDate = LocalDate.parse(remoteLastDate);
+        LocalDate resultLocalDate;
         if (localLocalDate.isBefore(remoteLocalDate)){
-            return remoteLastDate;
+            resultLocalDate = remoteLocalDate;
         } else {
-            return localLastDate;
+            resultLocalDate = localLocalDate;
+        }
+        if (resultLocalDate.equals(LocalDate.now())) {
+            return null;
+        } else if (resultLocalDate.isAfter(LocalDate.now())) {
+            return  null;
+        } else {
+            return resultLocalDate.toString();
         }
     }
 }
