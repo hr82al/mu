@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.ArrayUtils;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
+import ru.haval.config.Config;
 import ru.haval.data.FxDatePickerConverter;
 import ru.haval.db._query;
 import javafx.application.Platform;
@@ -769,7 +770,8 @@ public class apwr_controller {
 
                 });
         favoriteColumn.setStyle("-fx-alignment: CENTER;");
-        columns.add(favoriteColumn);
+        //FIXME remove calculations from GUI
+        //columns.add(favoriteColumn);
 
         //Добавляем кнопку в table_wr
         final ObservableList<TableColumn<hmmr_wr_model, ?>> columns1 = table_wr.getColumns();
@@ -807,7 +809,8 @@ public class apwr_controller {
                     }
 
                 });
-        columns1.add(favoriteColumn1);
+        //FIXME remove calculations from GUI
+        //columns1.add(favoriteColumn1);
 
         n_ap.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<hmmr_ap_model, String>>() {
 
@@ -1227,7 +1230,8 @@ public class apwr_controller {
                     }
 
                 });
-        columns_at_wr.add(at_wr);
+        //FIXME remove calculations from GUI
+        //columns_at_wr.add(at_wr);
 
         //Устанавливаем подсказку для строки Описание в таблице AP
        /* table_ap.setRowFactory((hmmr_ap_model) -> { 
@@ -1966,7 +1970,9 @@ public class apwr_controller {
         //After save current date
         Map<String, String> env = System.getenv();
         String localLastDateFile = env.get("APPDATA")  + "\\last_date.txt";
-        String remoteLastDateFile = "\\\\10.168.150.74\\mu\\updates\\last_date.txt";
+        String remoteLastDateFile = "\\\\" +
+                Config.getInstance().getAddress() +
+                "\\mu\\updates\\last_date.txt";
         String currentDate = LocalDate.now().toString();
         writeDate(currentDate, remoteLastDateFile);
         writeDate(currentDate, localLastDateFile);
@@ -2960,7 +2966,9 @@ public class apwr_controller {
     public static String getLastDateFromFile() {
         Map<String, String> env = System.getenv();
         String localLastDateFile = env.get("APPDATA")  + "\\last_date.txt";
-        String remoteLastDateFile = "\\\\10.168.150.74\\mu\\updates\\last_date.txt";
+        String remoteLastDateFile = "\\\\" +
+                Config.getInstance().getAddress() +
+                "\\mu\\updates\\last_date.txt";
         File localFile = new File(localLastDateFile);
         String localLastDate = null;
         if (localFile.exists()) {
