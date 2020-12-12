@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import javafx.beans.Observable;
 import javafx.scene.control.*;
 import org.apache.commons.lang3.ArrayUtils;
 import ru.haval.application.Main;
@@ -93,7 +94,7 @@ public class apwr_controller {
     JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, logistics, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp;
 
     @FXML
-    Label from_wr, to_wr, title_wo, title_wr, title_wp;
+    Label from_wr, to_wr, title_wo, title_wr, title_wp, total_amount;
 
     @FXML
     HBox hb1, hb2, hb3, hb_wr1, hb_wr2, hb_wr3, hb1_wp, hb2_wp, hb3_wp;
@@ -192,6 +193,8 @@ public class apwr_controller {
     @SuppressWarnings({"unchecked"})
     @FXML
     public void initialize() {
+
+        total_amount.textProperty().bind(hmmr_wr_model.totalProperty());
         shopButtons = new JFXButton[]{assembly, logistics, paint, stamp, welding};
         initSops();
 
@@ -625,10 +628,8 @@ public class apwr_controller {
                         btn.setText("");
                         btn.setPrefWidth(30);
                         btn.setPrefHeight(30);
-
-
                         //Подтверждать задачу может только тот кто ее создал или ответсвенный за задачу
-                        if (qr._select_userid(data.getap_num()).equals(conn_connector.USER_ID) || qr._select_oft(data.getap_num()).equals(USER_S))
+                        if (data.OFT_ID.get().equals(conn_connector.USER_ID) || data.OFT.get().equals(USER_S))
                             btn.setDisable(false);
                         else
                             btn.setDisable(true);
@@ -644,9 +645,9 @@ public class apwr_controller {
                             btn.setStyle("-fx-background-color: green");
 
                         //Если техник изменил статус задачи на Done, то делаем кнопку желтой при инициализации таблицы
-                        if (qr._select_status(data.IdProperty().get().substring(2)).equals("New WR") && !data.getuser())
+                        if (data.statusProperty().get().equals("New WR") && !data.getuser())
                             btn.setStyle("-fx-background-color: yellow");
-                        else if (qr._select_status(data.IdProperty().get().substring(2)).equals("Confirmed WR") && !data.getuser())
+                        else if (data.statusProperty().get().equals("Confirmed WR") && !data.getuser())
                             btn.setStyle("-fx-background-color: yellow");
 
                         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -655,7 +656,7 @@ public class apwr_controller {
                             public void handle(ActionEvent event) {
                                 Platform.runLater(() -> {
                                 //Если задачу подтверждает ответственный за задачу
-                                if (qr._select_oft(data.getap_num()).equals(USER_S) && qr._select_status(data.IdProperty().get().substring(2)).equals("Confirmed WR") && !data.getqty()) {
+                                if (data.OFT.get().equals(USER_S) && data.statusProperty().get().equals("Confirmed WR") && !data.getqty()) {
                                     qr._update_oft_wr("1", data.IdProperty().get().substring(2));
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
@@ -706,7 +707,7 @@ public class apwr_controller {
                                 }
 
                                 //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
-                                if (qr._select_userid(data.getap_num()).equals(conn_connector.USER_ID) && qr._select_oft(data.getap_num()).equals(USER_S) && qr._select_status(data.IdProperty().get().substring(2)).equals("Done")) {
+                                if (data.OFT_ID.get().equals(conn_connector.USER_ID) && data.OFT.get().equals(USER_S) &&  data.statusProperty().get().equals("Done")) {
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     qr._update_oft_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
@@ -725,7 +726,7 @@ public class apwr_controller {
                                 }
 
                                 //Если задачу подтвердил ее хозяин и если хозяин задачи не совпадает с ответственным за задачу
-                                if (qr._select_userid(data.getap_num()).equals(conn_connector.USER_ID)) { // && data.getuser()
+                                if (data.OFT_ID.get().equals(conn_connector.USER_ID)) { // && data.getuser()
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
                                     if (flag == 1)
@@ -764,14 +765,13 @@ public class apwr_controller {
                             }
                         });
 
-                        qr._update_calc_field(data.getId().substring(2));
+                        //qr._update_calc_field(data.getId().substring(2));
                         return new SimpleObjectProperty<Button>(btn);
                     }
 
                 });
         favoriteColumn.setStyle("-fx-alignment: CENTER;");
-        //FIXME remove calculations from GUI
-        //columns.add(favoriteColumn);
+        columns.add(favoriteColumn);
 
         //Добавляем кнопку в table_wr
         final ObservableList<TableColumn<hmmr_wr_model, ?>> columns1 = table_wr.getColumns();
@@ -809,8 +809,7 @@ public class apwr_controller {
                     }
 
                 });
-        //FIXME remove calculations from GUI
-        //columns1.add(favoriteColumn1);
+        columns1.add(favoriteColumn1);
 
         n_ap.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<hmmr_ap_model, String>>() {
 
@@ -1071,8 +1070,6 @@ public class apwr_controller {
                     //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                     iv.setFocusTraversable(false);
 
-
-
                     BufferedImage bufferedImage;
                     try {
                         if (!data.geticon().equals("1")) {
@@ -1084,7 +1081,12 @@ public class apwr_controller {
                             iv.setGraphic(new ImageView(image));
                         }
                     } catch (IOException e) {
-                        scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
+                        bufferedImage = new BufferedImage(10, 10, 2);
+                        priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
+                        Image image = priorImages.get(data.getPrior_img());
+                        iv.setGraphic(new ImageView(image));
+                        //error
+                        System.out.println(e.getMessage().toString() + " prior_controller " + "Ошибка загрузки изображения");
                     }
 
                     iv.setOnMouseEntered(new EventHandler<Event>() {
@@ -1187,6 +1189,7 @@ public class apwr_controller {
         //ap_instr_col.add(favoriteColumn2);
 
         final ObservableList<TableColumn<hmmr_wr_model, ?>> columns_at_wr = table_wr.getColumns();
+        at_wr.setStyle("-fx-alignment: CENTER;");
         at_wr.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<hmmr_wr_model, JFXButton>, ObservableValue<JFXButton>>() {
                     Tooltip tooltip = new Tooltip();
@@ -1199,22 +1202,28 @@ public class apwr_controller {
                         //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                         iv.setFocusTraversable(false);
 
-                        at_wr.setStyle("-fx-alignment: CENTER;");
+                        //at_wr.setStyle("-fx-alignment: CENTER;");
+
 
                         BufferedImage bufferedImage;
                         try {
                             if (!data.geticon_at().equals("1")) {
-                                String tmpIcon = qr._select_recStr("hmmr_activity_type", "Icon", "del_rec", "Name", data.geticon_at());
-                                if (!priorImages.containsKey(tmpIcon)) {
-                                    bufferedImage = ImageIO.read(new File(tmpIcon));
-                                    priorImages.put(tmpIcon, SwingFXUtils.toFXImage(bufferedImage, null));
+                                if (!atImages.containsKey(data.iconATAddress.get())) {
+                                    bufferedImage = ImageIO.read(new File(data.iconATAddress.get()));
+
+                                    atImages.put(data.iconATAddress.get(), SwingFXUtils.toFXImage(bufferedImage, null));
                                 }
-                                Image image = priorImages.get(tmpIcon);
-                                //iv.setImage(image);
+
+                                Image image = atImages.get(data.iconATAddress.get());
                                 iv.setGraphic(new ImageView(image));
                             }
-                        } catch (IOException e) {
-                            scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
+                        }catch (Exception e) {
+                            bufferedImage = new BufferedImage(10, 10, 2);
+                            atImages.put(data.iconATAddress.get(), SwingFXUtils.toFXImage(bufferedImage, null));
+                            Image image = atImages.get(data.iconATAddress.get());
+                            iv.setGraphic(new ImageView(image));
+                            //error
+                            System.out.println(e.getMessage().toString() + " prior_controller " + "Ошибка загрузки изображения");
                         }
                         iv.setOnMouseEntered(new EventHandler<Event>() {
 
@@ -1230,8 +1239,7 @@ public class apwr_controller {
                     }
 
                 });
-        //FIXME remove calculations from GUI
-        //columns_at_wr.add(at_wr);
+        columns_at_wr.add(at_wr);
 
         //Устанавливаем подсказку для строки Описание в таблице AP
        /* table_ap.setRowFactory((hmmr_ap_model) -> { 

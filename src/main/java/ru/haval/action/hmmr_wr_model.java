@@ -20,6 +20,63 @@ public class hmmr_wr_model {
 	public SimpleStringProperty user_id = new SimpleStringProperty();
 	private SimpleBooleanProperty user = new SimpleBooleanProperty();
 	public SimpleStringProperty icon_at = new SimpleStringProperty();
+
+    public SimpleStringProperty OFT_ID = new SimpleStringProperty();
+    public SimpleStringProperty OFT = new SimpleStringProperty();
+    public SimpleStringProperty iconATAddress = new SimpleStringProperty();
+
+    public static SimpleStringProperty total = new SimpleStringProperty();
+
+
+    public String getIconATAddress() {
+        return iconATAddress.get();
+    }
+
+    public SimpleStringProperty iconATAddressProperty() {
+        return iconATAddress;
+    }
+
+    public void setIconATAddress(String iconATAddress) {
+        this.iconATAddress.set(iconATAddress);
+    }
+
+    public static String getTotal() {
+        return total.get();
+    }
+
+    public static SimpleStringProperty totalProperty() {
+        return total;
+    }
+
+    public static void setTotal(String total) {
+        hmmr_wr_model.total.set(total);
+    }
+
+    public String getOFT() {
+        return OFT.get();
+    }
+
+    public SimpleStringProperty OFTProperty() {
+        return OFT;
+    }
+
+    public void setOFT(String OFT) {
+        this.OFT.set(OFT);
+    }
+
+    public String getOFT_ID() {
+        return OFT_ID.get();
+    }
+
+    public SimpleStringProperty OFT_IDProperty() {
+        return OFT_ID;
+    }
+
+    public void setOFT_ID(String OFT_ID) {
+        this.OFT_ID.set(OFT_ID);
+    }
+
+
 	
 	public hmmr_wr_model()
 	{
@@ -258,6 +315,8 @@ public class hmmr_wr_model {
                 ", user_id='" + user_id.get() + '\'' +
                 ", user='" + user.get() + '\'' +
                 ", icon_at='" + icon_at.get() + '\'' +
+                ", OFT_ID= " + OFT_ID.get() +
+                ", OFT=" + OFT.get() +
                 '}';
     }
 }

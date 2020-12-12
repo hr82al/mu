@@ -52,6 +52,8 @@ public class _query {
     private String del_rec = "0";
     public static boolean _flag_error = true;
     private static boolean onlyNotConfirmed = false;
+    //private final static String WORK_RECORDING_BASE_QUERY = "select hwr.id, hwr.Task_Description, hwr.Task_Report,CM_DownTime, hwr.WR_Work_Time, hwr.WR_End_Date, hwr.Equipment_Full, hwr.Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, hap.user_id, hap.Otv_For_Task from hmmr_work_recording hwr inner join hmmr_action_plan hap on hwr.ap_num = hap.id ";
+    private final static String WORK_RECORDING_BASE_QUERY = "select hwr.id, hwr.Task_Description, hwr.Task_Report,CM_DownTime, hwr.WR_Work_Time, hwr.WR_End_Date, hwr.Equipment_Full, hwr.Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, hap.user_id, hap.Otv_For_Task, hat.Icon from hmmr_work_recording hwr inner join hmmr_action_plan hap on hwr.ap_num = hap.id inner join  hmmr_activity_type hat on hwr.Activity_Type = hat.Name ";
 
     private static final String HAP_HEAD = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap." +
             "Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm," +
@@ -609,82 +611,22 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_wr_model> _select_data_wr() {
-        synchronized (_query.class) {
-            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
-
-            try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_Begin_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num from hmmr_work_recording;";
-
-                cn.ConToDb();
-                stmt16 = cn.con.createStatement();
-                rs16 = stmt16.executeQuery(query);
-
-                while (rs16.next()) {
-                    hmmr_wr_model hpm = new hmmr_wr_model();
-                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
-                        hpm.Id.set("WR" + rs16.getString(1));
-                        hpm.shift_report.set(rs16.getString(2));
-                        hpm.req_action.set(rs16.getString(3));
-                        hpm.actual_time.set(rs16.getString(4));
-                        hpm.actual_time1.set(rs16.getString(5));
-                        hpm.data.set(rs16.getString(6));
-                        hpm.equip.set(rs16.getString(7));
-                        hpm.record_type.set(rs16.getString(8));
-                        hpm.resp.set(rs16.getString(9));
-                        hpm.status.set(rs16.getString(10));
-                        hpm.qtyProperty().set(rs16.getBoolean(11));
-                        hpm.ap_num.set(rs16.getString(12));
-
-                        list.add(hpm);
-                    }
-                }
-            } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 493!");
-            } finally {
-                //close connection ,stmt and resultset here
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-            }
-            return list;
-        }
+        System.out.println("wr1");
+        return fillWRModel(" ;");
     }
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WORK RECORDING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    /**
-     * Заполняем данными таблицу Work Recording при открытии окна
-     * редактирования APWR - редактор, отсортированных по дате
-     *
-     * @param begin_data - Начальная дата
-     * @param last_data  - Конечная дата
-     * @return - Возвращает набор данных типа ObservableList
-     * отсортированных по дате и заполняет ими
-     * таблицу TableView.
-     */
-    @SuppressWarnings({"static-access"})
-    public ObservableList<hmmr_wr_model> _select_data_wr(String begin_data, String last_data) {
+    private ObservableList<hmmr_wr_model> fillWRModel(String filter) {
+        //Query construction. base + filter
+        String query = WORK_RECORDING_BASE_QUERY + filter;
         synchronized (_query.class) {
+            System.out.println(query);
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
-
             try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording where WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'";// + ";";
-                if (onlyNotConfirmed) {
-                    query += " AND WR_Host_Confirmed = 0";
-                }
-                query += ";";
-
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
                 rs16 = stmt16.executeQuery(query);
 
+                int total = 0;
                 while (rs16.next()) {
                     hmmr_wr_model hpm = new hmmr_wr_model();
                     if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
@@ -703,11 +645,17 @@ public class _query {
                         hpm.user_id.set(rs16.getString(13));
                         hpm.userProperty().set(rs16.getBoolean(14));
                         hpm.icon_at.set(rs16.getString(15));
+                        hpm.OFT_ID.set(rs16.getString(16));
+                        hpm.OFT.set(rs16.getString(17));
+                        hpm.iconATAddress.set(rs16.getString(18));
+
                         list.add(hpm);
+                        total++;
                     }
                 }
+                hmmr_wr_model.total.set("Общее количество: " + Integer.toString(total));
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 547!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 493!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
@@ -722,6 +670,37 @@ public class _query {
             }
             return list;
         }
+    }
+
+    private String WorkRecordingCommonFilter() {
+        String commonFilter = "";
+        if (onlyNotConfirmed) {
+            commonFilter = " AND WR_Host_Confirmed = 0";
+        }
+        commonFilter += ";";
+        return commonFilter;
+    }
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WORK RECORDING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    /**
+     * Заполняем данными таблицу Work Recording при открытии окна
+     * редактирования APWR - редактор, отсортированных по дате
+     *
+     * @param begin_data - Начальная дата
+     * @param last_data  - Конечная дата
+     * @return - Возвращает набор данных типа ObservableList
+     * отсортированных по дате и заполняет ими
+     * таблицу TableView.
+     */
+    @SuppressWarnings({"static-access"})
+    public ObservableList<hmmr_wr_model> _select_data_wr(String begin_data, String last_data) {
+        System.out.println("wr2");
+        //String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording where WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'";// + ";";
+        //String query ="select hwr.id, hwr.Task_Description, hwr.Task_Report,CM_DownTime, hwr.WR_Work_Time, hwr.WR_End_Date, hwr.Equipment_Full, hwr.Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, hap.user_id, hap.Otv_For_Task from hmmr_work_recording hwr inner join hmmr_action_plan hap on hwr.ap_num = hap.id where WR_End_Date BETWEEN  " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'";// + ";";
+        //query += ";";
+        return fillWRModel(" where WR_End_Date BETWEEN  " + "'" + begin_data + "'" + " AND " + "'" + last_data + "' "  + WorkRecordingCommonFilter());
     }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -792,58 +771,13 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_wr_model> _select_sort_apnum_wr(String apnum) {
-        synchronized (_query.class) {
-            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
-
-            try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE ap_num = " + "'" + apnum + "'";// + ";";
-                if (onlyNotConfirmed) {
-                    query += " AND WR_Host_Confirmed = 0";
-                }
-                query += ";";
-
-                cn.ConToDb();
-                stmt16 = cn.con.createStatement();
-                rs16 = stmt16.executeQuery(query);
-
-                while (rs16.next()) {
-                    hmmr_wr_model hpm = new hmmr_wr_model();
-                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
-                        hpm.Id.set("WR" + rs16.getString(1));
-                        hpm.shift_report.set(rs16.getString(2));
-                        hpm.req_action.set(rs16.getString(3));
-                        hpm.actual_time.set(rs16.getString(4));
-                        hpm.actual_time1.set(rs16.getString(5));
-                        hpm.data.set(rs16.getString(6));
-                        hpm.equip.set(rs16.getString(7));
-                        hpm.record_type.set(rs16.getString(8));
-                        hpm.resp.set(rs16.getString(9));
-                        hpm.status.set(rs16.getString(10));
-                        hpm.qtyProperty().set(rs16.getBoolean(11));
-                        hpm.ap_num.set(rs16.getString(12));
-                        hpm.user_id.set(rs16.getString(13));
-                        hpm.userProperty().set(rs16.getBoolean(14));
-                        hpm.icon_at.set(rs16.getString(15));
-
-                        list.add(hpm);
-                    }
-                }
-            } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 648!");
-            } finally {
-                //close connection ,stmt and resultset here
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-            }
-            return list;
-        }
+        System.out.println("wr3");
+//        String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE ap_num = " + "'" + apnum + "'";// + ";";
+//        if (onlyNotConfirmed) {
+//            query += " AND WR_Host_Confirmed = 0";
+//        }
+//        query += ";";
+        return fillWRModel(" WHERE ap_num = " + "'" + apnum + "' ;");
     }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -862,58 +796,15 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_wr_model> _select_sort_shop_wr(String begin_data, String last_data, String shop) {
-        synchronized (_query.class) {
-            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
+        //String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND FL_WSH = " + "'" + shop + "'";// + ";";
 
-            try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND FL_WSH = " + "'" + shop + "'";// + ";";
-                if (onlyNotConfirmed) {
-                    query += " AND WR_Host_Confirmed = 0";
-                }
-                query += ";";
-
-                cn.ConToDb();
-                stmt16 = cn.con.createStatement();
-                rs16 = stmt16.executeQuery(query);
-
-                while (rs16.next()) {
-                    hmmr_wr_model hpm = new hmmr_wr_model();
-                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
-                        hpm.Id.set("WR" + rs16.getString(1));
-                        hpm.shift_report.set(rs16.getString(2));
-                        hpm.req_action.set(rs16.getString(3));
-                        hpm.actual_time.set(rs16.getString(4));
-                        hpm.actual_time1.set(rs16.getString(5));
-                        hpm.data.set(rs16.getString(6));
-                        hpm.equip.set(rs16.getString(7));
-                        hpm.record_type.set(rs16.getString(8));
-                        hpm.resp.set(rs16.getString(9));
-                        hpm.status.set(rs16.getString(10));
-                        hpm.qtyProperty().set(rs16.getBoolean(11));
-                        hpm.ap_num.set(rs16.getString(12));
-                        hpm.user_id.set(rs16.getString(13));
-                        hpm.userProperty().set(rs16.getBoolean(14));
-                        hpm.icon_at.set(rs16.getString(15));
-
-                        list.add(hpm);
-                    }
-                }
-            } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 706!");
-            } finally {
-                //close connection ,stmt and resultset here
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-            }
-            return list;
-        }
+//        String query ="select hwr.id, hwr.Task_Description, hwr.Task_Report,CM_DownTime, hwr.WR_Work_Time, hwr.WR_End_Date, hwr.Equipment_Full, hwr.Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, hap.user_id, hap.Otv_For_Task from hmmr_work_recording hwr inner join hmmr_action_plan hap on hwr.ap_num = hap.id where WR_End_Date BETWEEN  " + "'" + begin_data + "'" + " AND " + "'" + last_data +  "'" + " AND FL_WSH = " + "'" + shop + "'";// + ";";
+//        if (onlyNotConfirmed) {
+//            query += " AND WR_Host_Confirmed = 0";
+//        }
+//        query += ";";
+        System.out.println("wr4");
+        return fillWRModel(" where WR_End_Date BETWEEN  " + "'" + begin_data + "'" + " AND " + "'" + last_data +  "'" + " AND FL_WSH = " + "'" + shop + "' " + WorkRecordingCommonFilter());
     }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -931,58 +822,13 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_wr_model> _select_sort_resp_wr(String begin_data, String last_data, String resp) {
-        synchronized (_query.class) {
-            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
-
-            try {
-                String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND Task_Resp_ID = " + "'" + resp + "'";// + ";";
-                if (onlyNotConfirmed) {
-                    query += " AND WR_Host_Confirmed = 0";
-                }
-                query += ";";
-
-                cn.ConToDb();
-                stmt16 = cn.con.createStatement();
-                rs16 = stmt16.executeQuery(query);
-
-                while (rs16.next()) {
-                    hmmr_wr_model hpm = new hmmr_wr_model();
-                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
-                        hpm.Id.set("WR" + rs16.getString(1));
-                        hpm.shift_report.set(rs16.getString(2));
-                        hpm.req_action.set(rs16.getString(3));
-                        hpm.actual_time.set(rs16.getString(4));
-                        hpm.actual_time1.set(rs16.getString(5));
-                        hpm.data.set(rs16.getString(6));
-                        hpm.equip.set(rs16.getString(7));
-                        hpm.record_type.set(rs16.getString(8));
-                        hpm.resp.set(rs16.getString(9));
-                        hpm.status.set(rs16.getString(10));
-                        hpm.qtyProperty().set(rs16.getBoolean(11));
-                        hpm.ap_num.set(rs16.getString(12));
-                        hpm.user_id.set(rs16.getString(13));
-                        hpm.userProperty().set(rs16.getBoolean(14));
-                        hpm.icon_at.set(rs16.getString(15));
-
-                        list.add(hpm);
-                    }
-                }
-            } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 763!");
-            } finally {
-                //close connection ,stmt and resultset here
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-            }
-            return list;
-        }
+//        String query = "select id,Task_Description,Task_Report,CM_DownTime,WR_Work_Time,WR_End_Date,Equipment_Full,Record_Type,Task_Resp_ID,WR_Executor_Confirmed,WR_Host_Confirmed,ap_num,user_number,WR_Resp_Confirmed,Activity_Type from hmmr_work_recording WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND Task_Resp_ID = " + "'" + resp + "'";// + ";";
+//        if (onlyNotConfirmed) {
+//            query += " AND WR_Host_Confirmed = 0";
+//        }
+//        query += ";";
+        System.out.println("wr5");
+        return fillWRModel(" WHERE WR_End_Date BETWEEN " + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND Task_Resp_ID = " + "'" + resp + "' " + WorkRecordingCommonFilter());
     }
 
     public static void setOnlyNotConfirmed(boolean onlyNotConfirmed) {
@@ -1001,61 +847,13 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_wr_model> _select_sort_OFT_wr(String begin_data, String last_data, String OFT) {
-        synchronized (_query.class) {
-            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
-            try {
-                String query = "select hwr.id, hwr.Task_Description, hwr.Task_Report, hwr.CM_DownTime, hwr.WR_Work_Time, " +
-                        "hwr.WR_End_Date, hwr.Equipment_Full,Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, " +
-                        "hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, " +
-                        "hap.Otv_For_Task from hmmr_work_recording hwr INNER JOIN hmmr_action_plan hap ON hap.id = " +
-                        "hwr.ap_num WHERE WR_End_Date BETWEEN "
-                        + "'" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "' ";// + ";";
-                if (onlyNotConfirmed) {
-                    query += " AND WR_Host_Confirmed = 0";
-                }
-                query += ";";
-                cn.ConToDb();
-                stmt16 = cn.con.createStatement();
-                rs16 = stmt16.executeQuery(query);
-
-                while (rs16.next()) {
-                    hmmr_wr_model hpm = new hmmr_wr_model();
-                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
-                        hpm.Id.set("WR" + rs16.getString(1));
-                        hpm.shift_report.set(rs16.getString(2));
-                        hpm.req_action.set(rs16.getString(3));
-                        hpm.actual_time.set(rs16.getString(4));
-                        hpm.actual_time1.set(rs16.getString(5));
-                        hpm.data.set(rs16.getString(6));
-                        hpm.equip.set(rs16.getString(7));
-                        hpm.record_type.set(rs16.getString(8));
-                        hpm.resp.set(rs16.getString(9));
-                        hpm.status.set(rs16.getString(10));
-                        hpm.qtyProperty().set(rs16.getBoolean(11));
-                        hpm.ap_num.set(rs16.getString(12));
-                        hpm.user_id.set(rs16.getString(13));
-                        hpm.userProperty().set(rs16.getBoolean(14));
-                        hpm.icon_at.set(rs16.getString(15));
-
-                        list.add(hpm);
-                    }
-                }
-            } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 763!");
-            } finally {
-                //close connection ,stmt and resultset here
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs16.close();
-                } catch (SQLException se) { /*can't do anything */ }
-            }
-            return list;
-        }
+//        String query = "select hwr.id, hwr.Task_Description, hwr.Task_Report, hwr.CM_DownTime, hwr.WR_Work_Time, hwr.WR_End_Date, hwr.Equipment_Full,Record_Type, hwr.Task_Resp_ID, hwr.WR_Executor_Confirmed, hwr.WR_Host_Confirmed, hwr.ap_num, hwr.user_number, hwr.WR_Resp_Confirmed, hwr.Activity_Type, hap.user_id, hap.Otv_For_Task from hmmr_work_recording hwr INNER JOIN hmmr_action_plan hap ON hap.id = hwr.ap_num WHERE WR_End_Date BETWEEN '" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "' ";// + ";";
+//        if (onlyNotConfirmed) {
+//            query += " AND WR_Host_Confirmed = 0";
+//        }
+//        query += ";";
+        System.out.println("wr6");
+        return fillWRModel(" WHERE WR_End_Date BETWEEN '" + begin_data + "'" + " AND " + "'" + last_data + "'" + " AND hap.Otv_For_Task = " + "'" + OFT + "' " + WorkRecordingCommonFilter());
     }
 
     private String getUserIDByLetters(String oft) {
@@ -3407,7 +3205,6 @@ public class _query {
             String status = "null";
             try {
                 String query = "select WR_Executor_Confirmed from hmmr_work_recording where id = " + "'" + id + "'" + ";";
-
                 cn.ConToDb();
                 stmt9 = cn.con.createStatement();
                 rs9 = stmt9.executeQuery(query);
@@ -6973,7 +6770,7 @@ public class _query {
 
             try {
                 String query = "select " + str + " from " + tbl_name + " where " + del_name + " = 0 AND " + id_name + " = " + "'" + id + "'" + ";";
-
+                System.out.println(query);
                 cn.ConToDb();
                 stmt6 = cn.con.createStatement();
                 rs6 = stmt6.executeQuery(query);
