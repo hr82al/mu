@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 
 
 public class hmmr_ap_model {
-    private static int BUTTON_WIDTH = 50;
 
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty PM_Num = new SimpleStringProperty();
@@ -48,6 +47,8 @@ public class hmmr_ap_model {
         this.tm = tm;
     }
 
+    public static SimpleStringProperty total = new SimpleStringProperty();
+
     public hmmr_ap_model()
 	{
 		
@@ -70,6 +71,18 @@ public class hmmr_ap_model {
 		this.icon.set(icon);
 		this.icon_at.set(icon_at);
 	}
+
+    public static String getTotal() {
+        return total.get();
+    }
+
+    public static SimpleStringProperty totalProperty() {
+        return total;
+    }
+
+    public static void setTotal(String total) {
+        hmmr_ap_model.total.set(total);
+    }
 
     public String getPrior_img() {
         return prior_img.get();

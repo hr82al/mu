@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
-import javafx.beans.Observable;
 import javafx.scene.control.*;
 import org.apache.commons.lang3.ArrayUtils;
 import ru.haval.application.Main;
@@ -59,6 +58,9 @@ import javafx.util.Callback;
 import net.sf.jasperreports.engine.JRException;
 import report.ExportToExcel;
 import report.PrintReport;
+import ru.haval.filter.APFilter;
+import ru.haval.filter.IFilter;
+import ru.haval.filter.WRFilter;
 import ru.haval.share_class.TooltippedTableCell;
 import ru.haval.share_class.s_class;
 
@@ -91,10 +93,10 @@ public class apwr_controller {
     ScrollPane sp_wr;
 
     @FXML
-    JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, logistics, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp;
+    JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, logistics, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp, WRFilterButton, APFilterButton;
 
     @FXML
-    Label from_wr, to_wr, title_wo, title_wr, title_wp, total_amount;
+    Label from_wr, to_wr, title_wo, title_wr, title_wp, wr_total_amount, ap_total_amount;
 
     @FXML
     HBox hb1, hb2, hb3, hb_wr1, hb_wr2, hb_wr3, hb1_wp, hb2_wp, hb3_wp;
@@ -194,7 +196,10 @@ public class apwr_controller {
     @FXML
     public void initialize() {
 
-        total_amount.textProperty().bind(hmmr_wr_model.totalProperty());
+
+        wr_total_amount.textProperty().bind(hmmr_wr_model.totalProperty());
+        ap_total_amount.textProperty().bind(hmmr_ap_model.totalProperty());
+
         shopButtons = new JFXButton[]{assembly, logistics, paint, stamp, welding};
         initSops();
 
@@ -356,6 +361,12 @@ public class apwr_controller {
             Image imageOk = new Image(getClass().getResourceAsStream("welding.png"));
             welding.setGraphic(new ImageView(imageOk));
         });
+        Platform.runLater(() -> {
+            Image imageFilter = new Image(getClass().getResourceAsStream("filterOff.png"));
+            WRFilterButton.setGraphic(new ImageView(imageFilter));
+            APFilterButton.setGraphic(new ImageView(imageFilter));
+        });
+
 
         if (conn_connector.LANG_ID == 0 || conn_connector.LANG_ID == -1) {
             rus_btn.setDisable(true);
@@ -811,7 +822,7 @@ public class apwr_controller {
                 });
         columns1.add(favoriteColumn1);
 
-        n_ap.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<hmmr_ap_model, String>>() {
+        n_ap.setOnEditStart(new EventHandler<CellEditEvent<hmmr_ap_model, String>>() {
 
             @Override
             public void handle(CellEditEvent<hmmr_ap_model, String> event) {
@@ -1842,6 +1853,22 @@ public class apwr_controller {
         table_wr.getSelectionModel().selectLast();
         table_wr.scrollTo(table_wr.getItems().size());
 
+        //Filters initialisation
+
+        WRFilter.getInstance().sqlFilterProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                table_wr.setItems(qr.selectWRDataByFilter(WRFilter.getInstance().getSqlFilter()));
+                //table_wr.setItems(qr.selectWRDataByFilter(WRFilter.getSqlFilter()));
+            }
+        });
+
+        APFilter.getInstance().sqlFilterProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                table_ap.setItems(qr.selectAPDataByFilter(APFilter.getInstance().getSqlFilter()));
+            }
+        });
     }
 
     private void newPWAPTasks() {
@@ -3029,4 +3056,46 @@ public class apwr_controller {
             return resultLocalDate.toString();
         }
     }
+
+    //filters
+    public void callAPFilter(ActionEvent actionEvent) {
+        System.out.println("call ap filter");
+        showFilterWindow(APFilter.getInstance());
+    }
+
+    public void callWRFilter(ActionEvent actionEvent) {
+        System.out.println("call wr filter");
+        showFilterWindow(WRFilter.getInstance());
+
+//        stage_set.setUserData(WRFilter.getInstance());
+//
+//        stage_set.initModality(Modality.WINDOW_MODAL);
+//        stage_set.setTitle("M&U - Filter");
+//        stage_set.setResizable(false);
+//        stage_set.setScene(scene);
+//        stage_set.show();
+    }
+
+    private void showFilterWindow(IFilter filter) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/haval/application/filter.fxml"));
+            FilterController filterController = new FilterController();
+            filterController.setFilter(filter);
+            loader.setController(filterController);
+
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setTitle("M&U Filter");
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

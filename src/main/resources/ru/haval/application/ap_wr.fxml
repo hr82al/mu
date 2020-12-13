@@ -70,7 +70,7 @@
                            </children>
                    </AnchorPane>
                   </content>
-              </Tab>     
+              </Tab>
                 <Tab fx:id="tab_wo" text="Work Order">
                   <content>
                     <AnchorPane fx:id="an_pn2" minHeight="0.0" minWidth="0.0" prefHeight="723.0" prefWidth="1322.0">
@@ -107,7 +107,7 @@
 					                        <HBox prefHeight="100.0" prefWidth="17.0" />
 					                        <JFXButton fx:id="usa_btn" focusTraversable="false" />
                      					</children>
-                     				</HBox>	
+                     				</HBox>
                      				<HBox fx:id="hb2" alignment="CENTER_LEFT" prefHeight="541.0" prefWidth="1322.0">
 				                     <children>
 				                        <HBox prefHeight="369.0" prefWidth="24.0" />
@@ -122,69 +122,78 @@
 				                                </columns>
 				                              </TableView>
 				                     </children>
-				                  </HBox>	
+				                  </HBox>
 				                  <HBox fx:id="hb3" alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="1322.0">
 				                     <children>
-				                        <HBox prefHeight="65.0" prefWidth="26.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="private_ap" focusTraversable="false" text="Личные">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="showall_ap" focusTraversable="false" text="Показать все">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="48.0" prefWidth="17.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="upd_table_ap" focusTraversable="false" text="Обновить таблицу">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox fx:id="hb_btn_ap" prefHeight="48.0" prefWidth="41.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="print_tsk" focusTraversable="false" ripplerFill="#c8f5ff" text="Печать TSK">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="48.0" prefWidth="17.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="export_excel" text="Экспорт в Excel">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="48.0" prefWidth="41.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="add_wr" focusTraversable="false" text="Создать запись WR">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="100.0" prefWidth="17.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
 				                        <JFXButton fx:id="create_ap" focusTraversable="false" text="Создать TSK/CM">
 				                           <font>
 				                              <Font name="System Bold" size="12.0" />
 				                           </font>
 				                        </JFXButton>
-				                        <HBox prefHeight="100.0" prefWidth="17.0" />
-				                        <JFXButton fx:id="upd_ap" focusTraversable="false" text="Обновить">
-				                           <font>
-				                              <Font name="System Bold" size="12.0" />
-				                           </font>
-				                        </JFXButton>
-				                        <HBox prefHeight="48.0" prefWidth="93.0" />
-				                        <ComboBox fx:id="filtre_apwr" prefWidth="150.0" />
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
+										 <JFXButton fx:id="upd_ap" focusTraversable="false" text="Обновить">
+											 <font>
+												 <Font name="System Bold" size="12.0" />
+											 </font>
+										 </JFXButton>
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
+										 <JFXButton fx:id="APFilterButton" focusTraversable="false" onAction="#callAPFilter" />
+
+										 <HBox prefHeight="63.0" prefWidth="25.0" />
+										 <VBox>
+											 <VBox prefHeight="2"></VBox>
+											 <Label fx:id="ap_total_amount" text="Общее количество" />
+											 <VBox prefHeight="2"></VBox>
+											 <ComboBox fx:id="filtre_apwr" prefWidth="150.0" />
+										 </VBox>
+
 				                     </children>
 				                     <VBox.margin>
 				                        <Insets />
 				                     </VBox.margin>
 				                  </HBox>
                					</children>
-               				</VBox>	
+               				</VBox>
 		                 </children>
 		            </AnchorPane>
-                           
+
                   </content>
                 </Tab>
                 <Tab fx:id="tab_wr" text="Work Recording">
@@ -267,13 +276,13 @@
 											 </font>
 										 </CheckBox>
 										 <HBox prefHeight="59.0" prefWidth="15.0" />
-										 <Label fx:id="total_amount"  prefHeight="51.0" prefWidth="170.0" text="">
-											 <font>
-												 <Font name="System" size="12.0" />
-											 </font>
+										 <Label fx:id="wr_total_amount" prefHeight="51.0" prefWidth="170.0" text="">
 										 </Label>
+										 <HBox prefHeight="59.0" prefWidth="15.0" />
+										 <JFXButton fx:id="WRFilterButton" focusTraversable="false" onAction="#callWRFilter" />
+										 <HBox prefHeight="48.0" prefWidth="48.0" />
 				                     </children>
-				                  </HBox>   
+				                  </HBox>
                                  </children>
                               </VBox>
                            </children>
