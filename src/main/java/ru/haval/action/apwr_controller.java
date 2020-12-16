@@ -323,45 +323,15 @@ public class apwr_controller {
             lang_fun("ru", "RU");
 
         Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("settings.png"));
-            set_btn.setGraphic(new ImageView(imageOk));
-        });
-
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("russia_flag.png"));
-            rus_btn.setGraphic(new ImageView(imageOk));
-        });
-
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("china_flag.png"));
-            chn_btn.setGraphic(new ImageView(imageOk));
-        });
-
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("united_flag.png"));
-            usa_btn.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("assembly.png"));
-            assembly.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("logistics.png"));
-            logistics.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("Painting.png"));
-            paint.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("stamp.png"));
-            stamp.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
-            Image imageOk = new Image(getClass().getResourceAsStream("welding.png"));
-            welding.setGraphic(new ImageView(imageOk));
-        });
-        Platform.runLater(() -> {
+            set_btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("settings.png"))));
+            rus_btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("russia_flag.png"))));
+            chn_btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("china_flag.png"))));
+            usa_btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("united_flag.png"))));
+            assembly.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("assembly.png"))));
+            logistics.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("logistics.png"))));
+            paint.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("Painting.png"))));
+            stamp.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("stamp.png"))));
+            welding.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("welding.png"))));
             Image imageFilter = new Image(getClass().getResourceAsStream("filterOff.png"));
             WRFilterButton.setGraphic(new ImageView(imageFilter));
             APFilterButton.setGraphic(new ImageView(imageFilter));
