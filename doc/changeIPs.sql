@@ -1,6 +1,58 @@
 set @from = '10.168.150.74', @to = '192.168.1.215';
+
 update hmmr_mu.hmmr_activity_type set Icon = REPLACE(Icon, @from, @to) where id > 0;
 update hmmr_mu.hmmr_mu_prior set Icon = REPLACE(Icon, @from, @to)  where id > 0;
+
+
+#Существущие в ap и несуществующие в wp установить флаги
+
+DROP table tmp;
+CREATE TEMPORARY TABLE IF NOT EXISTS tmp as (
+
+
+select hap.id as id from hmmr_action_plan hap left join hmmr_work_recording hwr on hwr.ap_num = hap.id  where (hap.Otv_For_Task = 'ASH' or hap.Otv_For_Task = 'SAV') and hap.Due_Date like '2020-11-%' and user_number IS NULL
+);
+UPDATE hmmr_action_plan set 
+del_rec = 0, flag_otv = 0, flag_tm = 0, flag_oft = 0 WHERE id IN (select id from tmp);
+#####################
+
+use hmmr_mu;
+
+CREATE TEMPORARY TABLE IF NOT EXISTS tmp as (
+
+
+select hap.id as id from hmmr_action_plan hap  left join hmmr_work_recording hwr on hwr.ap_num = hap.id  where hap.Due_Date like '2020-11-%' and hap.Otv = 'need select' and (hap.Otv_For_Task = 'DVO' OR hap.Otv_For_Task = 'SRA') and hwr.id IS NULL
+);
+
+UPDATE hmmr_action_plan set 
+Otv = 'DGA' WHERE id IN (select id from tmp)
+################
+
+
+CREATE TEMPORARY TABLE IF NOT EXISTS tmp as (
+SELECT id FROM hmmr_action_plan WHERE Due_Date like '2020-11-%' and Otv = 'need select' and Otv_For_Task ='RKa'
+);
+UPDATE hmmr_action_plan set
+Otv = 'RN' WHERE id in (SELECT * FROM tmp);
+############################################
+
+
+SELECT * from hmmr_action_plan hap WHERE id NOT IN (SELECT ap_num FROM hmmr_work_recording) and Due_Date BETWEEN '2020-01-01' and '2020-10-31' GROUP BY CONCAT(hap.PM_Num,hap.Due_Date) HAVING COUNT(CONCAT(hap.PM_Num,hap.Due_Date)) > 1 ORDER BY hap.id
+
+
+
+CREATE TEMPORARY TABLE IF NOT EXISTS tmp AS (
+SELECT id from hmmr_action_plan hap WHERE  id NOT IN (SELECT ap_num FROM hmmr_work_recording) AND  Due_Date BETWEEN '2020-01-01' and '2020-10-31' GROUP BY CONCAT(hap.PM_Num,hap.Due_Date) HAVING COUNT(CONCAT(hap.PM_Num,hap.Due_Date)) > 1 ORDER BY hap.id
+);
+
+DELETE FROM hmmr_action_plan WHERE id IN (SELECT * FROM tmp);
+
+
+SELECT * FROM hmmr_action_plan hap WHERE Otv = 'need select' and Due_Date BETWEEN '2020-01-01' AND '2020-10-31' ORDER BY hap.Otv_For_Task;
+
+
+
+
 
 update hmmr_mu.hmmr_work_plan
 set
