@@ -4,6 +4,8 @@ update hmmr_mu.hmmr_activity_type set Icon = REPLACE(Icon, @from, @to) where id 
 update hmmr_mu.hmmr_mu_prior set Icon = REPLACE(Icon, @from, @to)  where id > 0;
 
 
+
+
 #Существущие в ap и несуществующие в wp установить флаги
 
 DROP table tmp;
@@ -14,6 +16,13 @@ select hap.id as id from hmmr_action_plan hap left join hmmr_work_recording hwr 
 );
 UPDATE hmmr_action_plan set 
 del_rec = 0, flag_otv = 0, flag_tm = 0, flag_oft = 0 WHERE id IN (select id from tmp);
+
+#######################
+UPDATE hmmr_work_recording hwr
+SET Record_Type = (
+SELECT Type FROM hmmr_action_plan WHERE id = hwr.ap_num
+)
+WHERE Record_Type IS NULL AND WR_Begin_Date LIKE '2020-%';
 #####################
 
 use hmmr_mu;
