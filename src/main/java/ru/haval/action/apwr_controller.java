@@ -226,6 +226,7 @@ public class apwr_controller {
         hb3.setPrefHeight(70.0);
         table_ap.setPrefWidth(screen_width - 100);
         table_ap.setPrefHeight(screen_hight - 200);
+        table_ap.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         title_wo.setPrefWidth(830.0);
         if (screen_width == 1920.0)
             desc_ap.setPrefWidth(810.0);
@@ -2286,6 +2287,7 @@ public class apwr_controller {
         Parent root = FXMLLoader.load(getClass().getResource("add_rec_wr.fxml"));
         Scene scene = new Scene(root);
         Stage stage_set = new Stage();
+        stage_set.setUserData(this);
         stage_set.initModality(Modality.WINDOW_MODAL);
         stage_set.initOwner(conn_connector.getPrimaryStage());
         stage_set.setTitle("M&U - Add Record Window");
