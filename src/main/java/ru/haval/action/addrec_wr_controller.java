@@ -80,6 +80,18 @@ public class addrec_wr_controller {
 	@FXML
 	public void initialize()
 	{
+
+		//Disable some elements if selected several records
+		if (pic.isApMultipleSelected) {
+			shop_wr_add.setDisable(true);
+			group_wr_add.setDisable(true);
+			lm_wr_add.setDisable(true);
+			os_wr_add.setDisable(true);
+			equip_wr_add.setDisable(true);
+			record_type_wr_add.setDisable(true);
+			list_at_wr.setDisable(true);
+			status_wr_add.setDisable(true);
+		}
 		if(conn_connector.LANG_ID == 1) {
 			lang_fun("en", "EN");
 			w_data_begin.setPromptText("from:");

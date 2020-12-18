@@ -1,0 +1,5 @@
+String jarLocationUrl = bsh.Console.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+String jarLocation = new File(new File(jarLocationUrl.toString()).getParent()).getParent();
+String command = "javaw.exe -jar \"" + jarLocation + "\\updates\\mu1.015.jar\"";
+//Run programm
+Runtime.getRuntime().exec(command);

@@ -190,6 +190,7 @@ public class apwr_controller {
 
     private Set<String> availableShops;
     private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
+    public static boolean isApMultipleSelected;
 
 
     @SuppressWarnings({"unchecked"})
@@ -860,6 +861,11 @@ public class apwr_controller {
                         func_upd(table_ap.getSelectionModel().getSelectedItem().getId());
                     if (conn_connector.USER_ROLE.equals("Technics")) {
                         try {
+                            if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+                                isApMultipleSelected = true;
+                            } else {
+                                isApMultipleSelected = false;
+                            }
                             addwr_start();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -1319,6 +1325,12 @@ public class apwr_controller {
                     //даты для сортировки таблицы
                     before_date = fx_dp.toString(begin_data.getValue());
                     after_date = fx_dp.toString(last_data.getValue().plusDays(1));
+
+                    if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+                        isApMultipleSelected = true;
+                    } else {
+                        isApMultipleSelected = false;
+                    }
 
                     addwr_start();
 
@@ -2514,6 +2526,11 @@ public class apwr_controller {
 
 
     private void func_upd(String str) {
+        if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+            isApMultipleSelected = true;
+        } else {
+            isApMultipleSelected = false;
+        }
         _sql_rez = qr._select_for_update_ap(str.substring(2));
         _id_ap = str.substring(2);
         _pmnum_ap = scl.parser_str_str_str(_sql_rez, 0);
