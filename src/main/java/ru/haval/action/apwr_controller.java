@@ -96,6 +96,9 @@ public class apwr_controller {
     JFXButton print_tsk, add_wr, create_ap, upd_ap, private_ap, showall_ap, upd_table_ap, upd_wr, clear_filter, upd_table_wr, set_btn, rus_btn, chn_btn, usa_btn, assembly, logistics, paint, stamp, welding, export_excel, upd_tbl_wp, upd_rec_wp, WRFilterButton, APFilterButton;
 
     @FXML
+    public JFXButton wrCloseAllButton;
+
+    @FXML
     Label from_wr, to_wr, title_wo, title_wr, title_wp, wr_total_amount, ap_total_amount;
 
     @FXML
@@ -394,6 +397,13 @@ public class apwr_controller {
             }
         });
 
+        hmmr_wr_model.hasConfirmedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                wrCloseAllButton.setDisable(newValue);
+            }
+        });
+
         rus_btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -643,7 +653,8 @@ public class apwr_controller {
                                     qr._update_oft_wr("1", data.IdProperty().get().substring(2));
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
-                                    switch (flag) {
+                                    updateTableWr();
+                                    /*switch (flag) {
                                         case 0:
                                         case 2:
                                             table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
@@ -662,7 +673,7 @@ public class apwr_controller {
                                             break;
                                     }
                                     table_wr.getColumns().get(0).setVisible(false);
-                                    table_wr.getColumns().get(0).setVisible(true);
+                                    table_wr.getColumns().get(0).setVisible(true);*/
 									/*if(flag == 1)
 										table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
 									if(flag == 0 || flag == 2) 
@@ -1533,6 +1544,7 @@ public class apwr_controller {
         });
 
         scl._style(upd_table_wr);
+        scl._style(wrCloseAllButton);
 
         upd_table_wr.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -2880,13 +2892,15 @@ public class apwr_controller {
     }
 
     public void oftConfirm(hmmr_ap_model data) {
-        Button btn = data.getOft();
+        //FIXME
+        //Button btn = data.getOft();
         if (!data.getflag_otv().equals("0") && !data.getflag_otv().equals("1")) {
             //Если задачу подтверждает ответственный за задачу в поле ответственный AP
             if (qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
                 qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
                 qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                btn.setStyle("-fx-background-color: green");
+                //FIXME
+                //btn.setStyle("-fx-background-color: green");
                 //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
                 //CECKME
@@ -2899,7 +2913,7 @@ public class apwr_controller {
             if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
                 qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
                 qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                btn.setStyle("-fx-background-color: green");
+                //btn.setStyle("-fx-background-color: green");
                 //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
                 setTableAPItems(qr._select_data_ap(USER_S));
@@ -2911,7 +2925,7 @@ public class apwr_controller {
             if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
                 qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
                 qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                btn.setStyle("-fx-background-color: green");
+                //btn.setStyle("-fx-background-color: green");
                 //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
                 setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
@@ -2922,12 +2936,12 @@ public class apwr_controller {
     }
 
     public void tmConfirm(hmmr_ap_model data) {
-        Button btn = data.getTm();
+        //Button btn = data.getTm();
         if (!data.getflag_otv().equals("0") && !data.getflag_oft().equals("0")) {
             //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
             if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID) && qr._select_oft(data.getId().substring(2)).equals(apwr_controller.USER_S)) {
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
-                btn.setStyle("-fx-background-color: green");
+                //btn.setStyle("-fx-background-color: green");
 
                 setTableAPItems(qr._select_data_ap(USER_S));
                 table_ap.getColumns().get(0).setVisible(false);
@@ -2937,7 +2951,7 @@ public class apwr_controller {
             //Владелец задачи может ее подтвердить в любом случае
             if (qr._select_userid(data.getId().substring(2)).equals(conn_connector.USER_ID)) {
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
-                btn.setStyle("-fx-background-color: green");
+                //btn.setStyle("-fx-background-color: green");
 
                 setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
                 table_ap.getColumns().get(0).setVisible(false);
@@ -2949,7 +2963,7 @@ public class apwr_controller {
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
                 qr._update_otv_ap(data.getId().substring(2), "flag_oft", "2");
                 qr._update_otv_ap(data.getId().substring(2), "flag_otv", "2");
-                btn.setStyle("-fx-background-color: green");
+                //btn.setStyle("-fx-background-color: green");
                 qr._update_calc_field(data.getId().substring(2));
                 qr._update_deleterec_ap(data.getId().substring(2));
                 setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
@@ -3086,5 +3100,25 @@ public class apwr_controller {
     }
 
 
+    public void onWrCloseAllButton(ActionEvent actionEvent) {
+        Platform.runLater(() -> {
+            for (hmmr_wr_model hpm : table_wr.getItems()) {
+                if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals(apwr_controller.USER_S))) {
+                    //Confirm everything  //73734, 73738, 67188
+                    qr._update_oft_wr("1", hpm.IdProperty().get().substring(2));
+                    qr._update_qty_wr("1", hpm.IdProperty().get().substring(2));
+                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_tm", "2");
+                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_oft", "2");
+                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_otv", "2");
+                    qr._update_calc_field(hpm.getap_num().substring(2));
+                    qr._update_deleterec_ap(hpm.getap_num().substring(2));
+                    System.out.println(hpm);
+                }
+            }
+            //update tables
+            setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+            updateTableWr();
+        });
 
+    }
 }

@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class hmmr_wr_model {
 
+    public static SimpleBooleanProperty hasConfirmed = new SimpleBooleanProperty(true);
+
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty shift_report = new SimpleStringProperty();
 	public SimpleStringProperty req_action = new SimpleStringProperty();
@@ -296,7 +298,19 @@ public class hmmr_wr_model {
     public void seticon_at(String icon_at) {
         this.icon_at.set(icon_at);
     }
-    
+
+    public static boolean isHasConfirmed() {
+        return hasConfirmed.get();
+    }
+
+    public static SimpleBooleanProperty hasConfirmedProperty() {
+        return hasConfirmed;
+    }
+
+    public static void setHasConfirmed(boolean hasConfirmed) {
+        hmmr_wr_model.hasConfirmed.set(hasConfirmed);
+    }
+
     @Override
     public String toString() {
         return "hmmr_wr_model{" +

@@ -453,8 +453,8 @@ public class _query {
     }
 
     private ObservableList<hmmr_ap_model> fillAPModel(String query) {
-        //System.out.println("ap query");
-        //System.out.println(query);
+//        System.out.println("ap query");
+//        System.out.println(query);
         synchronized (_query.class) {
             ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
             try {
@@ -637,7 +637,7 @@ public class _query {
         //Query construction. base + filter
         String query = WORK_RECORDING_BASE_QUERY + filter;
         synchronized (_query.class) {
-            //System.out.println(query);
+            System.out.println(query);
             ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
             try {
                 cn.ConToDb();
@@ -645,6 +645,7 @@ public class _query {
                 rs16 = stmt16.executeQuery(query);
 
                 int total = 0;
+                int confirmed = 0;
                 while (rs16.next()) {
                     hmmr_wr_model hpm = new hmmr_wr_model();
                     if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
@@ -669,9 +670,19 @@ public class _query {
 
                         list.add(hpm);
                         total++;
+                        if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals( apwr_controller.USER_S))) {
+                            confirmed++;
+                        }
                     }
                 }
                 hmmr_wr_model.total.set("Общее количество: " + Integer.toString(total));
+                if (confirmed != 0) {
+                    System.out.println("confirmed");
+                    hmmr_wr_model.setHasConfirmed(false);
+                } else {
+                    hmmr_wr_model.setHasConfirmed(true);
+                }
+
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 493!");
             } finally {

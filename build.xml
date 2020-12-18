@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="compile-jar" name="mu" basedir=".">
+<project default="compile-jar-without-copy-lib" name="mu" basedir=".">
 
     <property name="src" value="src"/>
     <property name="build" value="target/build"/>
@@ -20,6 +20,56 @@
     <target name="compile-jar"
             description="compile the source code"
     depends="compile-sources">
+        <tstamp/>
+        <pathconvert property="libs.project" pathsep=" ">
+            <mapper>
+                <chainedmapper>
+
+                    <!-- remove absolute path -->
+                    <flattenmapper />
+
+                    <!-- add lib/ prefix -->
+                    <globmapper from="*" to="${jar.lib}/*" />
+                </chainedmapper>
+            </mapper>
+
+            <path>
+
+                <!-- lib contains all jar files, in several subdirectories -->
+                <fileset dir="${jar.lib}">
+                    <include name="**/*.jar" />
+                </fileset>
+            </path>
+        </pathconvert>
+
+        <jar destfile="${dist}/${jar.name}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="ru.haval.application.Main"/>
+                <!--<attribute name="Class-Path" value="${build.classpath}"/>-->
+                <attribute name="Class-Path" value=". ${jar.manifest.libs}/mysql-connector-java-8.0.21.jar ${jar.manifest.libs}/protobuf-java-3.11.4.jar ${jar.manifest.libs}/platform.jar ${jar.manifest.libs}/jeuclid-core-3.1.3.jar ${jar.manifest.libs}/org-apache-commons-logging.jar ${jar.manifest.libs}/jfoenix-9.0.5.jar ${jar.manifest.libs}/barbecue-1.5-beta1.jar ${jar.manifest.libs}/barcode4j-2.1.jar ${jar.manifest.libs}/batik-anim-1.9.jar ${jar.manifest.libs}/batik-awt-util-1.9.jar ${jar.manifest.libs}/batik-bridge-1.9.jar ${jar.manifest.libs}/batik-constants-1.9.jar ${jar.manifest.libs}/batik-css-1.9.jar ${jar.manifest.libs}/batik-dom-1.9.jar ${jar.manifest.libs}/batik-gvt-1.9.jar ${jar.manifest.libs}/batik-i18n-1.9.jar ${jar.manifest.libs}/batik-svg-dom-1.9.jar ${jar.manifest.libs}/batik-svggen-1.9.jar ${jar.manifest.libs}/batik-util-1.9.jar ${jar.manifest.libs}/bsh-2.0b6.jar ${jar.manifest.libs}/castor-core-1.3.3.jar ${jar.manifest.libs}/castor-xml-1.3.3.jar ${jar.manifest.libs}/commons-beanutils-1.9.3.jar ${jar.manifest.libs}/commons-cli.jar ${jar.manifest.libs}/commons-codec-1.5.jar ${jar.manifest.libs}/commons-collections-3.2.2.jar ${jar.manifest.libs}/commons-collections4-4.1.jar ${jar.manifest.libs}/commons-digester-2.1.jar ${jar.manifest.libs}/commons-lang-2.6.jar ${jar.manifest.libs}/commons-logging-1.1.1.jar ${jar.manifest.libs}/commons-pool2-2.4.2.jar ${jar.manifest.libs}/controlsfx-8.0.1.jar ${jar.manifest.libs}/controlsfx-8.40.11.jar ${jar.manifest.libs}/controlsfx-9.0.0.jar ${jar.manifest.libs}/core-3.2.1.jar ${jar.manifest.libs}/easyant-core.jar ${jar.manifest.libs}/groovy-all-2.4.5.jar ${jar.manifest.libs}/httpclient-4.3.6.jar ${jar.manifest.libs}/httpcore-4.3.3.jar ${jar.manifest.libs}/jasperreports-6.6.0.jar ${jar.manifest.libs}/jasperreports-metadata-6.6.0.jar ${jar.manifest.libs}/jaxen-1.1.1.jar ${jar.manifest.libs}/jcommander-1.27.jar ${jar.manifest.libs}/jcommon-1.0.23.jar ${jar.manifest.libs}/jfreechart-1.0.19.jar ${jar.manifest.libs}/log4j-1.2.17.jar ${jar.manifest.libs}/log4j-api-2.8.2.jar ${jar.manifest.libs}/log4j-core-2.8.2.jar ${jar.manifest.libs}/log4j-jcl-2.8.2.jar ${jar.manifest.libs}/net.tascalate.javaflow.api-2.2.1.jar ${jar.manifest.libs}/net.tascalate.javaflow.providers.asm5-2.2.1.jar ${jar.manifest.libs}/net.tascalate.javaflow.tools.ant-2.2.1.jar ${jar.manifest.libs}/net.tascalate.javaflow.tools.jar-2.2.1.jar ${jar.manifest.libs}/olap4j-0.9.7.309-JS-3.jar ${jar.manifest.libs}/persistence-api-1.0.jar ${jar.manifest.libs}/poi-3.15.jar ${jar.manifest.libs}/poi-ooxml-3.15.jar ${jar.manifest.libs}/servlet-api-2.4.jar ${jar.manifest.libs}/spring-beans-3.2.18.RELEASE.jar${jar.manifest.libs}/spring-core-3.2.18.RELEASE.jar ${jar.manifest.libs}/testng-6.8.1.jar ${jar.manifest.libs}/velocity-1.7.jar ${jar.manifest.libs}/xml-apis-ext-1.3.04.jar ${jar.manifest.libs}/xmpcore-5.1.1.jar ${jar.manifest.libs}/ecj-4.4.2.jar ${jar.manifest.libs}/hibernate-core-3.3.2.GA.jar ${jar.manifest.libs}/commons-lang3-3.4.jar"/>
+            </manifest>
+            <fileset dir="${build}"/>
+            <fileset dir="src/main/resources"/>
+        </jar>
+        <delete dir="${dist}/${jar.lib}"/>
+        <mkdir dir="${dist}/${jar.lib}"/>
+        <copy todir="${dist}/${jar.lib}">
+            <fileset dir="${jar.lib}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="deploy"
+            description="Deploy to server">
+        <copy  todir="127.0.0.1/mu/updates" overwrite="true" verbose="true">
+            <file file="${dist}/${jar.name}.jar"/>
+        </copy>
+    <tstamp/>
+    </target>
+    <target name="compile-jar-without-copy-lib"
+            description="compile the source code"
+            depends="compile-sources">
         <tstamp/>
         <pathconvert property="libs.project" pathsep=" ">
             <mapper>

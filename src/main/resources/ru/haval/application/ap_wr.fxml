@@ -279,8 +279,13 @@
 										 <Label fx:id="wr_total_amount" prefHeight="51.0" prefWidth="170.0" text="">
 										 </Label>
 										 <HBox prefHeight="59.0" prefWidth="15.0" />
-										 <JFXButton fx:id="WRFilterButton" focusTraversable="false" onAction="#callWRFilter" />
-										 <HBox prefHeight="48.0" prefWidth="48.0" />
+										 <JFXButton prefHeight="48.0" prefWidth="48.0" fx:id="WRFilterButton" focusTraversable="false" onAction="#callWRFilter" />
+										 <HBox  prefHeight="59.0" prefWidth="15.0"/>
+										 <JFXButton fx:id="wrCloseAllButton" onAction="#onWrCloseAllButton" focusTraversable="false" text="Закрыть выполненые">
+											 <font>
+												 <Font name="System Bold" size="12.0" />
+											 </font>
+										 </JFXButton>
 				                     </children>
 				                  </HBox>
                                  </children>
