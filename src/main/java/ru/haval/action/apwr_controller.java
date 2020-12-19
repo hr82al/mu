@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
+import ru.haval.data.BackgroundFileLoader;
 import ru.haval.data.FxDatePickerConverter;
 import ru.haval.db._query;
 import javafx.application.Platform;
@@ -1080,24 +1081,7 @@ public class apwr_controller {
                     //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                     iv.setFocusTraversable(false);
 
-                    BufferedImage bufferedImage;
-                    try {
-                        if (!data.geticon().equals("1")) {
-                            if (!priorImages.containsKey(data.getPrior_img())) {
-                                bufferedImage = ImageIO.read(new File(data.getPrior_img()));
-                                priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
-                            }
-                            Image image = priorImages.get(data.getPrior_img());;
-                            iv.setGraphic(new ImageView(image));
-                        }
-                    } catch (IOException e) {
-                        bufferedImage = new BufferedImage(10, 10, 2);
-                        priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
-                        Image image = priorImages.get(data.getPrior_img());
-                        iv.setGraphic(new ImageView(image));
-                        //error
-                        System.out.println(e.getMessage().toString() + " prior_controller " + "Ошибка загрузки изображения");
-                    }
+                    iv.setGraphic(BackgroundFileLoader.getInstance().getImage(data.getPrior_img()));
 
                     iv.setOnMouseEntered(new EventHandler<Event>() {
 
@@ -1126,19 +1110,9 @@ public class apwr_controller {
                     JFXButton iv2 = new JFXButton();
                     //запрещаем бегунку прокрутки возвращаться назад после нажатия кнопки
                     iv2.setFocusTraversable(false);
-                    BufferedImage bufferedImage2;
-                    try {
-                        if (!data.geticon_at().equals("1")) {
-                            if (!atImages.containsKey(data.AT_img.get())) {
-                                bufferedImage2 = ImageIO.read(new File(data.AT_img.get()));
-                                atImages.put(data.AT_img.get(), SwingFXUtils.toFXImage(bufferedImage2, null));
-                            }
-                            Image image = atImages.get(data.AT_img.get());
-                            iv2.setGraphic(new ImageView(image));
-                        }
-                    } catch (IOException e) {
-                        scl._AlertDialog(e.getMessage() + " prior_controller", "Ошибка загрузки изображения");
-                    }
+
+                    iv2.setGraphic(BackgroundFileLoader.getInstance().getImage(data.AT_img.get()));
+
                     iv2.setOnMouseEntered(new EventHandler<Event>() {
 
                         @Override
@@ -1214,27 +1188,7 @@ public class apwr_controller {
 
                         //at_wr.setStyle("-fx-alignment: CENTER;");
 
-
-                        BufferedImage bufferedImage;
-                        try {
-                            if (!data.geticon_at().equals("1")) {
-                                if (!atImages.containsKey(data.iconATAddress.get())) {
-                                    bufferedImage = ImageIO.read(new File(data.iconATAddress.get()));
-
-                                    atImages.put(data.iconATAddress.get(), SwingFXUtils.toFXImage(bufferedImage, null));
-                                }
-
-                                Image image = atImages.get(data.iconATAddress.get());
-                                iv.setGraphic(new ImageView(image));
-                            }
-                        }catch (Exception e) {
-                            bufferedImage = new BufferedImage(10, 10, 2);
-                            atImages.put(data.iconATAddress.get(), SwingFXUtils.toFXImage(bufferedImage, null));
-                            Image image = atImages.get(data.iconATAddress.get());
-                            iv.setGraphic(new ImageView(image));
-                            //error
-                            System.out.println(e.getMessage().toString() + " prior_controller " + "Ошибка загрузки изображения");
-                        }
+                        iv.setGraphic(BackgroundFileLoader.getInstance().getImage(data.iconATAddress.get()));
                         iv.setOnMouseEntered(new EventHandler<Event>() {
 
                             @Override
@@ -1890,11 +1844,11 @@ public class apwr_controller {
         });
     }
 
-    public apwr_controller getInstance() {
+    public static apwr_controller getInstance() {
         return instance;
     }
 
-    private void setWPItems(ObservableList<hmmr_wp_model> select_data_wp) {
+    public void setWPItems(ObservableList<hmmr_wp_model> select_data_wp) {
         wpRows = select_data_wp;
         wpOTVs.clear();
         for (hmmr_wp_model i : wpRows) {
@@ -1906,46 +1860,54 @@ public class apwr_controller {
     private void showSearchedWP() {
         if (wpSearch.length() != 0) {
             ObservableList<hmmr_wp_model> searchedRows =  FXCollections.observableArrayList();
-            //If wpSearch one upper letter search by shop
-            if (wpSearch.length() == 1 && Character.isUpperCase(wpSearch.charAt(0))) {
-                for (hmmr_wp_model i : wpRows) {
-                    if (i.getEquip().charAt(0) == wpSearch.charAt(0)) {
-                        searchedRows.add(i);
+            ObservableList<hmmr_wp_model> tmpSearch =  FXCollections.observableArrayList();
+            tmpSearch.addAll(wpRows);
+            String[] searches = wpSearch.split(",");
+            for (String search : searches) {
+                //If wpSearch one upper letter search by shop
+                if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
+                    for (hmmr_wp_model i : tmpSearch) {
+                        if (i.getEquip().charAt(0) == search.charAt(0)) {
+                            searchedRows.add(i);
+                        }
+                    }
+                    //If the search is OTV
+                } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
+                    for (hmmr_wp_model i : tmpSearch) {
+                        if (i.getOTV().equals(search)) {
+                            searchedRows.add(i);
+                        }
                     }
                 }
-                //If the search is OTV
-            } else if (wpSearch.equals("need select") || (wpSearch.length() <= 3 && wpOTVs.contains(wpSearch))) {
-                for (hmmr_wp_model i : wpRows) {
-                    if (i.getOTV().equals(wpSearch)) {
-                        searchedRows.add(i);
+                //If the search is a number than search in PM
+                else if (StringUtils.isNumeric(search)) {
+                    for (hmmr_wp_model i : tmpSearch) {
+                        if (i.getPM_Num().contains(search)) {
+                            searchedRows.add(i);
+                        }
                     }
                 }
+                //If the search is a date
+                else if (isDate(search)) {
+                    for (hmmr_wp_model i : tmpSearch) {
+                        if (i.getD_D().equals(search)) {
+                            searchedRows.add(i);
+                        }
+                    }
+                }
+                // else search in equipment and description
+                else {
+                    for (hmmr_wp_model i : tmpSearch) {
+                        if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
+                            searchedRows.add(i);
+                        }
+                    }
+                }
+                tmpSearch.clear();
+                tmpSearch.addAll(searchedRows);
+                searchedRows.clear();
             }
-            //If the search is a number than search in PM
-            else if (StringUtils.isNumeric(wpSearch)) {
-                for (hmmr_wp_model i : wpRows) {
-                    if (i.getPM_Num().contains(wpSearch)) {
-                        searchedRows.add(i);
-                    }
-                }
-            }
-            //If the search is a date
-            else if (isDate(wpSearch)) {
-                for (hmmr_wp_model i : wpRows) {
-                    if (i.getD_D().equals(wpSearch)) {
-                        searchedRows.add(i);
-                    }
-                }
-            }
-            // else search in equipment
-            else {
-                for (hmmr_wp_model i : wpRows) {
-                    if (i.getEquip().contains(wpSearch)) {
-                        searchedRows.add(i);
-                    }
-                }
-            }
-            table_wp.setItems(searchedRows);
+            table_wp.setItems(tmpSearch);
         } else {
             table_wp.setItems(wpRows);
         }
@@ -2183,6 +2145,7 @@ public class apwr_controller {
 
     private void initSops() {
         SHOP_NAME = scl.parser_str(qr._select_user(conn_connector.USER_ID), 5);
+        System.out.println(SHOP_NAME);
         if (SHOP_NAME != "S,W") {
             availableShops = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).collect(Collectors.toSet());
             SHOP_NAME = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).toArray(String[]::new)[0];

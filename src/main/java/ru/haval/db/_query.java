@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import ru.haval.action.*;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
+import ru.haval.data.BackgroundFileLoader;
 import ru.haval.dir.Cycle;
 import ru.haval.dir.Hmmr_OrderType_Model;
 import ru.haval.dir.Hmmr_PartCharDir_Model;
@@ -5939,6 +5940,7 @@ public class _query {
                         list.add(hpm);
                     }
                 }
+                BackgroundFileLoader.getInstance().update();
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 5120!");
             } finally {
@@ -6058,6 +6060,33 @@ public class _query {
                 //log.log(Level.INFO, "STATUS RING WAS UPDATED");
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 5238!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
+
+    @SuppressWarnings("static-access")
+    public void changeOtv(String id, String otv) {
+        synchronized (_query.class) {
+            String query = "UPDATE hmmr_work_plan SET Otv = '" + otv + "' WHERE id = '" + id + "';";
+
+            try {
+                cn.ConToDb();
+                stmt = cn.con.createStatement();
+                stmt.executeUpdate(query);
+                //log.log(Level.INFO, "STATUS RING WAS UPDATED");
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 6089!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
@@ -6202,6 +6231,7 @@ public class _query {
             return tm;
         }
     }
+
 
     /**
      * Апдейтим запись в БД в таблице hmmr_work_plan

@@ -20,13 +20,13 @@
             </HBox>
             <VBox prefHeight="20" />
             <HBox alignment="CENTER_RIGHT">
-               <JFXButton fx:id="add_tsk_upd" text="Применить">
+               <JFXButton fx:id="upd_oft_ok"  text="Применить" onAction="#changeOFTs">
                   <font>
                      <Font name="System Bold" size="12.0" />
                   </font>
                </JFXButton>
                <HBox prefWidth="20" />
-               <JFXButton fx:id="cancel_tsk" text="Отмена">
+               <JFXButton fx:id="upd_oft_cancel" text="Отмена">
                   <font>
                      <Font name="System Bold" size="12.0" />
                   </font>
