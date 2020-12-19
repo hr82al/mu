@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="149.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.ChangeExecutorController">
+         <VBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="353.0" text="Обновить TSK/CM">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Label>
+            <VBox prefHeight="20" />
+            <HBox alignment="CENTER">
+               <Label text="Ответственный исполнитель:" />
+               <HBox prefWidth="20" />
+               <ComboBox fx:id="otv"  prefWidth="150.0" />
+            </HBox>
+            <VBox prefHeight="20" />
+            <HBox alignment="CENTER_RIGHT">
+               <JFXButton fx:id="add_tsk_upd" text="Применить">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </JFXButton>
+               <HBox prefWidth="20" />
+               <JFXButton fx:id="cancel_tsk" text="Отмена">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </JFXButton>
+            </HBox>
+         </VBox>
+      </AnchorPane>

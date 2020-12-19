@@ -677,7 +677,6 @@ public class _query {
                 }
                 hmmr_wr_model.total.set("Общее количество: " + Integer.toString(total));
                 if (confirmed != 0) {
-                    System.out.println("confirmed");
                     hmmr_wr_model.setHasConfirmed(false);
                 } else {
                     hmmr_wr_model.setHasConfirmed(true);

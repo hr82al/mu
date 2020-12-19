@@ -18,6 +18,7 @@ import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.scene.control.*;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
@@ -63,6 +64,8 @@ import ru.haval.filter.IFilter;
 import ru.haval.filter.WRFilter;
 import ru.haval.share_class.TooltippedTableCell;
 import ru.haval.share_class.s_class;
+
+import static com.mysql.cj.protocol.a.MysqlTextValueDecoder.isDate;
 
 
 public class apwr_controller {
@@ -124,6 +127,9 @@ public class apwr_controller {
 
     @FXML
     CheckBox chBNotConfirmed;
+
+    @FXML
+    TextField search_wp;
 
     _query qr = new _query();
     s_class scl = new s_class();
@@ -194,13 +200,17 @@ public class apwr_controller {
     private Set<String> availableShops;
     private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
     public static boolean isApMultipleSelected;
+    private ObservableList<hmmr_wp_model> wpRows;
+    private HashSet<String> wpOTVs = new HashSet<>();
+    private String wpSearch = "";
+    private static apwr_controller instance;
+
 
 
     @SuppressWarnings({"unchecked"})
     @FXML
     public void initialize() {
-
-
+        instance = this;
         wr_total_amount.textProperty().bind(hmmr_wr_model.totalProperty());
         ap_total_amount.textProperty().bind(hmmr_ap_model.totalProperty());
 
@@ -231,6 +241,7 @@ public class apwr_controller {
         table_ap.setPrefWidth(screen_width - 100);
         table_ap.setPrefHeight(screen_hight - 200);
         table_ap.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        table_wp.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         title_wo.setPrefWidth(830.0);
         if (screen_width == 1920.0)
             desc_ap.setPrefWidth(810.0);
@@ -1295,13 +1306,21 @@ public class apwr_controller {
 
             @Override
             public void handle(ActionEvent event) {
-                hmmr_wp_model _ccl1 = table_wp.getSelectionModel().getSelectedItem();
-                try {
-                    //mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
-                    upd_rec_wp.setDisable(true);
-                    _fill_rec_wp(_ccl1.getId());
-                } catch (Exception e) {
+                if (table_wp.getSelectionModel().getSelectedItems().size() > 1) {
+                    try {
+                        wpChangeExecutor();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    hmmr_wp_model _ccl1 = table_wp.getSelectionModel().getSelectedItem();
+                    try {
+                        //mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
+                        upd_rec_wp.setDisable(true);
+                        _fill_rec_wp(_ccl1.getId());
+                    } catch (Exception e) {
 
+                    }
                 }
             }
         });
@@ -1537,9 +1556,7 @@ public class apwr_controller {
 
             @Override
             public void handle(ActionEvent arg0) {
-                table_wp.setItems(qr._select_data_wp(USER_S));
-                table_wp.getColumns().get(0).setVisible(false);
-                table_wp.getColumns().get(0).setVisible(true);
+                setWPItems(qr._select_data_wp(USER_S));
             }
         });
 
@@ -1747,9 +1764,7 @@ public class apwr_controller {
         _table_update_wp.addListener(new ListChangeListener<hmmr_wp_model>() {
             @Override
             public void onChanged(Change<? extends hmmr_wp_model> c) {
-                table_wp.setItems(qr._select_data_wp(USER_S));
-                table_wp.getColumns().get(0).setVisible(false);
-                table_wp.getColumns().get(0).setVisible(true);
+                setWPItems(qr._select_data_wp(USER_S));
             }
         });
         _table_update_wr.addListener(new ListChangeListener<hmmr_wr_model>() {
@@ -1770,6 +1785,15 @@ public class apwr_controller {
                 }
             }
         });
+        search_wp.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                wpSearch = newValue;
+                showSearchedWP();
+            }
+        });
+
+
 
         shop_resp_wr.setPromptText(sort_filter);
         ObservableList<String> shop_n = FXCollections.observableArrayList();
@@ -1866,6 +1890,69 @@ public class apwr_controller {
         });
     }
 
+    public apwr_controller getInstance() {
+        return instance;
+    }
+
+    private void setWPItems(ObservableList<hmmr_wp_model> select_data_wp) {
+        wpRows = select_data_wp;
+        wpOTVs.clear();
+        for (hmmr_wp_model i : wpRows) {
+            wpOTVs.add(i.getOTV());
+        }
+        showSearchedWP();
+    }
+
+    private void showSearchedWP() {
+        if (wpSearch.length() != 0) {
+            ObservableList<hmmr_wp_model> searchedRows =  FXCollections.observableArrayList();
+            //If wpSearch one upper letter search by shop
+            if (wpSearch.length() == 1 && Character.isUpperCase(wpSearch.charAt(0))) {
+                for (hmmr_wp_model i : wpRows) {
+                    if (i.getEquip().charAt(0) == wpSearch.charAt(0)) {
+                        searchedRows.add(i);
+                    }
+                }
+                //If the search is OTV
+            } else if (wpSearch.equals("need select") || (wpSearch.length() <= 3 && wpOTVs.contains(wpSearch))) {
+                for (hmmr_wp_model i : wpRows) {
+                    if (i.getOTV().equals(wpSearch)) {
+                        searchedRows.add(i);
+                    }
+                }
+            }
+            //If the search is a number than search in PM
+            else if (StringUtils.isNumeric(wpSearch)) {
+                for (hmmr_wp_model i : wpRows) {
+                    if (i.getPM_Num().contains(wpSearch)) {
+                        searchedRows.add(i);
+                    }
+                }
+            }
+            //If the search is a date
+            else if (isDate(wpSearch)) {
+                for (hmmr_wp_model i : wpRows) {
+                    if (i.getD_D().equals(wpSearch)) {
+                        searchedRows.add(i);
+                    }
+                }
+            }
+            // else search in equipment
+            else {
+                for (hmmr_wp_model i : wpRows) {
+                    if (i.getEquip().contains(wpSearch)) {
+                        searchedRows.add(i);
+                    }
+                }
+            }
+            table_wp.setItems(searchedRows);
+        } else {
+            table_wp.setItems(wpRows);
+        }
+        table_wp.getColumns().get(0).setVisible(false);
+        table_wp.getColumns().get(0).setVisible(true);
+    }
+
     private void newPWAPTasks() {
         //выгрузка создание и удаление новый записей
         //uploading new tasks
@@ -1929,9 +2016,7 @@ public class apwr_controller {
                             _get_field.removeAll(_get_field);
                             _chk.addAll(qr._select_pmplan());
                             //setTableAPItems(qr._select_data_ap(USER_S));
-                            table_wp.setItems(qr._select_data_wp(USER_S));
-                            table_wp.getColumns().get(0).setVisible(false);
-                            table_wp.getColumns().get(0).setVisible(true);
+                            setWPItems(qr._select_data_wp(USER_S));
                         }
                     }
                 }
@@ -1962,9 +2047,7 @@ public class apwr_controller {
                 qr._update_wp_record(_id);
 
                 //setTableAPItems(qr._select_data_ap(USER_S));
-                table_wp.setItems(qr._select_data_wp(USER_S));
-                table_wp.getColumns().get(0).setVisible(false);
-                table_wp.getColumns().get(0).setVisible(true);
+                setWPItems(qr._select_data_wp(USER_S));
 
             }
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -2183,7 +2266,7 @@ public class apwr_controller {
 
     private void initData() {
         setTableAPItems(qr._select_data_ap(USER_S));
-        table_wp.setItems(qr._select_data_wp(USER_S));
+        setWPItems(qr._select_data_wp(USER_S));
         table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
     }
 
@@ -2288,6 +2371,19 @@ public class apwr_controller {
         stage_set.initModality(Modality.WINDOW_MODAL);
         stage_set.initOwner(conn_connector.getPrimaryStage());
         stage_set.setTitle("M&U - Update Record Window");
+        stage_set.setResizable(false);
+        stage_set.setScene(scene);
+        stage_set.show();
+    }
+
+    //Вызываем окно обновления записи WP
+    protected void wpChangeExecutor() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("upd_oft.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage_set = new Stage();
+        stage_set.initModality(Modality.WINDOW_MODAL);
+        stage_set.initOwner(conn_connector.getPrimaryStage());
+        stage_set.setTitle("M&U - Update Records Window");
         stage_set.setResizable(false);
         stage_set.setScene(scene);
         stage_set.show();

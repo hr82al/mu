@@ -26,11 +26,12 @@
                                                 <Image url="@haval.jpg" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="title_wp" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="1063.0" text="WORK PLAN">
+                                          <Label fx:id="title_wp" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="692.0" text="WORK PLAN">
                                              <font>
                                                 <Font name="System Bold Italic" size="18.0" />
                                              </font>
                                           </Label>
+										   <TextField fx:id="search_wp" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска" />
                                        </children></HBox>
                                     <HBox fx:id="hb2_wp" alignment="CENTER" prefHeight="592.0" prefWidth="1322.0">
                                     <children>
@@ -178,9 +179,9 @@
 
 										 <HBox prefHeight="63.0" prefWidth="25.0" />
 										 <VBox>
-											 <VBox prefHeight="2"></VBox>
+											 <VBox prefHeight="2" />
 											 <Label fx:id="ap_total_amount" text="Общее количество" />
-											 <VBox prefHeight="2"></VBox>
+											 <VBox prefHeight="2" />
 											 <ComboBox fx:id="filtre_apwr" prefWidth="150.0" />
 										 </VBox>
 
@@ -279,9 +280,9 @@
 										 <Label fx:id="wr_total_amount" prefHeight="51.0" prefWidth="170.0" text="">
 										 </Label>
 										 <HBox prefHeight="59.0" prefWidth="15.0" />
-										 <JFXButton prefHeight="48.0" prefWidth="48.0" fx:id="WRFilterButton" focusTraversable="false" onAction="#callWRFilter" />
-										 <HBox  prefHeight="59.0" prefWidth="15.0"/>
-										 <JFXButton fx:id="wrCloseAllButton" onAction="#onWrCloseAllButton" focusTraversable="false" text="Закрыть выполненые">
+										 <JFXButton fx:id="WRFilterButton" focusTraversable="false" onAction="#callWRFilter" prefHeight="48.0" prefWidth="48.0" />
+										 <HBox prefHeight="59.0" prefWidth="15.0" />
+										 <JFXButton fx:id="wrCloseAllButton" focusTraversable="false" onAction="#onWrCloseAllButton" text="Закрыть выполненые">
 											 <font>
 												 <Font name="System Bold" size="12.0" />
 											 </font>
