@@ -2,15 +2,17 @@ package ru.haval.action;
 //Pm instructions
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.control.*;
 import  ru.haval.application.conn_connector;
 import ru.haval.application.mu_main_controller;
 import  ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -23,11 +25,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -36,10 +33,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import ru.haval.share_class.s_class;
 
 public class pm_controller {
+
+	@FXML
+	TextField searchPMDB;
 	
 	@FXML
 	TableView<hmmr_pm_model> table_pm;
@@ -75,7 +74,15 @@ public class pm_controller {
 	
 	public static int _Id_Dup_Pm = 0;
 	public static String _num_inst_last = "NULL"; //Номер последней выбранной инструкции
-	
+
+	private ObservableList<hmmr_pm_model> pmDbRows;
+	private String pmRows = "";
+	private HashSet<String> pmOTVs = new HashSet<>();
+	private HashSet<String> pmPMCs = new HashSet<>();
+	private HashSet<String> pmPMGroups = new HashSet<>();
+
+	boolean isPmsGet = false;
+
 	@FXML
 	public void initialize()
 	{
@@ -418,7 +425,7 @@ public class pm_controller {
 				
 				@Override
 				public void handle(ActionEvent event) {
-					table_pm.setItems(qr._select_data_pm2());
+					setPmItems(qr._select_data_pm2());
 					columns_pm.get(0).setVisible(false);
 				    columns_pm.get(0).setVisible(true);
 				}
@@ -426,7 +433,7 @@ public class pm_controller {
 	        _table_update_pm.addListener(new ListChangeListener<hmmr_pm_model>() {
 			    @Override
 				public void onChanged(Change<? extends hmmr_pm_model> c) {
-					table_pm.setItems(qr._select_data_pm2());
+					setPmItems(qr._select_data_pm2());
 			    	table_pm.getColumns().get(0).setVisible(false);
 			        table_pm.getColumns().get(0).setVisible(true);
 			    }
@@ -448,13 +455,129 @@ public class pm_controller {
 					}
 				}
 			});
+	        searchPMDB.textProperty().addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					pmRows = newValue;
+					showSearchedPMDB();
+				}
+			});
 	}
-	
+
+	private void showSearchedPMDB() {
+		if (pmRows.length() != 0) {
+			ObservableList<hmmr_pm_model> searchedRows =  FXCollections.observableArrayList();
+			ObservableList<hmmr_pm_model> tmpSearch =  FXCollections.observableArrayList();
+			tmpSearch.addAll(pmDbRows);
+			String[] searches = pmRows.split(",");
+
+			for (String search : searches) {
+				try {
+					//If the search is OTV
+					if (pmOTVs.contains(search)) {
+						for (hmmr_pm_model i : tmpSearch) {
+							if (i.getOtv().equals(search)) {
+								searchedRows.add(i);
+							}
+						}
+					} else if (pmPMCs.contains(search)) {
+						for (hmmr_pm_model i : tmpSearch) {
+							if (i.getPMC().equals(search)) {
+								searchedRows.add(i);
+							}
+						}
+					} else if (pmPMGroups.contains(search)) {
+						for (hmmr_pm_model i : tmpSearch) {
+							if (i.getGroup_PM().equals(search)) {
+								searchedRows.add(i);
+							}
+						}
+					} else {
+						for (hmmr_pm_model i : tmpSearch) {
+							if ( (i.getEquip().contains(search) || i.getnum_inst().contains(search))) {
+								searchedRows.add(i);
+							}
+						}
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+
+
+				 /*else if ()
+				//If wpSearch one upper letter search by shop
+				if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
+					for (hmmr_pm_model i : tmpSearch) {
+						if (i.getEquip().charAt(0) == search.charAt(0)) {
+							searchedRows.add(i);
+						}
+					}
+					//If the search is OTV
+				} else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
+					for (hmmr_pm_model i : tmpSearch) {
+						if (i.getOTV().equals(search)) {
+							searchedRows.add(i);
+						}
+					}
+				}
+				//If the search is a number than search in PM
+				else if (StringUtils.isNumeric(search)) {
+					for (hmmr_pm_model i : tmpSearch) {
+						if (i.getPM_Num().contains(search)) {
+							searchedRows.add(i);
+						}
+					}
+				}
+				//If the search is a date
+				else if (isDate(search)) {
+					for (hmmr_pm_model i : tmpSearch) {
+						if (i.getD_D().equals(search)) {
+							searchedRows.add(i);
+						}
+					}
+				}
+				// else search in equipment and description
+				else {
+					for (hmmr_pm_model i : tmpSearch) {
+						if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
+							searchedRows.add(i);
+						}
+					}
+				}*/
+				tmpSearch.clear();
+				tmpSearch.addAll(searchedRows);
+				searchedRows.clear();
+			}
+			table_pm.setItems(tmpSearch);
+		} else {
+			table_pm.setItems(pmDbRows);
+		}
+		table_pm.getColumns().get(0).setVisible(false);
+		table_pm.getColumns().get(0).setVisible(true);
+	}
+
 	private void initData()
 	{
-		table_pm.setItems(qr._select_data_pm2());
+		setPmItems(qr._select_data_pm2());
 	}
-	
+
+	private void setPmItems(ObservableList<hmmr_pm_model> select_data_pm2) {
+		pmDbRows = select_data_pm2;
+		getPms();
+		showSearchedPMDB();
+	}
+
+	private void getPms() {
+		if (isPmsGet) return;
+		for (hmmr_pm_model i : pmDbRows) {
+			pmOTVs.add(i.getOtv());
+			pmPMCs.add(i.getPMC());
+			pmPMGroups.add(i.getGroup_PM());
+		}
+		isPmsGet = true;
+	}
+
+
 	private void func_upd(String str)
 	{
 		 

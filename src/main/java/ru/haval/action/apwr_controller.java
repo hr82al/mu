@@ -3160,7 +3160,7 @@ public class apwr_controller {
 
 
     public void onWrCloseAllButton(ActionEvent actionEvent) {
-        Platform.runLater(() -> {
+        Thread thread = new Thread(() -> {
             for (hmmr_wr_model hpm : table_wr.getItems()) {
                 if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals(apwr_controller.USER_S))) {
                     //Confirm everything  //73734, 73738, 67188
@@ -3171,13 +3171,16 @@ public class apwr_controller {
                     qr._update_otv_ap(hpm.getap_num().substring(2), "flag_otv", "2");
                     qr._update_calc_field(hpm.getap_num().substring(2));
                     qr._update_deleterec_ap(hpm.getap_num().substring(2));
-                    System.out.println(hpm);
                 }
             }
-            //update tables
-            setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
-            updateTableWr();
-        });
+            Platform.runLater(() -> {
+                //update tables
+                setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+                updateTableWr();
+            });
 
+        });
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 }

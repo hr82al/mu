@@ -31,7 +31,7 @@
                                                 <Font name="System Bold Italic" size="18.0" />
                                              </font>
                                           </Label>
-										   <TextField fx:id="search_wp" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска" />
+										   <TextField fx:id="search_wp" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска (введите условия поиска через запятую)" />
                                        </children></HBox>
                                     <HBox fx:id="hb2_wp" alignment="CENTER" prefHeight="592.0" prefWidth="1322.0">
                                     <children>
