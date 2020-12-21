@@ -207,7 +207,7 @@ public class conn_connector
 			USER_ROLE = _parser_sql(query_rez, 2);
 			USER_LOGIN = login;
 			
-			qr._insert_history(USER_ID, "Авторизация пользователя - " + scl.parser_str(qr._select_user(conn_connector.USER_ID), 1));
+			qr._insert_history(USER_ID, "#V018# Авторизация пользователя - " + scl.parser_str(qr._select_user(conn_connector.USER_ID), 1));
 			Stage stage = new Stage();
 	        try {
 				FXMLDocumentController(stage);

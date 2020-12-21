@@ -3172,11 +3172,11 @@ public class apwr_controller {
                     //Confirm everything  //73734, 73738, 67188
                     qr._update_oft_wr("1", hpm.IdProperty().get().substring(2));
                     qr._update_qty_wr("1", hpm.IdProperty().get().substring(2));
-                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_tm", "2");
-                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_oft", "2");
-                    qr._update_otv_ap(hpm.getap_num().substring(2), "flag_otv", "2");
-                    qr._update_calc_field(hpm.getap_num().substring(2));
-                    qr._update_deleterec_ap(hpm.getap_num().substring(2));
+                    qr._update_otv_ap(hpm.getap_num(), "flag_tm", "2");
+                    qr._update_otv_ap(hpm.getap_num(), "flag_oft", "2");
+                    qr._update_otv_ap(hpm.getap_num(), "flag_otv", "2");
+                    qr._update_calc_field(hpm.getap_num());
+                    qr._update_deleterec_ap(hpm.getap_num());
                 }
             }
             Platform.runLater(() -> {
