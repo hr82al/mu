@@ -324,6 +324,10 @@ public class apwr_controller {
 
         if (conn_connector.USER_ROLE.equals("Technics")) {
             create_ap.setDisable(true);
+            wrCloseAllButton.setDisable(true);
+        }
+        else  {
+            wrCloseAllButton.setDisable(false);
         }
 
         shopsEnableAll();
@@ -1219,7 +1223,9 @@ public class apwr_controller {
         //addButtonToTable();
         addButtonToTable_wp();
 
-        newPWAPTasks();
+        //Not need any more. New work now add scheduler from server
+        //newPWAPTasks();
+        //FIXME need to add the check and notice to the users if scheduler is not ok
         _get_data_dly.removeAll(_get_data_dly);
         table_ap.getColumns().get(0).setVisible(false);
         table_ap.getColumns().get(0).setVisible(true);

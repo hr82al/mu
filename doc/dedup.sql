@@ -6,7 +6,7 @@ select id from hmmr_work_plan group by concat(PM_Num, Due_Date) having count(*) 
 delete from hmmr_work_plan where id in (select id from tmp);
 
 #
-alter table hmmr_work_plan add unique (PM_Num, Due_Date)
+alter table hmmr_work_plan add unique (PM_Num, Due_Date);
 
 #
 use hmmr_mu;
@@ -25,11 +25,14 @@ delete from tmpap where id in (select id from tmp);
 SET SQL_SAFE_UPDATES=1;
 
 #
+SET SQL_SAFE_UPDATES=0;
 delete from hmmr_work_recording where ap_num in (select id from tmpap);
+SET SQL_SAFE_UPDATES=1;
 
 #
+SET SQL_SAFE_UPDATES=0;
 delete from hmmr_action_plan where id in (select id from tmpap);
-
+SET SQL_SAFE_UPDATES=1;
 #
 alter table hmmr_action_plan add unique (PM_Num, Due_Date);
 

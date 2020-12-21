@@ -2199,7 +2199,7 @@ public class _query {
                 //log.log(Level.INFO, "ADD STRING TO DB");
                 //mgr.logger.log(Level.INFO, "ADD STRING TO DB");
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 2058!");
+                System.out.println(e.getMessage() + ", " + " ошибка в строке № 2058!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
@@ -2229,7 +2229,7 @@ public class _query {
                 //log.log(Level.INFO, "ADD STRING TO DB");
                 //mgr.logger.log(Level.INFO, "ADD STRING TO DB");
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 2083!");
+                System.out.println(e.getMessage() + ", " + " ошибка в строке № 2083!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
@@ -5877,7 +5877,7 @@ public class _query {
                 //log.log(Level.INFO, "ADD STRING TO DB");
                 //mgr.logger.log(Level.INFO, "ADD STRING TO DB");
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 5092!");
+                System.out.println(e.getMessage() + ", " + " ошибка в строке № 5092!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {
