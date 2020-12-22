@@ -2275,6 +2275,7 @@ public class _query {
             }
 
         }
+        _insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Добавил запись № = " + _select_last_id("hmmr_work_recording") + " в таблице Work Recording");
     }
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

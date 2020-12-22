@@ -60,9 +60,9 @@
         </copy>
     </target>
 
-    <target name="deploy"
+    <target name="upload"
             description="Deploy to server">
-        <copy  todir="127.0.0.1/mu/updates" overwrite="true" verbose="true">
+        <copy  todir="//10.168.150.74/mu/updates" overwrite="true" verbose="true">
             <file file="${dist}/${jar.name}.jar"/>
         </copy>
     <tstamp/>
