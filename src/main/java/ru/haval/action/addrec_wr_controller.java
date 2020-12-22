@@ -612,14 +612,17 @@ public class addrec_wr_controller {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Platform.runLater(() -> {;
-					stage = (Stage) add_wr_add.getScene().getWindow();
-					stage.close();
-					Node node = (Node)event.getSource();
-					apwr_controller _apwr = (apwr_controller) node.getScene().getWindow().getUserData();
-					if (_apwr.table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+				stage = (Stage) add_wr_add.getScene().getWindow();
+				stage.close();
+				Node node = (Node)event.getSource();
+				apwr_controller _apwr = (apwr_controller) node.getScene().getWindow().getUserData();
+				ObservableList<hmmr_ap_model> selectedItems = _apwr.table_ap.getSelectionModel().getSelectedItems();
+				hmmr_ap_model selectedItem = _apwr.table_ap.getSelectionModel().getSelectedItem();
+
+				Thread thread = new Thread(() -> {
+					if (selectedItems.size() > 1) {
 						//Checks
-						for (hmmr_ap_model i : _apwr.table_ap.getSelectionModel().getSelectedItems()) {
+						for (hmmr_ap_model i : selectedItems) {
 							//Check if all the work is belong to its user
 							if (!i.getOTV().equals(apwr_controller.USER_S)) {
 								s_class._AlertDialog("Ошибка! Если выбрано несколько записей все забиси должны принадлижать владельцу. Одна из записей принадлежит дургому владельцу.");
@@ -639,7 +642,7 @@ public class addrec_wr_controller {
 						//Calculate total time in minutes needs to do the work
 						int totalWorkTime = 0;
 						LinkedList<Integer> durations = new LinkedList<>();
-						for (hmmr_ap_model i : _apwr.table_ap.getSelectionModel().getSelectedItems()) {
+						for (hmmr_ap_model i : selectedItems) {
 							int totalTime = qr.getTotalWorkTime(i.getPM_Num());
 							durations.add(totalTime);
 							totalWorkTime += totalTime;
@@ -670,7 +673,7 @@ public class addrec_wr_controller {
 						LocalTime beginWork = b_picker.getValue();
 						e_picker.setValue(b_picker.getValue());
 						int shift = 0;
-						ObservableList<hmmr_ap_model> works = _apwr.table_ap.getSelectionModel().getSelectedItems();
+						ObservableList<hmmr_ap_model> works = selectedItems;
 						//Create new work record for every selected item
 						for (int i = 0; i < works.size(); i++) {
 							//Set params for every item
@@ -683,25 +686,11 @@ public class addrec_wr_controller {
 
 							addOneOfWr();
 						}
-						//рефрешим таблицу AP
 						String id_wr = qr._select_last_id("hmmr_work_recording");
-						pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-						pic._table_update.addAll(qr._select_data_ap(pic.USER_S));
-						//Заполняем таблицу данными в зависимости от условия сортировкия, которое было выбранно
-						if (pic.flag == 1)
-							pic._table_update_wr.addAll(qr._select_sort_apnum_wr(id_wr.substring(2)));
-						if (pic.flag == 2)
-							pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-						if (pic.flag == 0)
-							pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-						if (pic.flag == 3)
-							pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
-						if (pic.flag == 4)
-							pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
-
+						updateTable(id_wr);
 					}
 					else {
-						addRecToWr();
+						addRecToWr(selectedItem);
 					}
 
 				/*if(shift_report_wr_add.getText().length() != 0 && req_action_wr_add.getText().length() != 0 && actual_time_wr_add.getText().length() != 0 &&
@@ -717,6 +706,8 @@ public class addrec_wr_controller {
 				//else
 				//	err_msg.setVisible(true);
 			});
+				thread.setPriority(Thread.MIN_PRIORITY);
+				thread.start();
 		}
 		});
 		
@@ -1370,9 +1361,9 @@ public class addrec_wr_controller {
 
 	}
 
-	private void addRecToWr() {
+	private void addRecToWr(hmmr_ap_model selectedItem) {
 		if (record_type_wr_add.getValue().equals("CM")) {
-			if (!qr._select_confirm_wt(pic._idap_for_wr.substring(2)).equals("YES")) {
+			if (!qr._select_confirm_wt(selectedItem.getId().substring(2)).equals("YES")) {
 
 				b_gdw = fx_dp.toString(w_data_begin.getValue());
 				e_gdw = fx_dp.toString(w_data_end.getValue());
@@ -1435,9 +1426,9 @@ public class addrec_wr_controller {
 
 			//qr._insert_history(conn_connector.USER_ID, pic.USER_S + " - Добавил запись № = " + qr._select_last_id("hmmr_work_recording") + " в таблице Work Recording");
 			//Если мы создаем новую запись в WR по задаче из AP то меняем цвет для поля исполнитель на желтый, т.к. эта новая запись еще не проверенна
-			qr._update_otv_ap(pic._idap_for_wr.substring(2), "flag_otv", "1");
-			qr._update_otv_ap(pic._idap_for_wr.substring(2), "flag_oft", "0");
-			qr._update_otv_ap(pic._idap_for_wr.substring(2), "flag_tm", "0");
+			qr._update_otv_ap(selectedItem.getId().substring(2), "flag_otv", "1");
+			qr._update_otv_ap(selectedItem.getId().substring(2), "flag_oft", "0");
+			qr._update_otv_ap(selectedItem.getId().substring(2), "flag_tm", "0");
 
 
 		String id_wr = qr._select_last_id("hmmr_work_recording");
@@ -1565,24 +1556,30 @@ public class addrec_wr_controller {
 			qr._update_r_wr(id_wr, "_Resp9", "0");
 			qr._update_r_wr(id_wr, "_Actual_Time9", "0");
 		}
-		//рефрешим таблицу AP
-		pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-		pic._table_update.addAll(qr._select_data_ap(pic.USER_S));
-		//Заполняем таблицу данными в зависимости от условия сортировкия, которое было выбранно
-		if (pic.flag == 1)
-			pic._table_update_wr.addAll(qr._select_sort_apnum_wr(id_wr.substring(2)));
-		if (pic.flag == 2)
-			pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-		if (pic.flag == 0)
-			pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-		if (pic.flag == 3)
-			pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
-		if (pic.flag == 4)
-			pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
-
+		updateTable(id_wr);
 	}
-	
-	
+
+
+	private void updateTable(String id_wr) {
+		Platform.runLater(() -> {
+			//рефрешим таблицу AP
+			pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
+			pic._table_update.addAll(qr._select_data_ap(pic.USER_S));
+			//Заполняем таблицу данными в зависимости от условия сортировкия, которое было выбранно
+			if (pic.flag == 1)
+				pic._table_update_wr.addAll(qr._select_sort_apnum_wr(id_wr.substring(2)));
+			if (pic.flag == 2)
+				pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
+			if (pic.flag == 0)
+				pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
+			if (pic.flag == 3)
+				pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
+			if (pic.flag == 4)
+				pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
+		});
+	}
+
+
 	//Проверяем ввел ли кто-то общее время ремонта, если да, то дизеблим всю строку с возможностью ввода общего времени ремонта
 	
 	private void chk_wt(String id)
