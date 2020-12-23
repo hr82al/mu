@@ -1868,6 +1868,8 @@ public class apwr_controller {
                 table_ap.setItems(qr.selectAPDataByFilter(APFilter.getInstance().getSqlFilter()));
             }
         });
+
+        desc_ap.setSortable(true);
     }
 
     private void updateAPWRInBackground() {

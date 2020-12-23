@@ -33,6 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import ru.haval.share_class.TooltippedTableCell;
 import ru.haval.share_class.s_class;
 
 public class pm_controller {
@@ -218,6 +219,7 @@ public class pm_controller {
 		col_period.setCellValueFactory(CellData -> CellData.getValue().PMCProperty());
 //		col_eq_id.setCellValueFactory(CellData -> CellData.getValue().eq_idProperty());
 		col_group_pm.setCellValueFactory(CellData -> CellData.getValue().Group_PMProperty());
+		col_group_pm.setCellValueFactory(TooltippedTableCell.showNextDate());
 //		col_lm_pm.setCellValueFactory(CellData -> CellData.getValue().L_MProperty());
 //		col_os_pm.setCellValueFactory(CellData -> CellData.getValue().O_SProperty());
 //		col_equip_pm.setCellValueFactory(CellData -> CellData.getValue().EquipProperty());

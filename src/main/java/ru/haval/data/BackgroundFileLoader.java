@@ -32,7 +32,9 @@ public class BackgroundFileLoader {
         if (!images.containsKey(path)) {
             BufferedImage bufferedImage = new BufferedImage(10, 10, 2);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            images.put(path, null);
+            synchronized (BackgroundFileLoader.class) {
+                images.put(path, null);
+            }
             loadImages();
             return new ImageView(image);
         } else {
@@ -65,11 +67,12 @@ public class BackgroundFileLoader {
 
     public void loadImages() {
         if (images.containsValue(null)) {
-            if (runs.get() == false) {
-                runs.set(true);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+            runs.set(true);
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Boolean wait = false;
+                    synchronized (BackgroundFileLoader.class) {
                         for (String path : images.keySet()) {
                             if (images.get(path) == null) {
                                 try {
@@ -77,18 +80,23 @@ public class BackgroundFileLoader {
                                     images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
                                 } catch (IOException e) {
                                     //If there is no file set up empty image
-                                    BufferedImage bufferedImage = new BufferedImage(10, 10, 2);
-                                    images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
+                                    wait = true;
                                     System.out.println(e.getMessage());
                                 }
                             }
                         }
-                        runs.set(false);
+
                     }
-                });
-                thread.setPriority(Thread.MIN_PRIORITY);
-                thread.start();
-            }
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runs.set(false);
+                }
+            });
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
         }
     }
 

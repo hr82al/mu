@@ -1,5 +1,7 @@
 package ru.haval.share_class;
 
+import javafx.beans.value.ObservableValue;
+import ru.haval.action.hmmr_pm_model;
 import  ru.haval.db._query;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -34,6 +36,10 @@ public class TooltippedTableCell<S, T> extends TableCell<S, T> {
     private static <T> String getItemText(Cell<T> cell, StringConverter<T> converter) {
         return converter == null ? cell.getItem() == null ? "" : cell.getItem()
                 .toString() : converter.toString(cell.getItem());
+    }
+
+    public static Callback<TableColumn.CellDataFeatures<hmmr_pm_model, String>, ObservableValue<String>> showNextDate() {
+        return null;
     }
 
     private void updateItem(final Cell<T> cell, final StringConverter<T> converter) {

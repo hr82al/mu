@@ -117,7 +117,7 @@
 				                                  <TableColumn fx:id="n_ap" prefWidth="75.0" text="№ AP" />
 				                                  <TableColumn fx:id="n_pm_ap" prefWidth="75.0" sortable="false" text="№ PM" />
 				                                    <TableColumn fx:id="type_ap" prefWidth="36.0" sortable="false" text="Тип" />
-				                                    <TableColumn fx:id="desc_ap" prefWidth="356.0" sortable="false" text="Описание" />
+				                                    <TableColumn fx:id="desc_ap" prefWidth="356.0" text="Описание" />
 				                                    <TableColumn fx:id="dd_ap" minWidth="0.0" prefWidth="95.0" text="Due Date" />
 				                                    <TableColumn fx:id="equip_ap" prefWidth="200.0" sortable="false" text="Оборудование" />
 				                                </columns>
