@@ -2,13 +2,12 @@ package ru.haval.action;
 //Pm instructions
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
+import org.jfree.util.ArrayUtilities;
 import  ru.haval.application.conn_connector;
 import ru.haval.application.mu_main_controller;
 import  ru.haval.data.FxDatePickerConverter;
@@ -71,13 +70,12 @@ public class pm_controller {
 	public static ObservableList<TableColumn<hmmr_pm_model, ?>> columns_pm;
 	private String name_col = "Оборудование";
 	public static ObservableList<hmmr_pm_model> _table_update_pm = FXCollections.observableArrayList();
+	private static ObservableList<hmmr_pm_model> pmDbRows = FXCollections.observableArrayList();
 	//TableColumn<hmmr_pm_model, String> col_eq_id = new TableColumn<hmmr_pm_model, String>(name_col);
 	
 	public static int _Id_Dup_Pm = 0;
 	public static String _num_inst_last = "NULL"; //Номер последней выбранной инструкции
 
-	private ObservableList<hmmr_pm_model> pmDbRows;
-	private String pmRows = "";
 	private HashSet<String> pmOTVs = new HashSet<>();
 	private HashSet<String> pmPMCs = new HashSet<>();
 	private HashSet<String> pmPMGroups = new HashSet<>();
@@ -219,7 +217,7 @@ public class pm_controller {
 		col_period.setCellValueFactory(CellData -> CellData.getValue().PMCProperty());
 //		col_eq_id.setCellValueFactory(CellData -> CellData.getValue().eq_idProperty());
 		col_group_pm.setCellValueFactory(CellData -> CellData.getValue().Group_PMProperty());
-		col_group_pm.setCellValueFactory(TooltippedTableCell.showNextDate());
+		col_group_pm.setCellFactory(TooltippedTableCell.forTableColumn());
 //		col_lm_pm.setCellValueFactory(CellData -> CellData.getValue().L_MProperty());
 //		col_os_pm.setCellValueFactory(CellData -> CellData.getValue().O_SProperty());
 //		col_equip_pm.setCellValueFactory(CellData -> CellData.getValue().EquipProperty());
@@ -460,21 +458,21 @@ public class pm_controller {
 	        searchPMDB.textProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					pmRows = newValue;
-					showSearchedPMDB();
+					showSearchedPMDB(newValue);
 				}
 			});
 	}
 
-	private void showSearchedPMDB() {
-		if (pmRows.length() != 0) {
-			ObservableList<hmmr_pm_model> searchedRows =  FXCollections.observableArrayList();
-			ObservableList<hmmr_pm_model> tmpSearch =  FXCollections.observableArrayList();
-			tmpSearch.addAll(pmDbRows);
-			String[] searches = pmRows.split(",");
+	private void showSearchedPMDB(String pmRows) {
 
-			for (String search : searches) {
-				try {
+		synchronized (pm_controller.class) {
+			if (pmRows.length() != 0) {
+				ObservableList<hmmr_pm_model> searchedRows = FXCollections.observableArrayList();
+				ObservableList<hmmr_pm_model> tmpSearch = FXCollections.observableArrayList();
+				tmpSearch.addAll(pmDbRows);
+				String[] searches = pmRows.split(",");
+
+				for (String search : searches) {
 					//If the search is OTV
 					if (pmOTVs.contains(search)) {
 						for (hmmr_pm_model i : tmpSearch) {
@@ -496,66 +494,27 @@ public class pm_controller {
 						}
 					} else {
 						for (hmmr_pm_model i : tmpSearch) {
-							if ( (i.getEquip().contains(search) || i.getnum_inst().contains(search))) {
+
+							if ((i.getEquip() != null && i.getEquip().contains(search)) || (i.getnum_inst() != null && i.getnum_inst().contains(search))) {
+
 								searchedRows.add(i);
+
 							}
 						}
 					}
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-				}
 
-
-				 /*else if ()
-				//If wpSearch one upper letter search by shop
-				if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
-					for (hmmr_pm_model i : tmpSearch) {
-						if (i.getEquip().charAt(0) == search.charAt(0)) {
-							searchedRows.add(i);
-						}
-					}
-					//If the search is OTV
-				} else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
-					for (hmmr_pm_model i : tmpSearch) {
-						if (i.getOTV().equals(search)) {
-							searchedRows.add(i);
-						}
-					}
+					tmpSearch.clear();
+					tmpSearch.addAll(searchedRows);
+					searchedRows.clear();
 				}
-				//If the search is a number than search in PM
-				else if (StringUtils.isNumeric(search)) {
-					for (hmmr_pm_model i : tmpSearch) {
-						if (i.getPM_Num().contains(search)) {
-							searchedRows.add(i);
-						}
-					}
-				}
-				//If the search is a date
-				else if (isDate(search)) {
-					for (hmmr_pm_model i : tmpSearch) {
-						if (i.getD_D().equals(search)) {
-							searchedRows.add(i);
-						}
-					}
-				}
-				// else search in equipment and description
-				else {
-					for (hmmr_pm_model i : tmpSearch) {
-						if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
-							searchedRows.add(i);
-						}
-					}
-				}*/
-				tmpSearch.clear();
-				tmpSearch.addAll(searchedRows);
-				searchedRows.clear();
+				table_pm.setItems(tmpSearch);
+			} else {
+				table_pm.setItems(pmDbRows);
 			}
-			table_pm.setItems(tmpSearch);
-		} else {
-			table_pm.setItems(pmDbRows);
+			table_pm.getColumns().get(0).setVisible(false);
+			table_pm.getColumns().get(0).setVisible(true);
 		}
-		table_pm.getColumns().get(0).setVisible(false);
-		table_pm.getColumns().get(0).setVisible(true);
+
 	}
 
 	private void initData()
@@ -564,9 +523,9 @@ public class pm_controller {
 	}
 
 	private void setPmItems(ObservableList<hmmr_pm_model> select_data_pm2) {
-		pmDbRows = select_data_pm2;
 		getPms();
-		showSearchedPMDB();
+		pmDbRows.addAll(select_data_pm2);
+		showSearchedPMDB("");
 	}
 
 	private void getPms() {
