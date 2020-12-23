@@ -1,6 +1,7 @@
 package ru.haval.share_class;
 
 import javafx.beans.value.ObservableValue;
+import ru.haval.action.hmmr_ap_model;
 import ru.haval.action.hmmr_pm_model;
 import  ru.haval.db._query;
 import javafx.beans.property.ObjectProperty;

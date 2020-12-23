@@ -9501,4 +9501,37 @@ public class _query {
 
     }
 
+    public String getNextDateByPMGroup(String group_pm) {
+        String query = "SELECT hpy.`data` FROM hmmr_pm_year hpy WHERE hpy.PM_Group = " +
+                group_pm +
+                " and hpy.record_del = 0 ORDER BY hpy.`data` limit 1";
+        String nextDate = "";
+        synchronized (_query.class) {
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                //log.log(Level.INFO, "CHANNEL WAS FOUND");
+
+                while (rs.next()) {
+                    nextDate = rs.getString(1);
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 9521!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return nextDate;
+        }
+    }
 }
