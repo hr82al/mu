@@ -198,7 +198,7 @@ public class apwr_controller {
 
     private Set<String> availableShops;
     private AtomicBoolean tableAPUpdateStop = new AtomicBoolean(false);
-    private AtomicBoolean tableAPWRUpdates = new AtomicBoolean(false);
+    private static AtomicBoolean tableAPWRUpdates = new AtomicBoolean(false);
     public static boolean isApMultipleSelected;
     private ObservableList<hmmr_wp_model> wpRows;
     private HashSet<String> wpOTVs = new HashSet<>();

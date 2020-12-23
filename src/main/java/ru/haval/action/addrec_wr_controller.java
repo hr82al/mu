@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
@@ -12,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.apache.commons.beanutils.BaseDynaBeanMapDecorator;
 import  ru.haval.application.conn_connector;
 import  ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
@@ -75,7 +77,8 @@ public class addrec_wr_controller {
 	double wt_rezult = 0;
 	private String b_gdw, e_gdw, b_gtw, e_gtw;
 	int OtId = 0;
-		
+	private static AtomicBoolean tableUpdates = new AtomicBoolean(false);
+
 	@SuppressWarnings("static-access")
 	@FXML
 	public void initialize()
@@ -1561,22 +1564,26 @@ public class addrec_wr_controller {
 
 
 	private void updateTable(String id_wr) {
-		Platform.runLater(() -> {
-			//рефрешим таблицу AP
-			pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-			pic._table_update.addAll(qr._select_data_ap(pic.USER_S));
-			//Заполняем таблицу данными в зависимости от условия сортировкия, которое было выбранно
-			if (pic.flag == 1)
-				pic._table_update_wr.addAll(qr._select_sort_apnum_wr(id_wr.substring(2)));
-			if (pic.flag == 2)
+		if (!tableUpdates.get()) {
+			Platform.runLater(() -> {
+				tableUpdates.set(true);
+				//рефрешим таблицу AP
 				pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-			if (pic.flag == 0)
-				pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
-			if (pic.flag == 3)
-				pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
-			if (pic.flag == 4)
-				pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
-		});
+				pic._table_update.addAll(qr._select_data_ap(pic.USER_S));
+				//Заполняем таблицу данными в зависимости от условия сортировкия, которое было выбранно
+				if (pic.flag == 1)
+					pic._table_update_wr.addAll(qr._select_sort_apnum_wr(id_wr.substring(2)));
+				if (pic.flag == 2)
+					pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
+				if (pic.flag == 0)
+					pic._table_update_wr.addAll(qr._select_data_wr(apwr_controller.before_date, apwr_controller.after_date));
+				if (pic.flag == 3)
+					pic._table_update_wr.addAll(qr._select_sort_shop_wr(apwr_controller.before_date, apwr_controller.after_date, pic.SORT_SHOP));
+				if (pic.flag == 4)
+					pic._table_update_wr.addAll(qr._select_sort_resp_wr(apwr_controller.before_date, apwr_controller.after_date, sclass.parser_str(pic.SORT_RESP, 0)));
+				tableUpdates.set(false);
+			});
+		}
 	}
 
 
