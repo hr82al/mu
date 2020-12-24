@@ -236,7 +236,6 @@ public class pm_controller {
                         tooltip.setOnShowing(new EventHandler<WindowEvent>() {
                             @Override
                             public void handle(WindowEvent event) {
-                                System.out.println("showing tooltip");
                                 hmmr_pm_model myModel = getTableView().getItems().get(getTableRow().getIndex());
                                 //tooltip.setText(myModel.getTip());
                                 tooltip.setText("Due date: " + qr.getNextDateByPMGroup(myModel.getGroup_PM()));
@@ -249,9 +248,6 @@ public class pm_controller {
                             setTooltip(null);
                             setText(null);
                         } else {
-
-//                            hmmr_pm_model myModel = getTableView().getItems().get(getTableRow().getIndex());
-                            //tooltip.setText(myModel.getTip());
                             tooltip.setText("");
                             setTooltip(tooltip);
                             setText(t.toString());
@@ -534,7 +530,6 @@ public class pm_controller {
 
                             if ((i.getEquip() != null && i.getEquip().contains(search)) || (i.getnum_inst() != null && i.getnum_inst().contains(search))) {
                                 searchedRows.add(i);
-
                             }
                         }
                     }
@@ -557,8 +552,8 @@ public class pm_controller {
     }
 
     private void setPmItems(ObservableList<hmmr_pm_model> select_data_pm2) {
-        getPms();
         pmDbRows.addAll(select_data_pm2);
+        getPms();
         showSearchedPMDB("");
     }
 
