@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,9 @@ import ru.haval.share_class.GroupCycle;
 import ru.haval.share_class.PMCycle;
 import ru.haval.share_class.PMYear;
 import ru.haval.share_class.s_class;
+import ru.haval.share_class.Period;
+
+import javax.swing.plaf.nimbus.State;
 
 public class _query {
     private static Statement stmt, stmt1, stmt2, stmt3, stmt4, stmt5, stmt6, stmt7, stmt8, stmt9, stmt10, stmt11, stmt12, stmt14, stmt15, stmt16, stmt17, stmt18, stmt19;
@@ -5892,7 +5896,7 @@ public class _query {
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 5051!");
             } finally {
-                //close connection ,stmt and resultset here
+                //close connection ,stmt and result set here
                 try {
                     cn.con.close();
                 } catch (SQLException se) { /*can't do anything */ }
@@ -9608,7 +9612,7 @@ public class _query {
                 }
 
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 9521!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
             } finally {
 
                 try {
@@ -9625,26 +9629,39 @@ public class _query {
         }
     }
 
-    public ArrayList<String[]> findGroupsLikeInstructionNumber(String subNum) {
-        String query = "SELECT hp.*, hgc.PM_StartDate as StartDate FROM hmmr_pm hp INNER JOIN hmmr_group_cycle hgc ON hp.PM_Group = hgc.PM_Group WHERE hp.del_rec = 0 and Instruction_num LIKE 'HMMR-MU__-PM-" + subNum + "%' GROUP BY hp.PM_Group HAVING COUNT(*) = 1;";
+    public ArrayList<Period> findGroupsLikeInstructionNumber(String like) {
+        String query = "SELECT hp.*, hgc.PM_StartDate as StartDate, hgc.PM_Cycle as cycle  FROM hmmr_pm hp INNER JOIN hmmr_group_cycle hgc ON hp.PM_Group = hgc.PM_Group WHERE hp.del_rec = 0 and Instruction_num LIKE '" + like + "' GROUP BY hp.PM_Group HAVING COUNT(*) = 1;";
+        System.out.println(query);
         ArrayList<String[]> groups = new ArrayList<>();
+        ArrayList<Period> periods = new ArrayList<>();
+        select(query, (rs) -> {
+            Period period = new Period();
+            try {
+                period.setPeriod(rs.getString(11));
+                period.setPmGroup(rs.getString(5));
+                period.setBeginDate(LocalDate.parse(rs.getString(10)));
+                periods.add(period);
+            } catch (SQLException e) {
+                s_class.alert(e);
+            }
+        });
+        return periods;
+    }
+
+
+
+    private void select(String query, Consumer<ResultSet> consumer) {
         synchronized (_query.class) {
             try {
                 cn.ConToDb();
-                stmt = _connect.con.createStatement();
-                rs = stmt.executeQuery(query);
-
+                Statement stmt = _connect.con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
-                    String[] tmp = new String[10];
-
-                    for (int i = 0; i < tmp.length; i++) {
-                        tmp[i] = rs.getString(i + 1);
-                    }
-                    groups.add(tmp);
+                    consumer.accept(rs);
                 }
 
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[2].getLineNumber() + "!");
             } finally {
 
                 try {
@@ -9657,43 +9674,25 @@ public class _query {
                     rs.close();
                 } catch (SQLException se) { /*can't do anything */ }
             }
-            return groups;
         }
     }
 
     public PMCycle getPmCycleByPMCycle(String pm_cycle) {
         String query = "SELECT * FROM `hmmr_pm_cycle` WHERE del_rec = 0 AND Type = '" + pm_cycle + "';";
-        synchronized (_query.class) {
-            PMCycle pmCycle = new PMCycle();
+        PMCycle pmCycle = new PMCycle();
+        select(query, (rs) -> {
             try {
-                cn.ConToDb();
-                stmt = _connect.con.createStatement();
-                rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    pmCycle.id = rs.getInt(1);
-                    pmCycle.type = pm_cycle;
-                    pmCycle.periodic = rs.getInt(3);
-                    pmCycle.hours = rs.getInt(4);
-                    pmCycle.beginDate = rs.getString(5);
-                    pmCycle.endDate = rs.getString(6);
-                }
-
+                pmCycle.id = rs.getInt(1);
+                pmCycle.type = pm_cycle;
+                pmCycle.periodic = rs.getInt(3);
+                pmCycle.hours = rs.getInt(4);
+                pmCycle.beginDate = rs.getString(5);
+                pmCycle.endDate = rs.getString(6);
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
-            } finally {
-
-                try {
-                    cn.con.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    stmt.close();
-                } catch (SQLException se) { /*can't do anything */ }
-                try {
-                    rs.close();
-                } catch (SQLException se) { /*can't do anything */ }
             }
-            return pmCycle;
-        }
+        });
+        return pmCycle;
     }
 
     public PMYear getPmYearByPmGroup(String pmGroup) {
@@ -9792,6 +9791,32 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
             }
             return exists;
+        }
+    }
+
+    public void deleteFromPmYearByPmGroup(String pmGroup) {
+        String query = "DELETE FROM hmmr_pm_year WHERE PM_Group = " + pmGroup + ";";
+        delete(query);
+    }
+
+    private void delete(String query) {
+        synchronized (_query.class) {
+            try {
+//                String query = "delete from hmmr_pm_cycle where id = " + "'" + id + "'" + ";";
+                cn.ConToDb();
+                Statement stmt = cn.con.createStatement();
+                stmt.executeUpdate(query);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[2].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
         }
     }
 }

@@ -41,12 +41,12 @@
 
                          <ComboBox fx:id="list_pm_cycle" prefHeight="25.0" prefWidth="189.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                          <Label fx:id="lbl_start_date" text="Дата старта:" GridPane.rowIndex="2" />
-                         <Label fx:id="lbl_duration" text="Длительность:" GridPane.rowIndex="3" />
-                         <Label fx:id="lbl_days_gc" text="Предупредить за:" GridPane.rowIndex="4" />
+                         <Label fx:id="lbl_duration" text="Длительность:" GridPane.rowIndex="4" />
+                         <Label fx:id="lbl_days_gc" text="Предупредить за:" GridPane.rowIndex="3" />
 
                          <DatePicker fx:id="d_start_date" prefHeight="25.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                         <TextField fx:id="txt_days_gc" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                         <TextField fx:id="txt_duration" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                         <TextField fx:id="txt_days_gc" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                         <TextField fx:id="txt_duration" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                          <Label fx:id="lbl_oft_ap" text="Отверственный:" GridPane.rowIndex="5" />
                          <ComboBox fx:id="oft" prefHeight="25.0" prefWidth="198.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                      </children>

@@ -1,6 +1,7 @@
 package ru.haval.share_class;
 
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -30,6 +31,10 @@ public class s_class {
 	static _query qr = new _query();
 	Tooltip tip;
 	private static s_class scl = new s_class();
+
+	public static void alert(SQLException e) {
+		_AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[3].getLineNumber() + "!");
+	}
 
 	public String parser_sql_str(String str, int count)
 	{
@@ -301,7 +306,7 @@ public class s_class {
 
 	}
 
-	private static boolean isExcludedDate(final long shift, final long[] excluded) {
+	private static boolean isExcludedDate(final long shift, List<Long> excluded) {
 		for (long i : excluded) {
 			if (shift % i == 0) {
 				return true;
@@ -312,13 +317,26 @@ public class s_class {
 
 	public static void updatePmYearDates(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID) {
 		Thread thread = new Thread(() -> {
-			updatePmYears(PMGroup, BEGIN_DATE, OFT, PERIOD_ID, new long[] {});
+			List<Period> periods = findPassPeriods(Integer.parseInt(PMGroup));
+			List<Long> excludedPeriods = new LinkedList<>();
+
+			if (periods != null) {
+				for (Period period : periods) {
+					//удаляем все записи из PM Plan группы для которой поменяли дату
+					qr.deleteFromPmYearByPmGroup(period.getPmGroup());
+					updatePmYears(period.getPmGroup(), BEGIN_DATE, OFT, period.getPeriodId(), excludedPeriods);
+					excludedPeriods.add((long) period.getPeriod());
+
+				}
+			} else {
+				updatePmYears(PMGroup, BEGIN_DATE, OFT, PERIOD_ID, new ArrayList<>());
+			}
 		});
 		thread.setPriority(Thread.MIN_PRIORITY);
 		thread.start();
 	}
 
-	public static void updatePmYears(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID, final long[] EXCLUDED_DAYS) {
+	public static void updatePmYears(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID, List<Long> excludedPeriods) {
 		final PMCycle pmCycle = qr.getPmCycleByPMCycle(PERIOD_ID);
 		//Prepare constant vars
 		String pmId = qr._select_pmid(PMGroup);
@@ -336,15 +354,19 @@ public class s_class {
 		LocalDate date = BEGIN_DATE;
 		long currentShift = 0;
 
-		while (date.plusDays(currentShift).isBefore(END_DATE)) {
-			//pass excluded days
-			if (isExcludedDate(currentShift, EXCLUDED_DAYS)) {
+		while (date.isBefore(END_DATE)) {
+			//pass excluded days or past days
+			if (isExcludedDate(currentShift, excludedPeriods) || date.isBefore(LocalDate.now())) {
+				//update counter!!!
+				currentShift += SHIFT;
+				date = date.plusDays(SHIFT);
 				continue;
 			}
-//			System.out.println(PM_ID + " : " + PM_GROUP + " : " + date.plusDays(currentShift) +  " : " + OFT);
-			qr._insert_pm_year(PM_ID,PM_GROUP, date.plusDays(currentShift), OFT);
+			System.out.println(PM_ID + " : " + PM_GROUP + " : " + date +  " : " + OFT);
+			qr._insert_pm_year(PM_ID,PM_GROUP, date, OFT);
 			//update counter!!!
 			currentShift += SHIFT;
+			date = date.plusDays(SHIFT);
 		}
 		qr._update_week_year(PM_GROUP);
 	}
@@ -392,7 +414,6 @@ public class s_class {
 								continue;
 							}
 							LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
-
 							qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
 							_count = period.getPeriod() + _count;
 						}
@@ -425,24 +446,25 @@ public class s_class {
 
 	private static List<Period> findPassPeriods(int pm_group) {
 		// If group has only pms format "HMMR-MU??-PM-????-{period}"
-		int instrSubNum = hasOnlyGroupInstructionNumFormat(pm_group);
-		if (instrSubNum == 0) {
+		String instrSubNum = hasOnlyGroupInstructionNumFormat(pm_group);
+		if (instrSubNum == null) {
 			return null;
 		} else {
-			String instructionNumber = qr.getInstructionsNumByPmGroup(pm_group).get(1);
+			String instructionNumber = qr.getInstructionsNumByPmGroup(pm_group).get(0);
 			//find other groups the same format "HMMR-MU??-PM-????-{period}"
-			ArrayList<String[]> groups = qr.findGroupsLikeInstructionNumber("HMMR-MU__-PM-" + instrSubNum + "-%");
-			List<Period> periods = new ArrayList<>();
-			Set<String> startDates = new HashSet<>();
-			for (String[] group : groups) {
-				startDates.add(group[9]);
-			}
-			if (startDates.size() > 1) {
-				return null;
-			}
-			for (String[] group : groups) {
-				periods.add(new Period(group));
-			}
+			ArrayList<Period> periods = qr.findGroupsLikeInstructionNumber("HMMR-MU__-PM-" + instrSubNum + "-%");
+//			Set<String> startDates = new HashSet<>();
+//			//Check the instructions in the group all starts at the same date
+//			for (String[] group : groups) {
+//				startDates.add(group[9]);
+//			}
+//			if (startDates.size() > 1) {
+//				return null;
+//			}
+//			for (String[] group : groups) {
+//				periods.add(new Period(group));
+//			}
+			Collections.sort(periods);
 			return periods;
 		}
 	}
@@ -450,18 +472,18 @@ public class s_class {
 
 
 	//hasOnlyOne instruction format "HMMR-MU??-PM-????-{period}" in given group
-	private static int hasOnlyGroupInstructionNumFormat(int pm_group) {
+	private static String hasOnlyGroupInstructionNumFormat(int pm_group) {
 		List<String> instructionsInGroup = qr.getInstructionsNumByPmGroup(pm_group);
 		if (instructionsInGroup.size() != 1) {
-			return 0;
+			return null;
 		} else {
-			Pattern pattern = Pattern.compile("^HMMR-MU\\d{2}-PM-\\d{4}-.{3,4}");
-			Matcher matcher = pattern.matcher(instructionsInGroup.get(1));
+			Pattern pattern = Pattern.compile("^HMMR-MU\\d{2}-PM-\\d{3,6}-.{3,5}$");
+			Matcher matcher = pattern.matcher(instructionsInGroup.get(0));
 			if (matcher.find()) {
-				return Integer.parseInt(instructionsInGroup.get(1).substring(13,17));
+				return instructionsInGroup.get(0).split("-")[3];
 			}
 		}
-		return 0;
+		return null;
 	}
 
 }

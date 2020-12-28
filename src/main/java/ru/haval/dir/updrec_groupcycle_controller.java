@@ -145,12 +145,22 @@ public class updrec_groupcycle_controller {
 				chk_btn();
 			}
 		});
+
+		oft.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				chk_btn();
+			}
+		});
 		txt_duration.setOnKeyReleased(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event arg0) {
 				chk_btn();
 			}
+		});
+		txt_days_gc.setOnKeyReleased((event) -> {
+			chk_btn();
 		});
 		
 		txt_pm_group.setText(scl.parser_str(qr._select_for_gc_str(gcc._id_gc), 0));
@@ -161,40 +171,41 @@ public class updrec_groupcycle_controller {
 		setOft();
 
 		//!!!!!!!!!!!Отслеживаем изменение даты!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
-            public void handle(ActionEvent e) 
-            { 
-            	Alert alert = new Alert(AlertType.CONFIRMATION);
-			    alert.setTitle("M&U - Внимание!");
-			    			    
-			    alert.setHeaderText("Вы изменили дату! Вы уверены что хотите пересчитать в PM Plan группу: "+txt_pm_group.getText()+" на новую дату?");
-			    
-			    Optional<ButtonType> option = alert.showAndWait();
-			    if (option.get() == null) {
-			      
-			    } else if (option.get() == ButtonType.OK) {
-			  	   try {
-			  		   new_date = d_start_date.getValue();
-			  		   new_pm_date(gcc._id_gc);
-			  		   chk_btn();
-			  	   } catch (Exception e1) {
-					
+        d_start_date.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("M&U - Внимание!");
+
+				alert.setHeaderText("Вы изменили дату! Вы уверены что хотите пересчитать в PM Plan группу: "+txt_pm_group.getText()+" на новую дату?");
+
+				Optional<ButtonType> option = alert.showAndWait();
+				if (option.get() == null) {
+
+				} else if (option.get() == ButtonType.OK) {
+					try {
+						new_date = d_start_date.getValue();
+						new_pm_date(gcc._id_gc);
+						chk_btn();
+					} catch (Exception e1) {
+
+					}
+				} else if (option.get() == ButtonType.CANCEL) {
+					return;
+				} else {
+					//label.setText("-");
 				}
-			    } else if (option.get() == ButtonType.CANCEL) {
-			       return;
-			    } else {
-			       //label.setText("-");
-			    }
-            } 
-        }; 
-        d_start_date.setOnAction(event);
+			}
+		});
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//Update button
 		add_rec.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent arg0) {
 				qr._update_for_gc(gcc._id_gc, txt_pm_group.getText(), list_pm_cycle.getValue(), txt_days_gc.getText(), d_start_date.getValue(), txt_duration.getText());
 				qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Обновил запись № = " + qr._select_last_id("hmmr_group_cycle") + " в справочнике Группа-Период");
+				s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0], list_pm_cycle.getValue());
 				gcc._table_update_gc.addAll(qr._select_for_gc());
 				stage = (Stage) add_rec.getScene().getWindow();
 				stage.close();
@@ -208,6 +219,8 @@ public class updrec_groupcycle_controller {
 				stage.close();
 			}
 		});
+
+		txt_pm_group.setDisable(true);
 	}
 
 	private void setOft() {
@@ -246,22 +259,18 @@ public class updrec_groupcycle_controller {
 		String pm_id = qr._select_pmid(txt_pm_group.getText());
 		if (!pm_id.equals("UNKNOWN")) {
 			//удаляем все записи из PM Plan группы для которой поменяли дату
-			qr._update_new_date(txt_pm_group.getText());
+//			qr._update_new_date(txt_pm_group.getText());
 
 			if (!txt_pm_group.getText().equals("0")) {
-				if (!scl.parser_sql_str(qr._select_for_pmgroup(txt_pm_group.getText()), 0).equals(txt_pm_group.getText())) {
+//				if (!scl.parser_sql_str(qr._select_for_pmgroup(txt_pm_group.getText()), 0).equals(txt_pm_group.getText())) {
 					try {
-						String before_pars = qr._select_for_pmplan(txt_pm_group.getText()).get(0);
-						String b_date = fx_dp.toString(new_date);
-						int pm_group = Integer.parseInt(txt_pm_group.getText());
-
-						s_class.updatePmPlanDates2(before_pars, b_date, pm_id, pm_group);
+						s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0], list_pm_cycle.getValue());
 					} catch (Exception e) {
 						scl._AlertDialog("Не найдено не одного PM соответствующего группе: " + txt_pm_group.getText() + " !", "Ошибка!");
 					}
-				} else {
-					scl._AlertDialog("Группа " + txt_pm_group.getText() + " уже добавлена в PM PLAN!", "Группа уже существует");
-				}
+//				} else {
+//					scl._AlertDialog("Группа " + txt_pm_group.getText() + " уже добавлена в PM PLAN!", "Группа уже существует");
+//				}
 			} else
 				scl._AlertDialog("Группа 0 не может быть добавлена в PM PLAN! Введите корректный номер группы!", "Ошибка!");
 		} else {
@@ -289,7 +298,7 @@ public class updrec_groupcycle_controller {
 	
 	@SuppressWarnings("static-access")
 	private void new_pm_date(String chk_date) {
-		String Otv_for_task = null;
+//		String Otv_for_task = null;
 
 		if (!chk_date.equals("2018-10-10")) {
 			//check if group exists
@@ -298,42 +307,43 @@ public class updrec_groupcycle_controller {
 			} else {
 				scl._AlertDialog("Группа " + txt_pm_group.getText() + " не найдена в таблице PM - Редактор!\nПожалуйста добавте эту группу в PM - Редактор! ", "Группа не существует");
 			}
-			String before_pars = qr._select_for_pmplan(txt_pm_group.getText()).get(0);
-			String pereodic = scl.parser_sql_str(before_pars, 0);
-			String b_date = fx_dp.toString(new_date);
-
-			String e_date = scl.parser_sql_str(before_pars, 2);
-			@SuppressWarnings("unused")
-			String shop = scl.parser_sql_str(before_pars, 3);
-			Otv_for_task = scl.parser_sql_str(before_pars, 4);
-
-			int pm_group = Integer.parseInt(txt_pm_group.getText());
-
-			int _count = Integer.parseInt(pereodic);
-			int _cnt = _count;
-
-			int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
-			int month_bdate = fx_dp.fromString(b_date).getMonthValue();
-			int year_bdate = fx_dp.fromString(b_date).getYear();
-
-			int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
-			int month_edate = fx_dp.fromString(e_date).getMonthValue();
-			int year_edate = fx_dp.fromString(e_date).getYear();
-
-			//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
-			int gen_day = Math.abs(day_edate - day_bdate);
-			int gen_month = Math.abs(month_edate - month_bdate) * 30;
-			int gen_year = Math.abs(year_edate - year_bdate) * 365;
-
-			int _general = Math.round((gen_day + gen_month + gen_year) / _count);
+//			String before_pars = qr._select_for_pmplan(txt_pm_group.getText()).get(0);
+//			String pereodic = scl.parser_sql_str(before_pars, 0);
+//			String b_date = fx_dp.toString(new_date);
+//
+//			String e_date = scl.parser_sql_str(before_pars, 2);
+//			@SuppressWarnings("unused")
+//			String shop = scl.parser_sql_str(before_pars, 3);
+//			Otv_for_task = scl.parser_sql_str(before_pars, 4);
+//
+//			int pm_group = Integer.parseInt(txt_pm_group.getText());
+//
+//			int _count = Integer.parseInt(pereodic);
+//			int _cnt = _count;
+//
+//			int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
+//			int month_bdate = fx_dp.fromString(b_date).getMonthValue();
+//			int year_bdate = fx_dp.fromString(b_date).getYear();
+//
+//			int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
+//			int month_edate = fx_dp.fromString(e_date).getMonthValue();
+//			int year_edate = fx_dp.fromString(e_date).getYear();
+//
+//			//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
+//			int gen_day = Math.abs(day_edate - day_bdate);
+//			int gen_month = Math.abs(month_edate - month_bdate) * 30;
+//			int gen_year = Math.abs(year_edate - year_bdate) * 365;
+//
+//			int _general = Math.round((gen_day + gen_month + gen_year) / _count);
 
 			if (!qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText()).equals("NULL")) {
 //				System.out.println("GROUP_NUM = " + txt_pm_group.getText() + "PM_ID = " + qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText()));
-				for (int i = 0; i < _general; i++) {
-					LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
-					qr._insert_pm_year(String.valueOf(qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText())), pm_group, days, Otv_for_task);
-					_count = _cnt + _count;
-				}
+				s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0], list_pm_cycle.getValue());
+//				for (int i = 0; i < _general; i++) {
+//					LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
+//					qr._insert_pm_year(String.valueOf(qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText())), pm_group, days, Otv_for_task);
+//					_count = _cnt + _count;
+//				}
 			} else
 				scl._AlertDialog("Группа " + txt_pm_group.getText() + " не найдена в таблице PM - Редактор!\nПожалуйста добавте эту группу в PM - Редактор! ", "Группа не существует");
 		}
@@ -342,7 +352,7 @@ public class updrec_groupcycle_controller {
 	private void chk_btn()
 	{
 		try {
-			if(txt_pm_group.getText().length() != 0 && list_pm_cycle.getValue().length() != 0 && txt_duration.getText().length() != 0)
+			if(txt_pm_group.getText().length() != 0 && list_pm_cycle.getValue().length() != 0 && txt_duration.getText().length() != 0 && oft.getValue().length() != 0)
 				add_rec.setDisable(false);
 			else
 				add_rec.setDisable(true);

@@ -153,6 +153,7 @@ public class addrec_groupcycle_controller {
 				qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Создал запись № = " + qr._select_last_id("hmmr_group_cycle") + " в справочнике Группа-Период");
 				//Check if the group in the pm year exists
 				if (!qr.isPmGroupExists(txt_pm_group.getText())) {
+					//Fill the PM Year DB for a new cycle
 					s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0] ,list_pm_cycle.getValue());
 				}
 				gcc._table_update_gc.addAll(qr._select_for_gc());
