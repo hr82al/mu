@@ -1,12 +1,16 @@
 package ru.haval.share_class;
 
 
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
 import ru.haval.dir.CycleController;
 import javafx.collections.ObservableList;
@@ -22,10 +26,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 
 public class s_class {
-
-	_query qr = new _query();
+	static FxDatePickerConverter fx_dp = new FxDatePickerConverter();
+	static _query qr = new _query();
 	Tooltip tip;
-	
+	private static s_class scl = new s_class();
+
 	public String parser_sql_str(String str, int count)
 	{
 		String[] p_str = null;
@@ -230,6 +235,233 @@ public class s_class {
 	{
 		tv.getColumns().get(0).setVisible(false);
         tv.getColumns().get(0).setVisible(true);
+	}
+
+	public static void updatePmPlanDates(String before_pars, String b_date, String  pm_id, int pm_group){
+
+		String Otv_for_task = null;
+
+		String pereodic = scl.parser_sql_str(before_pars, 0);
+		String e_date = scl.parser_sql_str(before_pars, 2);
+		@SuppressWarnings("unused")
+		String shop = scl.parser_sql_str(before_pars, 3);
+		Otv_for_task = scl.parser_sql_str(before_pars, 4);
+
+		int _count = Integer.parseInt(pereodic);
+		int _cnt = _count;
+
+		int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
+		int month_bdate = fx_dp.fromString(b_date).getMonthValue();
+		int year_bdate = fx_dp.fromString(b_date).getYear();
+
+		int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
+		int month_edate = fx_dp.fromString(e_date).getMonthValue();
+		int year_edate = fx_dp.fromString(e_date).getYear();
+
+		//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
+		int gen_day = Math.abs(day_edate - day_bdate);
+		int gen_month = Math.abs(month_edate - month_bdate) * 30;
+		int gen_year = Math.abs(year_edate - year_bdate) * 365;
+
+		int _general = Math.round((gen_day + gen_month + gen_year) / _count);
+		// If group has only pms format "HMMR-MU??-PM-????-{period}"
+		List<Period> periods = findPassPeriods(pm_group);
+		List<Integer> excludedPeriods = new LinkedList<>();
+		if (periods != null) {
+			for (int j = Period.getPeriods() - 1; j >=0;j--) {
+				for (Period period : periods) {
+					if (period.isPeriodNumber(j)) {
+						_count = period.getPeriod();
+						_general = Math.round((gen_day + gen_month + gen_year) / _count);
+						pm_id = qr._select_pmid(period.getPmGroup());
+						pm_group = Integer.parseInt(period.getPmGroup());
+						for (int i = 0; i < _general; i++) {
+							if (isExcluded(_count, excludedPeriods)) {
+								continue;
+							}
+							LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
+
+							qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
+							_count = period.getPeriod() + _count;
+						}
+						qr._update_week_year(pm_group);
+						excludedPeriods.add(0, period.getPeriod());
+					}
+				}
+			}
+
+		} else {
+			for (int i = 0; i < _general; i++) {
+				LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
+				qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
+				_count = _cnt + _count;
+			}
+			qr._update_week_year(pm_group);
+		}
+
+	}
+
+	private static boolean isExcludedDate(final long shift, final long[] excluded) {
+		for (long i : excluded) {
+			if (shift % i == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void updatePmYearDates(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID) {
+		Thread thread = new Thread(() -> {
+			updatePmYears(PMGroup, BEGIN_DATE, OFT, PERIOD_ID, new long[] {});
+		});
+		thread.setPriority(Thread.MIN_PRIORITY);
+		thread.start();
+	}
+
+	public static void updatePmYears(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID, final long[] EXCLUDED_DAYS) {
+		final PMCycle pmCycle = qr.getPmCycleByPMCycle(PERIOD_ID);
+		//Prepare constant vars
+		String pmId = qr._select_pmid(PMGroup);
+
+		//PM_ID redundant the column and it has no any sense;
+		if (pmId.equals("UNKNOWN")) {
+			pmId = qr._select_last_id("hmmr_pm");
+		}
+		final String PM_ID = pmId;
+		//***************************************************
+		final LocalDate END_DATE = LocalDate.parse(pmCycle.endDate);
+		final int PM_GROUP = Integer.parseInt(PMGroup);
+		final long SHIFT = pmCycle.periodic;
+
+		LocalDate date = BEGIN_DATE;
+		long currentShift = 0;
+
+		while (date.plusDays(currentShift).isBefore(END_DATE)) {
+			//pass excluded days
+			if (isExcludedDate(currentShift, EXCLUDED_DAYS)) {
+				continue;
+			}
+//			System.out.println(PM_ID + " : " + PM_GROUP + " : " + date.plusDays(currentShift) +  " : " + OFT);
+			qr._insert_pm_year(PM_ID,PM_GROUP, date.plusDays(currentShift), OFT);
+			//update counter!!!
+			currentShift += SHIFT;
+		}
+		qr._update_week_year(PM_GROUP);
+	}
+
+	public static void updatePmPlanDates2(String before_pars, String b_date, String  pm_id, int pm_group){
+
+		String Otv_for_task = null;
+
+		String pereodic = scl.parser_sql_str(before_pars, 0);
+		String e_date = scl.parser_sql_str(before_pars, 2);
+		@SuppressWarnings("unused")
+		String shop = scl.parser_sql_str(before_pars, 3);
+		Otv_for_task = scl.parser_sql_str(before_pars, 4);
+
+		int _count = Integer.parseInt(pereodic);
+		int _cnt = _count;
+
+		int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
+		int month_bdate = fx_dp.fromString(b_date).getMonthValue();
+		int year_bdate = fx_dp.fromString(b_date).getYear();
+
+		int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
+		int month_edate = fx_dp.fromString(e_date).getMonthValue();
+		int year_edate = fx_dp.fromString(e_date).getYear();
+
+		//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
+		int gen_day = Math.abs(day_edate - day_bdate);
+		int gen_month = Math.abs(month_edate - month_bdate) * 30;
+		int gen_year = Math.abs(year_edate - year_bdate) * 365;
+
+		int _general = Math.round((gen_day + gen_month + gen_year) / _count);
+		// If group has only pms format "HMMR-MU??-PM-????-{period}"
+		List<Period> periods = findPassPeriods(pm_group);
+		List<Integer> excludedPeriods = new LinkedList<>();
+		if (periods != null) {
+			for (int j = Period.getPeriods() - 1; j >=0;j--) {
+				for (Period period : periods) {
+					if (period.isPeriodNumber(j)) {
+						_count = period.getPeriod();
+						_general = Math.round((gen_day + gen_month + gen_year) / _count);
+						pm_id = qr._select_pmid(period.getPmGroup());
+						pm_group = Integer.parseInt(period.getPmGroup());
+						for (int i = 0; i < _general; i++) {
+							if (isExcluded(_count, excludedPeriods)) {
+								continue;
+							}
+							LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
+
+							qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
+							_count = period.getPeriod() + _count;
+						}
+						qr._update_week_year(pm_group);
+						excludedPeriods.add(0, period.getPeriod());
+					}
+				}
+			}
+
+		} else {
+			for (int i = 0; i < _general; i++) {
+				LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
+				//qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
+				System.out.println(pm_id + " : " + pm_group + " : " + days +  " : " + Otv_for_task);
+				_count = _cnt + _count;
+			}
+			qr._update_week_year(pm_group);
+		}
+
+	}
+
+	private static boolean isExcluded(int count, List<Integer> excludedPeriods) {
+		for (int exclude : excludedPeriods) {
+			if (count % exclude == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static List<Period> findPassPeriods(int pm_group) {
+		// If group has only pms format "HMMR-MU??-PM-????-{period}"
+		int instrSubNum = hasOnlyGroupInstructionNumFormat(pm_group);
+		if (instrSubNum == 0) {
+			return null;
+		} else {
+			String instructionNumber = qr.getInstructionsNumByPmGroup(pm_group).get(1);
+			//find other groups the same format "HMMR-MU??-PM-????-{period}"
+			ArrayList<String[]> groups = qr.findGroupsLikeInstructionNumber("HMMR-MU__-PM-" + instrSubNum + "-%");
+			List<Period> periods = new ArrayList<>();
+			Set<String> startDates = new HashSet<>();
+			for (String[] group : groups) {
+				startDates.add(group[9]);
+			}
+			if (startDates.size() > 1) {
+				return null;
+			}
+			for (String[] group : groups) {
+				periods.add(new Period(group));
+			}
+			return periods;
+		}
+	}
+
+
+
+	//hasOnlyOne instruction format "HMMR-MU??-PM-????-{period}" in given group
+	private static int hasOnlyGroupInstructionNumFormat(int pm_group) {
+		List<String> instructionsInGroup = qr.getInstructionsNumByPmGroup(pm_group);
+		if (instructionsInGroup.size() != 1) {
+			return 0;
+		} else {
+			Pattern pattern = Pattern.compile("^HMMR-MU\\d{2}-PM-\\d{4}-.{3,4}");
+			Matcher matcher = pattern.matcher(instructionsInGroup.get(1));
+			if (matcher.find()) {
+				return Integer.parseInt(instructionsInGroup.get(1).substring(13,17));
+			}
+		}
+		return 0;
 	}
 
 }

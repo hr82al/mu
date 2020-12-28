@@ -29,7 +29,7 @@ import ru.haval.share_class.s_class;
 
 public class updrec_groupcycle_controller {
 	@FXML
-	Label lbl_title_upd, lbl_pm_group, lbl_pm_cycle, lbl_days_gc, lbl_start_date, lbl_duration;
+	Label lbl_title_upd, lbl_pm_group, lbl_pm_cycle, lbl_days_gc, lbl_start_date, lbl_duration, lbl_oft_ap;
 	
 	@FXML
 	JFXButton add_rec, cancel_form;
@@ -38,7 +38,7 @@ public class updrec_groupcycle_controller {
 	TextField txt_pm_group, txt_days_gc, txt_duration;
 	
 	@FXML
-	ComboBox<String> list_pm_cycle;
+	ComboBox<String> list_pm_cycle, oft;
 	
 	@FXML
 	DatePicker d_start_date;
@@ -121,6 +121,8 @@ public class updrec_groupcycle_controller {
 		
 		
 		list_pm_cycle.setItems(qr._select_cycle_inst());
+		oft.setItems(qr._select_fio_for_ap(4, ""));
+		//oft.selectionModelProperty().set();
 		
 		txt_pm_group.setOnKeyReleased(new EventHandler<Event>() {
 
@@ -156,6 +158,8 @@ public class updrec_groupcycle_controller {
 		txt_days_gc.setText(scl.parser_str(qr._select_for_gc_str(gcc._id_gc), 2));
 		d_start_date.setValue(fx_dp.fromString(scl.parser_str(qr._select_for_gc_str(gcc._id_gc), 3)));
 		txt_duration.setText(scl.parser_str(qr._select_for_gc_str(gcc._id_gc), 4));
+		setOft();
+
 		//!!!!!!!!!!!Отслеживаем изменение даты!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
@@ -205,7 +209,20 @@ public class updrec_groupcycle_controller {
 			}
 		});
 	}
-	
+
+	private void setOft() {
+		String sOft = qr.getOFTByPmGroup(txt_pm_group.getText());
+		if (sOft.equals("")) {
+			return;
+		}
+		for (String i : oft.getItems()) {
+			if (i.contains(sOft)) {
+				oft.getSelectionModel().select(i);
+				return;
+			}
+		}
+	}
+
 	private void lang_fun(String loc1, String loc2)
 	{
 		ResourceBundle lngBndl = ResourceBundle
@@ -216,145 +233,111 @@ public class updrec_groupcycle_controller {
 		lbl_pm_cycle.setText(lngBndl.getString("lbl_pm_cycle")+":");
 		lbl_start_date.setText(lngBndl.getString("col_startdate_ps")+":");
 		lbl_duration.setText(lngBndl.getString("lbl_duration")+":");
+
+		lbl_oft_ap.setText(lngBndl.getString("lbl_oft_ap")+":");
 		
 		add_rec.setText(lngBndl.getString("upd_ap"));
 		cancel_form.setText(lngBndl.getString("cancel_tsk"));
 	}
 	
 	@SuppressWarnings("static-access")
-	private void new_pm_date(int _id_gc)
-	{
-		String Otv_for_task = null;
-		
+	private void new_pm_date(int _id_gc) {
 		//находим Pm_id для группы для которой поменяли дату
 		String pm_id = qr._select_pmid(txt_pm_group.getText());
-		if(!pm_id.equals("UNKNOWN")) {
+		if (!pm_id.equals("UNKNOWN")) {
 			//удаляем все записи из PM Plan группы для которой поменяли дату
 			qr._update_new_date(txt_pm_group.getText());
-			
-			if(!txt_pm_group.getText().equals("0")) {
-				if(!scl.parser_sql_str(qr._select_for_pmgroup(txt_pm_group.getText()), 0).equals(txt_pm_group.getText())) {
+
+			if (!txt_pm_group.getText().equals("0")) {
+				if (!scl.parser_sql_str(qr._select_for_pmgroup(txt_pm_group.getText()), 0).equals(txt_pm_group.getText())) {
 					try {
 						String before_pars = qr._select_for_pmplan(txt_pm_group.getText()).get(0);
-						String pereodic = scl.parser_sql_str(before_pars, 0);
 						String b_date = fx_dp.toString(new_date);
-						
-							String e_date = scl.parser_sql_str(before_pars, 2);
-							@SuppressWarnings("unused")
-							String shop = scl.parser_sql_str(before_pars, 3);
-							Otv_for_task = scl.parser_sql_str(before_pars, 4);
-							
-							int pm_group = Integer.parseInt(txt_pm_group.getText());
-							
-							int _count = Integer.parseInt(pereodic);
-							int _cnt = _count;
-							
-							int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
-							int month_bdate = fx_dp.fromString(b_date).getMonthValue();
-							int year_bdate = fx_dp.fromString(b_date).getYear();
-							
-							int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
-							int month_edate = fx_dp.fromString(e_date).getMonthValue();
-							int year_edate = fx_dp.fromString(e_date).getYear();
-							
-							//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
-							int gen_day = Math.abs(day_edate - day_bdate);
-							int gen_month = Math.abs(month_edate - month_bdate)*30;
-							int gen_year = Math.abs(year_edate - year_bdate)*365;
-							
-							int _general = Math.round((gen_day + gen_month + gen_year)/_count);
-							
-							for (int i = 0; i < _general; i++) {
-								LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
-								qr._insert_pm_year(pm_id, pm_group, days, Otv_for_task);
-								_count = _cnt + _count;
-							}
-							qr._update_week_year(pm_group);
-						
+						int pm_group = Integer.parseInt(txt_pm_group.getText());
+
+						s_class.updatePmPlanDates2(before_pars, b_date, pm_id, pm_group);
+					} catch (Exception e) {
+						scl._AlertDialog("Не найдено не одного PM соответствующего группе: " + txt_pm_group.getText() + " !", "Ошибка!");
 					}
-					catch (Exception e) {
-						scl._AlertDialog("Не найдено не одного PM соответствующего группе: "+ txt_pm_group.getText() +" !", "Ошибка!");
-					}
+				} else {
+					scl._AlertDialog("Группа " + txt_pm_group.getText() + " уже добавлена в PM PLAN!", "Группа уже существует");
 				}
-				else
-				{
-					scl._AlertDialog("Группа "+ txt_pm_group.getText() +" уже добавлена в PM PLAN!", "Группа уже существует");
-				}
-			}
-			else
+			} else
 				scl._AlertDialog("Группа 0 не может быть добавлена в PM PLAN! Введите корректный номер группы!", "Ошибка!");
-		}
-		else
-		{
+		} else {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-		    alert.setTitle("M&U - Внимание!");
-		    			    
-		    alert.setHeaderText("ВНИМАНИЕ!!! Группы: "+txt_pm_group.getText()+" нет в PM PLAN!\nДобавить эту группу в PM PLAN? Дата старта будет: "+d_start_date.getValue()+"!\nЕсли нет, то эту группу Вам необходимо будет добавить позже вручную!");
-		    
-		    Optional<ButtonType> option = alert.showAndWait();
-		    if (option.get() == null) {
-		      
-		    } else if (option.get() == ButtonType.OK) {
-		  	   try {
-		  		   new_date = d_start_date.getValue();
-		  		   new_pm_date(fx_dp.toString(new_date));
-		  		   chk_btn();
-		  	   } catch (Exception e1) {
-				
+			alert.setTitle("M&U - Внимание!");
+
+			alert.setHeaderText("ВНИМАНИЕ!!! Группы: " + txt_pm_group.getText() + " нет в PM PLAN!\nДобавить эту группу в PM PLAN? Дата старта будет: " + d_start_date.getValue() + "!\nЕсли нет, то эту группу Вам необходимо будет добавить позже вручную!");
+
+			Optional<ButtonType> option = alert.showAndWait();
+			if (option.get() == null) {
+
+			} else if (option.get() == ButtonType.OK) {
+				try {
+					new_date = d_start_date.getValue();
+					new_pm_date(fx_dp.toString(new_date));
+					chk_btn();
+				} catch (Exception e1) {
+
+				}
+			} else if (option.get() == ButtonType.CANCEL) {
+				return;
 			}
-		    } else if (option.get() == ButtonType.CANCEL) {
-		    	return;
-		    }
 		}
 	}
 	
 	@SuppressWarnings("static-access")
-	private void new_pm_date(String chk_date)
-	{
+	private void new_pm_date(String chk_date) {
 		String Otv_for_task = null;
-				
-		if(!chk_date.equals("2018-10-10")) {
+
+		if (!chk_date.equals("2018-10-10")) {
+			//check if group exists
+			if (qr.isPmGroupExists(txt_pm_group.getText())) {
+
+			} else {
+				scl._AlertDialog("Группа " + txt_pm_group.getText() + " не найдена в таблице PM - Редактор!\nПожалуйста добавте эту группу в PM - Редактор! ", "Группа не существует");
+			}
 			String before_pars = qr._select_for_pmplan(txt_pm_group.getText()).get(0);
 			String pereodic = scl.parser_sql_str(before_pars, 0);
 			String b_date = fx_dp.toString(new_date);
-					
+
 			String e_date = scl.parser_sql_str(before_pars, 2);
 			@SuppressWarnings("unused")
 			String shop = scl.parser_sql_str(before_pars, 3);
 			Otv_for_task = scl.parser_sql_str(before_pars, 4);
-						
+
 			int pm_group = Integer.parseInt(txt_pm_group.getText());
-						
+
 			int _count = Integer.parseInt(pereodic);
 			int _cnt = _count;
-						
+
 			int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
 			int month_bdate = fx_dp.fromString(b_date).getMonthValue();
 			int year_bdate = fx_dp.fromString(b_date).getYear();
-						
+
 			int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
 			int month_edate = fx_dp.fromString(e_date).getMonthValue();
 			int year_edate = fx_dp.fromString(e_date).getYear();
-						
+
 			//Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
 			int gen_day = Math.abs(day_edate - day_bdate);
-			int gen_month = Math.abs(month_edate - month_bdate)*30;
-			int gen_year = Math.abs(year_edate - year_bdate)*365;
-						
-			int _general = Math.round((gen_day + gen_month + gen_year)/_count);
-			
-			if(!qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText()).equals("NULL")) {
+			int gen_month = Math.abs(month_edate - month_bdate) * 30;
+			int gen_year = Math.abs(year_edate - year_bdate) * 365;
+
+			int _general = Math.round((gen_day + gen_month + gen_year) / _count);
+
+			if (!qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText()).equals("NULL")) {
 //				System.out.println("GROUP_NUM = " + txt_pm_group.getText() + "PM_ID = " + qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText()));
 				for (int i = 0; i < _general; i++) {
 					LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
 					qr._insert_pm_year(String.valueOf(qr._select_recStrSort("hmmr_pm", "id", "del_rec", "PM_Group", txt_pm_group.getText())), pm_group, days, Otv_for_task);
 					_count = _cnt + _count;
 				}
-			}
-			else
-				scl._AlertDialog("Группа "+ txt_pm_group.getText() +" не найдена в таблице PM - Редактор!\nПожалуйста добавте эту группу в PM - Редактор! ","Группа не существует");
-		}		
-}
+			} else
+				scl._AlertDialog("Группа " + txt_pm_group.getText() + " не найдена в таблице PM - Редактор!\nПожалуйста добавте эту группу в PM - Редактор! ", "Группа не существует");
+		}
+	}
 	
 	private void chk_btn()
 	{

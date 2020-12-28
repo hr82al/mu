@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
+import javafx.scene.input.KeyEvent;
 import ru.haval.action.apwr_controller;
 import ru.haval.application.conn_connector;
 import ru.haval.data.FxDatePickerConverter;
@@ -24,7 +25,7 @@ import ru.haval.share_class.s_class;
 public class addrec_groupcycle_controller {
 	
 	@FXML
-	Label lbl_title, lbl_pm_group, lbl_pm_cycle, lbl_days_gc, lbl_start_date, lbl_duration;
+	Label lbl_title, lbl_pm_group, lbl_pm_cycle, lbl_days_gc, lbl_start_date, lbl_duration, lbl_oft_ap;
 	
 	@FXML
 	JFXButton add_rec, cancel_form;
@@ -33,7 +34,7 @@ public class addrec_groupcycle_controller {
 	TextField txt_pm_group, txt_days_gc, txt_duration;
 	
 	@FXML
-	ComboBox<String> list_pm_cycle;
+	ComboBox<String> list_pm_cycle, oft;
 	
 	@FXML
 	DatePicker d_start_date;
@@ -114,6 +115,7 @@ public class addrec_groupcycle_controller {
 			}
 		});
 		list_pm_cycle.setItems(qr._select_cycle_inst());
+		oft.setItems(qr._select_fio_for_ap(4, ""));
 		
 		txt_pm_group.setOnKeyReleased(new EventHandler<Event>() {
 
@@ -126,6 +128,12 @@ public class addrec_groupcycle_controller {
 
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+				chk_btn();
+			}
+		});
+		oft.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				chk_btn();
 			}
 		});
@@ -143,8 +151,11 @@ public class addrec_groupcycle_controller {
 			public void handle(ActionEvent arg0) {
 				qr._insert_gc(txt_pm_group.getText(), list_pm_cycle.getValue(), d_start_date.getValue(), txt_duration.getText(), txt_days_gc.getText());
 				qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Создал запись № = " + qr._select_last_id("hmmr_group_cycle") + " в справочнике Группа-Период");
+				//Check if the group in the pm year exists
+				if (!qr.isPmGroupExists(txt_pm_group.getText())) {
+					s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0] ,list_pm_cycle.getValue());
+				}
 				gcc._table_update_gc.addAll(qr._select_for_gc());
-				
 				stage = (Stage) add_rec.getScene().getWindow();
 				stage.close();
 			}
@@ -169,6 +180,8 @@ public class addrec_groupcycle_controller {
 		lbl_pm_cycle.setText(lngBndl.getString("lbl_pm_cycle")+":");
 		lbl_start_date.setText(lngBndl.getString("col_startdate_ps")+":");
 		lbl_duration.setText(lngBndl.getString("lbl_duration")+":");
+
+		lbl_oft_ap.setText(lngBndl.getString("lbl_oft_ap")+":");
 		
 		add_rec.setText(lngBndl.getString("add_tsk"));
 		cancel_form.setText(lngBndl.getString("cancel_tsk"));
@@ -176,8 +189,9 @@ public class addrec_groupcycle_controller {
 	
 	private void chk_btn()
 	{
+
 		try {
-			if(txt_pm_group.getText().length() != 0 && list_pm_cycle.getValue().length() != 0 && txt_duration.getText().length() != 0)
+			if(txt_pm_group.getText().length() != 0 && list_pm_cycle.getValue().length() != 0 && txt_duration.getText().length() != 0 && !oft.getSelectionModel().isEmpty() )
 				add_rec.setDisable(false);
 			else
 				add_rec.setDisable(true);

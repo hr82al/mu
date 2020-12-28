@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +27,9 @@ import ru.haval.dir.hmmr_prior_model;
 import ru.haval.dir.type_pm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import ru.haval.share_class.GroupCycle;
+import ru.haval.share_class.PMCycle;
+import ru.haval.share_class.PMYear;
 import ru.haval.share_class.s_class;
 
 public class _query {
@@ -1947,6 +1952,7 @@ public class _query {
     //для разных комбобоксов свой запрос, для ответственных - сортируем так чтоб на первом месте шли инженеры
     //для исполнителей так - что на первом месте идут техники принадлежащее цеху, затем другие техники, затем инженера и т.д.
     //otv = 1 - ответственные, otv = 2 - исполнители, shop - цех
+    //otv = 4 exclude technics
     @SuppressWarnings({"static-access"})
     public ObservableList<String> _select_fio_for_ap(int otv, String shop) {
         synchronized (_query.class) {
@@ -1965,6 +1971,9 @@ public class _query {
                         query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del " +
                                 "= 0 AND Position <> 'Technician' ORDER BY FIELD(Team, 'T', 'E', 'SL', 'SS', " +
                                 "'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC";
+                        break;
+                    case 4:
+                        query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del = 0 AND Position != 'Technician' ORDER BY FIELD(Team, 'T', 'E', 'SL', 'SS', 'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
                         break;
                     default:
                         query = "select ID, L_Name_RUS, F_Name_RUS, Otchestvo from hmmr_mu_staff where user_del = 0 ORDER BY IF(Group_S=" + "'" + shop + "'" + ",Team = 'T',0) DESC, FIELD(Team, 'T', 'E', 'SL', 'SS', 'TL', 'GL', 'MS', 'HOD', 'HOS', 'ECh') ASC, L_Name_RUS ASC;";
@@ -2312,8 +2321,12 @@ public class _query {
     @SuppressWarnings("static-access")
     public void _insert_pm_year(String pm_id, int pm_group, LocalDate data, String OFT) //, String pm_startdate, String pm_duration
     {
+//        for (StackTraceElement i : Thread.currentThread().getStackTrace()) {
+//            System.out.println(i);
+//        }
         synchronized (_query.class) {
             String query = "INSERT INTO hmmr_pm_year (PM_ID,PM_Group, data, OFT) VALUES (" + "'" + pm_id + "'" + "," + "'" + pm_group + "'" + "," + "'" + data + "'" + "," + "'" + OFT + "'" + ");";
+            System.out.println(query);
 
             try {
                 cn.ConToDb();
@@ -2324,7 +2337,7 @@ public class _query {
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 2155!");
             } finally {
-                //close connection ,stmt and resultset here
+                //close connection ,stmt and result set here
                 try {
                     cn.con.close();
                 } catch (SQLException se) { /*can't do anything */ }
@@ -3025,6 +3038,49 @@ public class _query {
                 }
             }
             return list;
+        }
+    }
+
+
+    @SuppressWarnings("static-access")
+    public GroupCycle getGroupCycleByGroup (String PMGroup) {
+        synchronized (_query.class) {
+            GroupCycle groupCycle = new GroupCycle();
+            try {
+                String query = "SELECT * FROM hmmr_group_cycle WHERE del_rec = 0 AND PM_Group = " + PMGroup + ";";
+
+                cn.ConToDb();
+                stmt9 = cn.con.createStatement();
+                rs9 = stmt9.executeQuery(query);
+                //log.log(Level.INFO, "CHANNEL WAS FOUND");
+                rs9.next();
+
+                groupCycle.id = rs9.getInt(1);
+                groupCycle.PM_Group = Integer.parseInt(PMGroup);
+                groupCycle.PM_Cycle = rs9.getString(3);
+                groupCycle.PM_StartDate = rs9.getString(4);
+                groupCycle.PM_Duration = rs9.getInt(5);
+                groupCycle.Date_Beforehand = rs9.getInt(6);
+
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) {
+                }
+                try {
+                    stmt9.close();
+                } catch (SQLException se) {
+                }
+                try {
+                    rs9.close();
+                } catch (SQLException se) {
+                }
+            }
+            return groupCycle;
         }
     }
 
@@ -9504,7 +9560,7 @@ public class _query {
     public String getNextDateByPMGroup(String group_pm) {
         String query = "SELECT hpy.`data` FROM hmmr_pm_year hpy WHERE hpy.PM_Group = " +
                 group_pm +
-                " and hpy.record_del = 0 ORDER BY hpy.`data` limit 1";
+                " and hpy.record_del = 0 ORDER BY hpy.`data` limit 1;";
         String nextDate = "";
         synchronized (_query.class) {
             try {
@@ -9532,6 +9588,210 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
             }
             return nextDate;
+        }
+    }
+
+    public List<String> getInstructionsNumByPmGroup(int pm_group) {
+        String query = "SELECT Instruction_num FROM hmmr_pm hp WHERE del_rec = 0 AND PM_Group = " +
+                pm_group +
+                ";";
+        ArrayList<String> instructionNumbers = new ArrayList<>();
+        synchronized (_query.class) {
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                //log.log(Level.INFO, "CHANNEL WAS FOUND");
+
+                while (rs.next()) {
+                    instructionNumbers.add(rs.getString(1));
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 9521!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return instructionNumbers;
+        }
+    }
+
+    public ArrayList<String[]> findGroupsLikeInstructionNumber(String subNum) {
+        String query = "SELECT hp.*, hgc.PM_StartDate as StartDate FROM hmmr_pm hp INNER JOIN hmmr_group_cycle hgc ON hp.PM_Group = hgc.PM_Group WHERE hp.del_rec = 0 and Instruction_num LIKE 'HMMR-MU__-PM-" + subNum + "%' GROUP BY hp.PM_Group HAVING COUNT(*) = 1;";
+        ArrayList<String[]> groups = new ArrayList<>();
+        synchronized (_query.class) {
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+
+                while (rs.next()) {
+                    String[] tmp = new String[10];
+
+                    for (int i = 0; i < tmp.length; i++) {
+                        tmp[i] = rs.getString(i + 1);
+                    }
+                    groups.add(tmp);
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return groups;
+        }
+    }
+
+    public PMCycle getPmCycleByPMCycle(String pm_cycle) {
+        String query = "SELECT * FROM `hmmr_pm_cycle` WHERE del_rec = 0 AND Type = '" + pm_cycle + "';";
+        synchronized (_query.class) {
+            PMCycle pmCycle = new PMCycle();
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    pmCycle.id = rs.getInt(1);
+                    pmCycle.type = pm_cycle;
+                    pmCycle.periodic = rs.getInt(3);
+                    pmCycle.hours = rs.getInt(4);
+                    pmCycle.beginDate = rs.getString(5);
+                    pmCycle.endDate = rs.getString(6);
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return pmCycle;
+        }
+    }
+
+    public PMYear getPmYearByPmGroup(String pmGroup) {
+        String query = "SELECT * FROM hmmr_pm_year WHERE record_del = 0 AND PM_Group = " + pmGroup + ";";
+        synchronized (_query.class) {
+            PMYear pmYear = new PMYear();
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+
+                }
+//                pmCycle.id = rs.getInt(1);
+//                pmCycle.type = pm_cycle;
+//                pmCycle.periodic = rs.getInt(3);
+//                pmCycle.hours = rs.getInt(4);
+//                pmCycle.beginDate = rs.getString(5);
+//                pmCycle.endDate = rs.getString(6);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return pmYear;
+        }
+    }
+
+    public String getOFTByPmGroup(String pmGroup) {
+        String query = "SELECT OFT FROM hmmr_pm_year WHERE record_del = 0 AND PM_Group = " + pmGroup + " LIMIT 1;";
+        synchronized (_query.class) {
+            String oft = "";
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    oft = rs.getString(1);
+                }
+//                pmCycle.id = rs.getInt(1);
+//                pmCycle.type = pm_cycle;
+//                pmCycle.periodic = rs.getInt(3);
+//                pmCycle.hours = rs.getInt(4);
+//                pmCycle.beginDate = rs.getString(5);
+//                pmCycle.endDate = rs.getString(6);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return oft;
+        }
+    }
+
+    public boolean isPmGroupExists(String pmGroup) {
+        String query = "select * from hmmr_pm_year where record_del = 0 AND PM_Group = " + pmGroup + " LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
         }
     }
 }

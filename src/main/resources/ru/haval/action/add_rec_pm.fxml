@@ -11,6 +11,7 @@
       <Label fx:id="lbl_head_pm" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="17.0" prefWidth="650.0" text="Добавление записи в таблицу PM">
          <font>
             <Font name="System Bold Italic" size="14.0" />
+            <Font name="System Bold Italic" size="14.0" />
          </font>
       </Label>
       <Label fx:id="lbl_ninst_pm" layoutX="14.0" layoutY="65.0" text="№ инструкции:" />
