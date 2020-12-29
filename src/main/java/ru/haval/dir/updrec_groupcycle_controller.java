@@ -174,27 +174,28 @@ public class updrec_groupcycle_controller {
         d_start_date.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("M&U - Внимание!");
-
-				alert.setHeaderText("Вы изменили дату! Вы уверены что хотите пересчитать в PM Plan группу: "+txt_pm_group.getText()+" на новую дату?");
-
-				Optional<ButtonType> option = alert.showAndWait();
-				if (option.get() == null) {
-
-				} else if (option.get() == ButtonType.OK) {
-					try {
-						new_date = d_start_date.getValue();
-						new_pm_date(gcc._id_gc);
-						chk_btn();
-					} catch (Exception e1) {
-
-					}
-				} else if (option.get() == ButtonType.CANCEL) {
-					return;
-				} else {
-					//label.setText("-");
-				}
+				chk_btn();
+//				Alert alert = new Alert(AlertType.CONFIRMATION);
+//				alert.setTitle("M&U - Внимание!");
+//
+//				alert.setHeaderText("Вы изменили дату! Вы уверены что хотите пересчитать в PM Plan группу: "+txt_pm_group.getText()+" на новую дату?");
+//
+//				Optional<ButtonType> option = alert.showAndWait();
+//				if (option.get() == null) {
+//
+//				} else if (option.get() == ButtonType.OK) {
+//					try {
+//						new_date = d_start_date.getValue();
+//						new_pm_date(gcc._id_gc);
+//						chk_btn();
+//					} catch (Exception e1) {
+//
+//					}
+//				} else if (option.get() == ButtonType.CANCEL) {
+//					return;
+//				} else {
+//					//label.setText("-");
+//				}
 			}
 		});
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

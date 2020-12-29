@@ -398,17 +398,19 @@ public class pm_controller {
             public void handle(ActionEvent event) {
                 String Otv_for_task = null;
 
-                hmmr_pm_model _ccl = table_pm.getSelectionModel().getSelectedItem();
+                hmmr_pm_model selectedItem = table_pm.getSelectionModel().getSelectedItem();
+
                 //String sql_rez = qr._select_for_pmplan(_ccl.getGroup_PM());
                 //for(int j = 0; j < qr._select_data_pmplan().size(); j++) {
-                if (!_ccl.getGroup_PM().equals("0")) {
-                    if (!scl.parser_sql_str(qr._select_for_pmgroup(_ccl.getGroup_PM()), 0).equals(_ccl.getGroup_PM())) {
+                if (!selectedItem.getGroup_PM().equals("0")) {
+                    if (!scl.parser_sql_str(qr._select_for_pmgroup(selectedItem.getGroup_PM()), 0).equals(selectedItem.getGroup_PM())) {
                         try {
-                            String before_pars = qr._select_for_pmplan(_ccl.getGroup_PM()).get(0);
-                            String pereodic = scl.parser_sql_str(before_pars, 0);
+                            String before_pars = qr._select_for_pmplan(selectedItem.getGroup_PM()).get(0);
+//                            String pereodic = scl.parser_sql_str(before_pars, 0);
                             String b_date = scl.parser_sql_str(before_pars, 1);
                             if (!b_date.equals("2018-10-10")) {
-                                String e_date = scl.parser_sql_str(before_pars, 2);
+                                String pmGroup =  selectedItem.getGroup_PM();
+                                /*String e_date = scl.parser_sql_str(before_pars, 2);
                                 @SuppressWarnings("unused")
                                 String shop = scl.parser_sql_str(before_pars, 3);
                                 Otv_for_task = scl.parser_sql_str(before_pars, 4);
@@ -438,14 +440,19 @@ public class pm_controller {
                                     qr._insert_pm_year(_ccl.getId(), pm_group, days, Otv_for_task);
                                     _count = _cnt + _count;
                                 }
-                                qr._update_week_year(pm_group);
+                                qr._update_week_year(pm_group);*/
+
+                                LocalDate beginDate = LocalDate.parse(b_date);
+                                String periodID = qr.getGroupCycleByGroup(selectedItem.getGroup_PM()).PM_Cycle;
+                                s_class.updatePmYearDates(selectedItem.getGroup_PM(), beginDate, selectedItem.getOtv(), periodID);
+
                             } else
                                 scl._AlertDialog("Пожалуйста, измените дату старта ППР в справочнике Группа-Период!", "Внимание!");
                         } catch (Exception e) {
                             scl._AlertDialog("Не найден номер инструкции или имя цикла переодичности задано некорректно!", "Ошибка!");
                         }
                     } else {
-                        scl._AlertDialog("Группа " + _ccl.getGroup_PM() + " уже добавлена в PM PLAN!", "Группа уже существует");
+                        scl._AlertDialog("Группа " + selectedItem.getGroup_PM() + " уже добавлена в PM PLAN!", "Группа уже существует");
                     }
                 } else
                     scl._AlertDialog("Группа 0 не может быть добавлена в PM PLAN! Введите корректный номер группы!", "Ошибка!");

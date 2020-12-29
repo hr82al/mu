@@ -416,8 +416,7 @@ public class addrec_pm_controller {
 			int pm_group = Integer.parseInt(group_eq.getValue());
 			String b_date = fx_dp.toString(new_date);
 			String pm_id = qr._select_last_id("hmmr_pm");
-
-			s_class.updatePmPlanDates2(before_pars, b_date, pm_id, pm_group);
+			s_class.updatePmYearDates( group_eq.getValue(), LocalDate.parse(b_date), qr.getOFTByPmGroup(group_eq.getValue()),  qr.getCycleIDByPm(group_eq.getValue()));
 		}
 	}
 	

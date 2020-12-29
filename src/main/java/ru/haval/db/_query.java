@@ -10,10 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import ru.haval.action.*;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
@@ -33,8 +36,6 @@ import ru.haval.share_class.PMCycle;
 import ru.haval.share_class.PMYear;
 import ru.haval.share_class.s_class;
 import ru.haval.share_class.Period;
-
-import javax.swing.plaf.nimbus.State;
 
 public class _query {
     private static Statement stmt, stmt1, stmt2, stmt3, stmt4, stmt5, stmt6, stmt7, stmt8, stmt9, stmt10, stmt11, stmt12, stmt14, stmt15, stmt16, stmt17, stmt18, stmt19;
@@ -9637,10 +9638,14 @@ public class _query {
         select(query, (rs) -> {
             Period period = new Period();
             try {
-                period.setPeriod(rs.getString(11));
-                period.setPmGroup(rs.getString(5));
-                period.setBeginDate(LocalDate.parse(rs.getString(10)));
-                periods.add(period);
+                periods.add(
+                        new Period(
+                                rs.getInt(4),
+                                rs.getString(5),
+                                LocalDate.parse(rs.getString(10)),
+                                rs.getString(11)
+                        )
+                );
             } catch (SQLException e) {
                 s_class.alert(e);
             }
@@ -9818,5 +9823,50 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
             }
         }
+    }
+
+    public int countEquipmentInPmGroup(int pmGroup) {
+        String query = "SELECT COUNT(*) FROM (SELECT * FROM hmmr_pm WHERE del_rec = 0 AND PM_Group = " + pmGroup + " GROUP BY Eq_ID) as p;";
+        AtomicInteger counter = new AtomicInteger();
+        counter.set(0);
+        select(query, (rs) -> {
+            try {
+                counter.set(rs.getInt(1));
+            } catch (SQLException e) {
+                s_class.alert(e);
+            }
+        });
+        return counter.get();
+    }
+
+    public boolean hasDateInPMGroupS(LocalDate date, ArrayList<String> excludedPMGroups) {
+        String query = "SELECT COUNT(*) FROM (SELECT * FROM hmmr_pm_year WHERE record_del = 0 AND `data` = '" + date + "' AND PM_Group IN (" + String.join(", ", excludedPMGroups) + ")) as p;";
+        AtomicInteger counter = new AtomicInteger();
+        counter.set(0);
+        select(query, (rs) -> {
+            try {
+                counter.set(rs.getInt(1));
+            } catch (SQLException e) {
+                s_class.alert(e);
+            }
+        });
+        if (counter.get() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String getCycleIDByPm(String pmGroup) {
+        String query = "SELECT PM_Cycle FROM hmmr_group_cycle WHERE PM_Group = " + pmGroup + ";";
+        AtomicReference<String> cycleID = new AtomicReference<>("");
+        select(query, (rs) -> {
+            try {
+                cycleID.set(rs.getString(1));
+            } catch (SQLException e) {
+                s_class.alert(e);
+            }
+        });
+        return cycleID.get();
     }
 }
