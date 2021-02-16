@@ -9869,4 +9869,120 @@ public class _query {
         });
         return cycleID.get();
     }
+
+    public boolean isStaffIdExists(String staffId) {
+        String query = "SELECT * FROM hmmr_mu_staff hms WHERE hms.STAFF_ID = '" + staffId + "' LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
+
+    public boolean isIdExists(String id) {
+        String query = "SELECT * FROM hmmr_mu_staff hms WHERE hms.ID = '" + id + "' LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
+
+    public boolean isPasswordExists(String password) {
+        String query = "SELECT * FROM users WHERE passwd = '" + password + "' LIMIT 1";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
+
+    public boolean isLoginExists(String login) {
+        String query = "SELECT * FROM users WHERE login = '" + login + "' LIMIT 1";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
 }

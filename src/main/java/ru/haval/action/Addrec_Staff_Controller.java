@@ -310,13 +310,16 @@ public class Addrec_Staff_Controller {
 
 			@Override
 			public void handle(Event arg0) {
+				validateStaffId();
 				chk_btn();
 			}
 		});
+
 		txt_ID_staff.setOnKeyReleased(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event arg0) {
+				validateId();
 				chk_btn();
 			}
 		});
@@ -366,6 +369,7 @@ public class Addrec_Staff_Controller {
 
 			@Override
 			public void handle(Event arg0) {
+				validateLogin();
 				chk_btn();
 			}
 		});
@@ -373,6 +377,7 @@ public class Addrec_Staff_Controller {
 
 			@Override
 			public void handle(Event arg0) {
+				validatePassword();
 				chk_btn();
 			}
 		});
@@ -507,7 +512,51 @@ public class Addrec_Staff_Controller {
 		}; 
 		d_dbegin_staff.setOnAction(event1);
 	}
-		
+
+	private void validateLogin() {
+		synchronized (Addrec_Staff_Controller.class) {
+			if (qr.isLoginExists(txt_login_staff.getText())) {
+				txt_login_staff.setStyle("-fx-text-inner-color: red;");
+			}
+			else {
+				txt_login_staff.setStyle("-fx-text-inner-color: black;");
+			}
+		}
+	}
+
+	private void validatePassword() {
+		synchronized (Addrec_Staff_Controller.class) {
+			if (qr.isPasswordExists(txt_passwd_staff.getText())) {
+				txt_passwd_staff.setStyle("-fx-text-inner-color: red;");
+			}
+			else {
+				txt_passwd_staff.setStyle("-fx-text-inner-color: black;");
+			}
+		}
+	}
+
+
+	private void validateId() {
+		synchronized (Addrec_Staff_Controller.class) {
+			if (qr.isIdExists(txt_ID_staff.getText())) {
+				txt_ID_staff.setStyle("-fx-text-inner-color: red;");
+			}
+			else {
+				txt_ID_staff.setStyle("-fx-text-inner-color: black;");
+			}
+		}
+	}
+	private void validateStaffId() {
+		synchronized (Addrec_Staff_Controller.class) {
+			if (qr.isStaffIdExists(txt_staffid_staff.getText())) {
+				txt_staffid_staff.setStyle("-fx-text-inner-color: red;");
+			}
+			else {
+				txt_staffid_staff.setStyle("-fx-text-inner-color: black;");
+			}
+		}
+	}
+
 	private void chk_btn()
 	{
 		try {
