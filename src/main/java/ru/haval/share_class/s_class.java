@@ -11,6 +11,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import org.apache.commons.lang3.StringUtils;
+import ru.haval.action.hmmr_wp_model;
 import ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
 import ru.haval.dir.CycleController;
@@ -25,6 +28,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
+
+import static com.mysql.cj.protocol.a.MysqlTextValueDecoder.isDate;
 
 public class s_class {
 	static FxDatePickerConverter fx_dp = new FxDatePickerConverter();
@@ -385,4 +390,83 @@ public class s_class {
 		return null;
 	}
 
+	public static String transliterate(String russian) {
+		final HashMap<String, String> ruEn = new HashMap<>();
+		ruEn.put("А", "A");
+		ruEn.put("а", "a");
+		ruEn.put("Б", "B");
+		ruEn.put("б", "b");
+		ruEn.put("В", "V");
+		ruEn.put("в", "v");
+		ruEn.put("Г", "G");
+		ruEn.put("г", "g");
+		ruEn.put("Д", "D");
+		ruEn.put("д", "d");
+		ruEn.put("Е", "E");
+		ruEn.put("е", "e");
+		ruEn.put("Ё", "E");
+		ruEn.put("ё", "e");
+		ruEn.put("Ж", "Zh");
+		ruEn.put("ж", "zh");
+		ruEn.put("З", "Z");
+		ruEn.put("з", "z");
+		ruEn.put("И", "I");
+		ruEn.put("и", "i");
+		ruEn.put("Й", "Y");
+		ruEn.put("й", "y");
+		ruEn.put("К", "K");
+		ruEn.put("к", "k");
+		ruEn.put("Л", "L");
+		ruEn.put("л", "l");
+		ruEn.put("М", "M");
+		ruEn.put("м", "m");
+		ruEn.put("Н", "N");
+		ruEn.put("н", "n");
+		ruEn.put("О", "O");
+		ruEn.put("о", "o");
+		ruEn.put("П", "P");
+		ruEn.put("п", "p");
+		ruEn.put("Р", "R");
+		ruEn.put("р", "r");
+		ruEn.put("С", "S");
+		ruEn.put("с", "s");
+		ruEn.put("Т", "T");
+		ruEn.put("т", "t");
+		ruEn.put("У", "U");
+		ruEn.put("у", "u");
+		ruEn.put("Ф", "F");
+		ruEn.put("ф", "f");
+		ruEn.put("Х", "Kh");
+		ruEn.put("х", "kh");
+		ruEn.put("Ц", "Ts");
+		ruEn.put("ц", "ts");
+		ruEn.put("Ч", "Ch");
+		ruEn.put("ч", "ch");
+		ruEn.put("Ш", "Sh");
+		ruEn.put("ш", "sh");
+		ruEn.put("Щ", "Shch");
+		ruEn.put("щ", "shch");
+		ruEn.put("Ъ", "");
+		ruEn.put("ъ", "");
+		ruEn.put("Ь", "");
+		ruEn.put("ь", "");
+		ruEn.put("Э", "E");
+		ruEn.put("э", "e");
+		ruEn.put("Ю", "Yu");
+		ruEn.put("ю", "yu");
+		ruEn.put("Я", "Ya");
+		ruEn.put("я", "ya");
+		StringBuilder in = new StringBuilder(russian);
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < in.length(); i++) {
+			String ch = Character.toString(in.charAt(i));
+			if (ruEn.containsKey(ch)) {
+				out.append(ruEn.get(ch));
+			}
+			else {
+				out.append(ch);
+			}
+		}
+		return out.toString();
+	}
 }

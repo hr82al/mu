@@ -233,6 +233,7 @@ public class Addrec_Staff_Controller {
 
 			@Override
 			public void handle(Event arg0) {
+				txt_fam_eng_staff.setText(s_class.transliterate(txt_fam_staff.getText()));
 				chk_btn();
 			}
 		});
@@ -240,6 +241,7 @@ public class Addrec_Staff_Controller {
 
 			@Override
 			public void handle(Event arg0) {
+				txt_imya_eng_staff.setText(s_class.transliterate(txt_imya_staff.getText()));
 				chk_btn();
 			}
 		});

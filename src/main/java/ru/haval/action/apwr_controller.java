@@ -202,7 +202,7 @@ public class apwr_controller {
     public static boolean isApMultipleSelected;
     private ObservableList<hmmr_wp_model> wpRows;
     private HashSet<String> wpOTVs = new HashSet<>();
-    private String wpSearch = "";
+    private String filterText = "";
     private static apwr_controller instance;
 
 
@@ -1768,7 +1768,7 @@ public class apwr_controller {
         search_wp.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                wpSearch = newValue;
+                filterText = newValue;
                 showSearchedWP();
             }
         });
@@ -1898,11 +1898,11 @@ public class apwr_controller {
     }
 
     private void showSearchedWP() {
-        if (wpSearch.length() != 0) {
+        if (filterText.length() != 0) {
             ObservableList<hmmr_wp_model> searchedRows =  FXCollections.observableArrayList();
             ObservableList<hmmr_wp_model> tmpSearch =  FXCollections.observableArrayList();
             tmpSearch.addAll(wpRows);
-            String[] searches = wpSearch.split(",");
+            String[] searches = filterText.split(",");
             for (String search : searches) {
                 //If wpSearch one upper letter search by shop
                 if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
