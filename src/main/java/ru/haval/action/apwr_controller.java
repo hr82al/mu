@@ -1965,7 +1965,7 @@ public class apwr_controller {
                             }
                         }
                         //If the search is OTV
-                    } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
+                    } else if (search.equals("need select") || (search.length() <= 3 && apOTVs.contains(search))) {
                         for (hmmr_ap_model i : tmpSearch) {
                             if (i.getOTV().equals(search)) {
                                 searchedRows.add(i);
@@ -2260,6 +2260,7 @@ public class apwr_controller {
         for (hmmr_ap_model i : apRows) {
             apOTVs.add(i.getOTV());
         }
+
         showSearchedAP();
     }
 
