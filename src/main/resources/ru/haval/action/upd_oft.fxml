@@ -26,7 +26,7 @@
                   </font>
                </JFXButton>
                <HBox prefWidth="20" />
-               <JFXButton fx:id="upd_oft_cancel" text="Отмена">
+               <JFXButton fx:id="upd_oft_cancel" text="Отмена" onAction="#close">
                   <font>
                      <Font name="System Bold" size="12.0" />
                   </font>

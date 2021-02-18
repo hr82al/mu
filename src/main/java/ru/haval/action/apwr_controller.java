@@ -128,7 +128,7 @@ public class apwr_controller {
     CheckBox chBNotConfirmed;
 
     @FXML
-    TextField search_wp;
+    TextField search_wp, search_ap, search_wr;
 
     _query qr = new _query();
     s_class scl = new s_class();
@@ -201,8 +201,14 @@ public class apwr_controller {
     private static AtomicBoolean tableAPWRUpdates = new AtomicBoolean(false);
     public static boolean isApMultipleSelected;
     private ObservableList<hmmr_wp_model> wpRows;
+    private ObservableList<hmmr_ap_model> apRows;
+    private ObservableList<hmmr_wr_model> wrRows;
     private HashSet<String> wpOTVs = new HashSet<>();
-    private String filterText = "";
+    private HashSet<String> apOTVs = new HashSet<>();
+    private HashSet<String> wrOTVs = new HashSet<>();
+    private String wpFilterText = "";
+    private String apFilterText = "";
+    private String wrFilterText = "";
     private static apwr_controller instance;
 
 
@@ -690,50 +696,6 @@ public class apwr_controller {
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
                                     updateTableWr();
-                                    /*switch (flag) {
-                                        case 0:
-                                        case 2:
-                                            table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-                                            break;
-                                        case 1:
-                                            table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
-                                            break;
-                                        case 3:
-                                            table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-                                            break;
-                                        case 4:
-                                            table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-                                            break;
-                                        case 5:
-                                            table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
-                                            break;
-                                    }
-                                    table_wr.getColumns().get(0).setVisible(false);
-                                    table_wr.getColumns().get(0).setVisible(true);*/
-									/*if(flag == 1)
-										table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
-									if(flag == 0 || flag == 2) 
-										table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-									table_wr.getColumns().get(0).setVisible(false);
-							        table_wr.getColumns().get(0).setVisible(true);
-							        if(flag == 3)
-							        {
-							        	table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-								    	table_wr.getColumns().get(0).setVisible(false);
-								        table_wr.getColumns().get(0).setVisible(true);
-							        }
-							        if(flag == 4)
-							        {
-							        	table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-								    	table_wr.getColumns().get(0).setVisible(false);
-								        table_wr.getColumns().get(0).setVisible(true);
-							        }
-							        if (flag == 5) {
-										table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
-										table_wr.getColumns().get(0).setVisible(false);
-										table_wr.getColumns().get(0).setVisible(true);
-										break;
-									}*/
                                 }
 
                                 //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
@@ -742,14 +704,14 @@ public class apwr_controller {
                                     qr._update_oft_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
                                     if (flag == 1)
-                                        table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
+                                        setTableWRItems(qr._select_sort_apnum_wr(data.getap_num()));
                                     if (flag == 0 || flag == 2)
-                                        table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                                        setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                                     if (flag == 3) {
-                                        table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+                                        setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
                                     }
                                     if (flag == 4) {
-                                        table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+                                        setTableWRItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
                                     }
                                     table_wr.getColumns().get(0).setVisible(false);
                                     table_wr.getColumns().get(0).setVisible(true);
@@ -760,14 +722,14 @@ public class apwr_controller {
                                     qr._update_qty_wr("1", data.IdProperty().get().substring(2));
                                     btn.setStyle("-fx-background-color: green");
                                     if (flag == 1)
-                                        table_wr.setItems(qr._select_sort_apnum_wr(data.getap_num()));
+                                        setTableWRItems(qr._select_sort_apnum_wr(data.getap_num()));
                                     if (flag == 0 || flag == 2)
-                                        table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                                        setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                                     if (flag == 3) {
-                                        table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+                                        setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
                                     }
                                     if (flag == 4) {
-                                        table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+                                        setTableWRItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
                                     }
                                     table_wr.getColumns().get(0).setVisible(false);
                                     table_wr.getColumns().get(0).setVisible(true);
@@ -825,7 +787,7 @@ public class apwr_controller {
                             @Override
                             public void handle(ActionEvent event) {
                                 //mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
-                                table_wr.setItems(qr._select_sort_apnum_wr(btn.getText().substring(2)));
+                                setTableWRItems(qr._select_sort_apnum_wr(btn.getText().substring(2)));
                                 ID_WR = btn.getText().substring(2);
                                 _get_text_btn = btn.getText();
                                 table_wr.getColumns().get(0).setVisible(false);
@@ -848,7 +810,7 @@ public class apwr_controller {
                 try {
                     String tst = event.getTableView().getItems().get(event.getTablePosition().getRow()).getId().substring(2);
                     ID_WR = tst;
-                    table_wr.setItems(qr._select_sort_apnum_wr(tst));
+                    setTableWRItems(qr._select_sort_apnum_wr(tst));
 
                     table_wr.getColumns().get(0).setVisible(false);
                     table_wr.getColumns().get(0).setVisible(true);
@@ -880,7 +842,7 @@ public class apwr_controller {
 
 					_fill_rec(_idap_for_wr.substring(2));
 					//mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
-					//table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+					//setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
 
 					//col_action.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 					if (!conn_connector.USER_ROLE.equals("Technics")) {
@@ -928,7 +890,7 @@ public class apwr_controller {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
                     ID_WR = table_ap.getSelectionModel().getSelectedItem().getId().substring(2);
-                    table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
+                    setTableWRItems(qr._select_sort_apnum_wr(ID_WR));
 
                     table_wr.getColumns().get(0).setVisible(false);
                     table_wr.getColumns().get(0).setVisible(true);
@@ -1271,13 +1233,21 @@ public class apwr_controller {
 
             @Override
             public void handle(ActionEvent event) {
-                hmmr_ap_model _ccl1 = table_ap.getSelectionModel().getSelectedItem();
-                try {
-                    //mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
-                    upd_ap.setDisable(true);
-                    func_upd(_ccl1.getId());
-                } catch (Exception e) {
 
+                if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+                    try {
+                        otvChangeExecutor(table_ap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    hmmr_ap_model _ccl1 = table_ap.getSelectionModel().getSelectedItem();
+                    try {
+                        //mu_main_controller.getPrimaryStage().setAlwaysOnTop(false);
+                        upd_ap.setDisable(true);
+                        func_upd(_ccl1.getId());
+                    } catch (Exception e) {
+                    }
                 }
             }
         });
@@ -1288,7 +1258,7 @@ public class apwr_controller {
             public void handle(ActionEvent event) {
                 if (table_wp.getSelectionModel().getSelectedItems().size() > 1) {
                     try {
-                        wpChangeExecutor();
+                        otvChangeExecutor(table_wp);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -1498,7 +1468,7 @@ public class apwr_controller {
             public void handle(ActionEvent event) {
                 begin_data.setValue(LocalDate.now().minusDays(7));
                 last_data.setValue(LocalDate.now());
-                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 clear_filter.setDisable(true);
@@ -1512,25 +1482,11 @@ public class apwr_controller {
 
             @Override
             public void handle(ActionEvent event) {
-                initSops();
-                if (chk_btn) {
-                    setTableAPItems(qr._select_data_ap(USER_S));
-                    private_ap.setDisable(true);
-                    showall_ap.setDisable(false);
-                } else {
-                    setTableAPItems(qr._select_data_ap_shop(SHOP_NAME, USER_S));
-                    private_ap.setDisable(false);
-                    showall_ap.setDisable(true);
-                }
-
-                shopsEnableAll();
-
-                add_wr.setDisable(true);
-                upd_ap.setDisable(true);
-                print_tsk.setDisable(true);
-                export_excel.setDisable(true);
+                updateAPTable();
             }
         });
+
+
 
         upd_tbl_wp.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -1750,16 +1706,16 @@ public class apwr_controller {
         _table_update_wr.addListener(new ListChangeListener<hmmr_wr_model>() {
             @Override
             public void onChanged(Change<? extends hmmr_wr_model> c) {
-                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 if (flag == 3) {
-                    table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+                    setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
                     table_wr.getColumns().get(0).setVisible(false);
                     table_wr.getColumns().get(0).setVisible(true);
                 }
                 if (flag == 4) {
-                    table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+                    setTableWRItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
                     table_wr.getColumns().get(0).setVisible(false);
                     table_wr.getColumns().get(0).setVisible(true);
                 }
@@ -1768,8 +1724,23 @@ public class apwr_controller {
         search_wp.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                filterText = newValue;
+                wpFilterText = newValue;
                 showSearchedWP();
+            }
+        });
+        search_ap.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                apFilterText = newValue;
+                showSearchedAP();
+            }
+        });
+
+        search_wr.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                wrFilterText = newValue;
+                showSearchedWR();
             }
         });
 
@@ -1857,20 +1828,101 @@ public class apwr_controller {
         WRFilter.getInstance().sqlFilterProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                table_wr.setItems(qr.selectWRDataByFilter(WRFilter.getInstance().getSqlFilter()));
-                //table_wr.setItems(qr.selectWRDataByFilter(WRFilter.getSqlFilter()));
+                setTableWRItems(qr.selectWRDataByFilter(WRFilter.getInstance().getSqlFilter()));
+                //setTableWRItems(qr.selectWRDataByFilter(WRFilter.getSqlFilter()));
             }
         });
 
         APFilter.getInstance().sqlFilterProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                table_ap.setItems(qr.selectAPDataByFilter(APFilter.getInstance().getSqlFilter()));
+                setTableAPItems(qr.selectAPDataByFilter(APFilter.getInstance().getSqlFilter()));
             }
         });
 
         desc_ap.setSortable(true);
     }
+
+    private void showSearchedWR() {
+        synchronized (apwr_controller.class) {
+            if (wrFilterText.length() != 0) {
+                ObservableList<hmmr_wr_model> searchedRows = FXCollections.observableArrayList();
+                ObservableList<hmmr_wr_model> tmpSearch = FXCollections.observableArrayList();
+                tmpSearch.addAll(wrRows);
+                String[] searches = wrFilterText.split(",");
+                for (String search : searches) {
+                    //If wpSearch one upper letter search by shop
+                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
+                        for (hmmr_wr_model i : tmpSearch) {
+                            if (i.getequip().charAt(0) == search.charAt(0)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                        //If the search is OTV
+                    } else if (search.equals("need select") || (search.length() <= 3 && wrOTVs.contains(search))) {
+                        for (hmmr_wr_model i : tmpSearch) {
+                            if (i.getresp().equals(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    //If the search is a number than search in AP or WP
+                    else if (StringUtils.isNumeric(search)) {
+                        for (hmmr_wr_model i : tmpSearch) {
+                            if (i.getap_num().contains(search) || i.getId().contains(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    //If the search is a date
+                    else if (isDate(search)) {
+                        for (hmmr_wr_model i : tmpSearch) {
+                            if (i.getdata().equals(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    // else search in equipment and description
+                    else {
+                        for (hmmr_wr_model i : tmpSearch) {
+                            if (i.getequip().contains(search) || i.getshift_report().contains(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    tmpSearch.clear();
+                    tmpSearch.addAll(searchedRows);
+                    searchedRows.clear();
+                }
+                table_wr.setItems(tmpSearch);
+            } else {
+                table_wr.setItems(wrRows);
+            }
+            table_wr.getColumns().get(0).setVisible(false);
+            table_wr.getColumns().get(0).setVisible(true);
+        }
+    }
+
+    public void updateAPTable() {
+        initSops();
+        if (chk_btn) {
+            setTableAPItems(qr._select_data_ap(USER_S));
+            private_ap.setDisable(true);
+            showall_ap.setDisable(false);
+        } else {
+            setTableAPItems(qr._select_data_ap_shop(SHOP_NAME, USER_S));
+            private_ap.setDisable(false);
+            showall_ap.setDisable(true);
+        }
+
+        shopsEnableAll();
+
+        add_wr.setDisable(true);
+        upd_ap.setDisable(true);
+        print_tsk.setDisable(true);
+        export_excel.setDisable(true);
+    }
+
 
     private void updateAPWRInBackground() {
         if (!tableAPWRUpdates.get()) {
@@ -1897,62 +1949,123 @@ public class apwr_controller {
         showSearchedWP();
     }
 
-    private void showSearchedWP() {
-        if (filterText.length() != 0) {
-            ObservableList<hmmr_wp_model> searchedRows =  FXCollections.observableArrayList();
-            ObservableList<hmmr_wp_model> tmpSearch =  FXCollections.observableArrayList();
-            tmpSearch.addAll(wpRows);
-            String[] searches = filterText.split(",");
-            for (String search : searches) {
-                //If wpSearch one upper letter search by shop
-                if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
-                    for (hmmr_wp_model i : tmpSearch) {
-                        if (i.getEquip().charAt(0) == search.charAt(0)) {
-                            searchedRows.add(i);
+    private void showSearchedAP() {
+        synchronized (apwr_controller.class) {
+            if (apFilterText.length() != 0) {
+                ObservableList<hmmr_ap_model> searchedRows = FXCollections.observableArrayList();
+                ObservableList<hmmr_ap_model> tmpSearch = FXCollections.observableArrayList();
+                tmpSearch.addAll(apRows);
+                String[] searches = apFilterText.split(",");
+                for (String search : searches) {
+                    //If wpSearch one upper letter search by shop
+                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
+                        for (hmmr_ap_model i : tmpSearch) {
+                            if (i.getEquip().charAt(0) == search.charAt(0)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                        //If the search is OTV
+                    } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
+                        for (hmmr_ap_model i : tmpSearch) {
+                            if (i.getOTV().equals(search)) {
+                                searchedRows.add(i);
+                            }
                         }
                     }
-                    //If the search is OTV
-                } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
-                    for (hmmr_wp_model i : tmpSearch) {
-                        if (i.getOTV().equals(search)) {
-                            searchedRows.add(i);
+                    //If the search is a number than search in PM
+                    else if (StringUtils.isNumeric(search)) {
+                        for (hmmr_ap_model i : tmpSearch) {
+                            if (i.getPM_Num().contains(search)) {
+                                searchedRows.add(i);
+                            }
                         }
                     }
+                    //If the search is a date
+                    else if (isDate(search)) {
+                        for (hmmr_ap_model i : tmpSearch) {
+                            if (i.getD_D().equals(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    // else search in equipment and description
+                    else {
+                        for (hmmr_ap_model i : tmpSearch) {
+                            if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    tmpSearch.clear();
+                    tmpSearch.addAll(searchedRows);
+                    searchedRows.clear();
                 }
-                //If the search is a number than search in PM
-                else if (StringUtils.isNumeric(search)) {
-                    for (hmmr_wp_model i : tmpSearch) {
-                        if (i.getPM_Num().contains(search)) {
-                            searchedRows.add(i);
-                        }
-                    }
-                }
-                //If the search is a date
-                else if (isDate(search)) {
-                    for (hmmr_wp_model i : tmpSearch) {
-                        if (i.getD_D().equals(search)) {
-                            searchedRows.add(i);
-                        }
-                    }
-                }
-                // else search in equipment and description
-                else {
-                    for (hmmr_wp_model i : tmpSearch) {
-                        if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
-                            searchedRows.add(i);
-                        }
-                    }
-                }
-                tmpSearch.clear();
-                tmpSearch.addAll(searchedRows);
-                searchedRows.clear();
+                table_ap.setItems(tmpSearch);
+            } else {
+                table_ap.setItems(apRows);
             }
-            table_wp.setItems(tmpSearch);
-        } else {
-            table_wp.setItems(wpRows);
+            table_ap.getColumns().get(0).setVisible(false);
+            table_ap.getColumns().get(0).setVisible(true);
         }
-        table_wp.getColumns().get(0).setVisible(false);
-        table_wp.getColumns().get(0).setVisible(true);
+    }
+    private void showSearchedWP() {
+        synchronized (apwr_controller.class) {
+            if (wpFilterText.length() != 0) {
+                ObservableList<hmmr_wp_model> searchedRows = FXCollections.observableArrayList();
+                ObservableList<hmmr_wp_model> tmpSearch = FXCollections.observableArrayList();
+                tmpSearch.addAll(wpRows);
+                String[] searches = wpFilterText.split(",");
+                for (String search : searches) {
+                    //If wpSearch one upper letter search by shop
+                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
+                        for (hmmr_wp_model i : tmpSearch) {
+                            if (i.getEquip().charAt(0) == search.charAt(0)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                        //If the search is OTV
+                    } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
+                        for (hmmr_wp_model i : tmpSearch) {
+                            if (i.getOTV().equals(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    //If the search is a number than search in PM
+                    else if (StringUtils.isNumeric(search)) {
+                        for (hmmr_wp_model i : tmpSearch) {
+                            if (i.getPM_Num().contains(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    //If the search is a date
+                    else if (isDate(search)) {
+                        for (hmmr_wp_model i : tmpSearch) {
+                            if (i.getD_D().equals(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    // else search in equipment and description
+                    else {
+                        for (hmmr_wp_model i : tmpSearch) {
+                            if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
+                                searchedRows.add(i);
+                            }
+                        }
+                    }
+                    tmpSearch.clear();
+                    tmpSearch.addAll(searchedRows);
+                    searchedRows.clear();
+                }
+                table_wp.setItems(tmpSearch);
+            } else {
+                table_wp.setItems(wpRows);
+            }
+            table_wp.getColumns().get(0).setVisible(false);
+            table_wp.getColumns().get(0).setVisible(true);
+        }
     }
 
     private void newPWAPTasks() {
@@ -2097,70 +2210,39 @@ public class apwr_controller {
         //0 - без сортировки; 1 - сортировка по номеру задачи; 2 - сортировка по времени
         switch (flag) {
             case 0:
-                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                 columns_wr.get(0).setVisible(false);
                 columns_wr.get(0).setVisible(true);
                 upd_wr.setDisable(true);
                 break;
             case 1:
-                table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
+                setTableWRItems(qr._select_sort_apnum_wr(ID_WR));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 break;
             case 2:
-                table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+                setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 clear_filter.setDisable(false);
                 break;
             case 3:
-                table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
+                setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 break;
             case 4:
-                table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
+                setTableWRItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 break;
             case 5:
-                table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+                setTableWRItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 break;
         }
-				/*if(flag == 1)
-				{
-					table_wr.setItems(qr._select_sort_apnum_wr(ID_WR));
-					table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-				}
-				else if(flag == 2)
-				{
-					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-					table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-			        clear_filter.setDisable(false);
-				}
-				else if(flag == 0)
-				{
-					table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
-					columns_wr.get(0).setVisible(false);
-				    columns_wr.get(0).setVisible(true);
-				    upd_wr.setDisable(true);
-				}
-				else if(flag == 3)
-		        {
-		        	table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), SORT_SHOP));
-			    	table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-		        }
-				else if(flag == 4)
-		        {
-		        	table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(SORT_RESP, 0)));
-			    	table_wr.getColumns().get(0).setVisible(false);
-			        table_wr.getColumns().get(0).setVisible(true);
-		        }*/
+
     }
 
     private void tableAPSetOft(String id, String s) {
@@ -2172,20 +2254,27 @@ public class apwr_controller {
         }
     }
 
-    private void setTableAPItems(ObservableList<hmmr_ap_model> select_data_exectsk) {
-        table_ap.setItems(select_data_exectsk);
-        table_ap.getColumns().get(0).setVisible(false);
-        table_ap.getColumns().get(0).setVisible(true);
-        //updateTableAPInBackground();
-       /* System.out.println("update ap");
-        Arrays.stream(Thread.currentThread().getStackTrace()).forEach(s -> System.out.println(
-                "\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s
-                        .getLineNumber() + ")"));*/
+    public void setTableAPItems(ObservableList<hmmr_ap_model> items) {
+        apRows = items;
+        apOTVs.clear();
+        for (hmmr_ap_model i : apRows) {
+            apOTVs.add(i.getOTV());
+        }
+        showSearchedAP();
     }
+
+    public void setTableWRItems(ObservableList<hmmr_wr_model> items) {
+        wrRows = items;
+        wrOTVs.clear();
+        for (hmmr_wr_model i : wrRows) {
+            wrOTVs.add(i.getresp());
+        }
+        showSearchedWR();
+    }
+
 
     private void initSops() {
         SHOP_NAME = scl.parser_str(qr._select_user(conn_connector.USER_ID), 5);
-        System.out.println(SHOP_NAME);
         if (SHOP_NAME != "S,W") {
             availableShops = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).collect(Collectors.toSet());
             SHOP_NAME = Arrays.stream(SHOP_NAME.split(",")).map(String::trim).toArray(String[]::new)[0];
@@ -2236,14 +2325,15 @@ public class apwr_controller {
     private void apply_table_wr_filter_selection() {
         if (table_wr_filter_state != null) {
             if (r_shop_wr.isSelected()) {
-                table_wr.setItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), table_wr_filter_state));
+                setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), table_wr_filter_state));
+                setTableWRItems(qr._select_sort_shop_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), table_wr_filter_state));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 SORT_SHOP = table_wr_filter_state;
                 flag = 3;
             }
             if (r_resp_wr.isSelected()) {
-                table_wr.setItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(table_wr_filter_state, 0)));
+                setTableWRItems(qr._select_sort_resp_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), scl.parser_str(table_wr_filter_state, 0)));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 SORT_RESP = table_wr_filter_state;
@@ -2251,7 +2341,7 @@ public class apwr_controller {
             }
             if (r_OFT_wr.isSelected()) {
 
-                table_wr.setItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
+                setTableWRItems(qr._select_sort_OFT_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue()), getUserLettersID(table_wr_filter_state)));
                 table_wr.getColumns().get(0).setVisible(false);
                 table_wr.getColumns().get(0).setVisible(true);
                 SORT_RESP = table_wr_filter_state;
@@ -2270,7 +2360,7 @@ public class apwr_controller {
     private void initData() {
         setTableAPItems(qr._select_data_ap(USER_S));
         setWPItems(qr._select_data_wp(USER_S));
-        table_wr.setItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
+        setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
     }
 
     private void lang_fun(String loc1, String loc2) {
@@ -2384,6 +2474,20 @@ public class apwr_controller {
         Parent root = FXMLLoader.load(getClass().getResource("upd_oft.fxml"));
         Scene scene = new Scene(root);
         Stage stage_set = new Stage();
+        stage_set.initModality(Modality.WINDOW_MODAL);
+        stage_set.initOwner(conn_connector.getPrimaryStage());
+        stage_set.setTitle("M&U - Update Records Window");
+        stage_set.setResizable(false);
+        stage_set.setScene(scene);
+        stage_set.show();
+    }
+
+    //Вызываем окно обновления записи AP
+    protected void otvChangeExecutor(TableView <?> table) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("upd_oft.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage_set = new Stage();
+        stage_set.setUserData(table);
         stage_set.initModality(Modality.WINDOW_MODAL);
         stage_set.initOwner(conn_connector.getPrimaryStage());
         stage_set.setTitle("M&U - Update Records Window");
@@ -2750,7 +2854,7 @@ public class apwr_controller {
     public void refreshTable_wr(ObservableList<TableColumn<hmmr_wr_model, ?>> col, String bdata, String ldata) {
         table_wr.getColumns().removeAll(col);
         table_wr.getColumns().addAll(col);
-        table_wr.setItems(qr._select_data_wr(bdata, ldata));
+        setTableWRItems(qr._select_data_wr(bdata, ldata));
         col.get(0).setVisible(false);
         col.get(0).setVisible(true);
     }
@@ -2920,7 +3024,7 @@ public class apwr_controller {
 
                         @Override
                         public void run() {
-//							        	table_wr.setItems(qr._select_data_wr());
+//							        	setTableWRItems(qr._select_data_wr());
 //										table_wr.getColumns().get(0).setVisible(false);
 //								        table_wr.getColumns().get(0).setVisible(true);
                         }

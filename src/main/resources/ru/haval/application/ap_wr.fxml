@@ -85,12 +85,15 @@
                                     			<Image url="@haval.jpg" />
                                  			</image>
                               				</ImageView>
-                              				<Label fx:id="title_wo" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="415.0" text="WORK ORDER">
+                              				<Label fx:id="title_wo" alignment="CENTER" contentDisplay="CENTER" maxWidth="149.0" prefHeight="27.0" text="WORK ORDER">
                                  			<font>
                                     			<Font name="System Bold Italic" size="18.0" />
                                  			</font>
                               				</Label>
-                              				<JFXButton fx:id="assembly" disable="true" focusTraversable="false" />
+											<HBox prefHeight="100.0" prefWidth="17.0" />
+											<TextField fx:id="search_ap" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска (введите условия поиска через запятую)" />
+											<HBox prefHeight="100.0" prefWidth="17.0" />
+											<JFXButton fx:id="assembly" disable="true" focusTraversable="false" />
 					                        <HBox prefHeight="100.0" prefWidth="17.0" />
 											<JFXButton fx:id="logistics" disable="true" focusTraversable="false" />
 											<HBox prefHeight="100.0" prefWidth="17.0" />
@@ -215,13 +218,23 @@
 				                                    <Font name="System Bold Italic" size="18.0" />
 				                                 </font>
 				                              </Label>
-				                        <HBox prefHeight="70.0" prefWidth="19.0" />
-				                              <Label fx:id="from_wr" text="с:" />
-				                              <DatePicker fx:id="begin_data" prefHeight="25.0" prefWidth="130.0" />
-				                        <HBox prefHeight="70.0" prefWidth="39.0" />
-				                              <Label fx:id="to_wr" text="по:" />
-				                              <DatePicker fx:id="last_data" disable="true" editable="false" prefHeight="25.0" prefWidth="131.0" />
-				                        <HBox prefHeight="70.0" prefWidth="39.0" />
+										 <VBox spacing="5.0">
+											 <HBox>
+												 <HBox prefHeight="70.0" prefWidth="19.0" />
+												 <Label fx:id="from_wr" text="с:" />
+												 <DatePicker fx:id="begin_data" prefHeight="25.0" prefWidth="130.0" />
+												 <HBox prefHeight="70.0" prefWidth="39.0" />
+												 <Label fx:id="to_wr" text="по:" />
+												 <DatePicker fx:id="last_data" disable="true" editable="false" prefHeight="25.0" prefWidth="131.0" />
+												 <HBox prefHeight="70.0" prefWidth="39.0" />
+											 </HBox>
+											 <TextField fx:id="search_wr" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска (введите условия поиска через запятую)" />
+											 <padding>
+                                                <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
+                                             </padding>
+
+										 </VBox>
+
 				                        <JFXRadioButton fx:id="r_shop_wr" selected="true" text="Цех" />
 				                        <HBox prefHeight="70.0" prefWidth="17.0" />
 										<JFXRadioButton fx:id="r_OFT_wr" text="Ответственный" />

@@ -3,8 +3,8 @@ package ru.haval.action;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import ru.haval.application.conn_connector;
 import ru.haval.db._query;
@@ -38,12 +38,28 @@ public class ChangeExecutorController {
         String newOTV = otv.getValue().toString().split(" ")[0];
 
         Stage stage = (Stage) otv.getScene().getWindow();
+
         stage.close();
-        for (hmmr_wp_model i : apwr_controller.getInstance().table_wp.getSelectionModel().getSelectedItems()) {
-            if (i.getOFT().equals(apwr_controller.USER_S)) {
-                qr.changeOtv(i.getId().substring(2), newOTV);
+        TableView tableView = (TableView) stage.getUserData();
+        if (tableView.getItems().get(0) instanceof hmmr_wp_model) {
+            for (hmmr_wp_model i : apwr_controller.getInstance().table_wp.getSelectionModel().getSelectedItems()) {
+                if (i.getOFT().equals(apwr_controller.USER_S)) {
+                    qr.changeWpOtv(i.getId().substring(2), newOTV);
+                }
             }
+            apwr_controller.getInstance().setWPItems(qr._select_data_wp(apwr_controller.USER_S));
+        } else if (tableView.getItems().get(0) instanceof hmmr_ap_model) {
+            for (hmmr_ap_model i : apwr_controller.getInstance().table_ap.getSelectionModel().getSelectedItems()) {
+                if (i.getOFT().equals(apwr_controller.USER_S)) {
+                    qr.changeApOtv(i.getId().substring(2), newOTV);
+                }
+            }
+            apwr_controller.getInstance().updateAPTable();
         }
-        apwr_controller.getInstance().setWPItems(qr._select_data_wp(apwr_controller.USER_S));
+    }
+
+    public void close(ActionEvent actionEvent) {
+        Stage stage = (Stage) upd_oft_cancel.getScene().getWindow();
+        stage.close();
     }
 }
