@@ -3265,12 +3265,10 @@ public class apwr_controller {
 
     //filters
     public void callAPFilter(ActionEvent actionEvent) {
-        System.out.println("call ap filter");
         showFilterWindow(APFilter.getInstance());
     }
 
     public void callWRFilter(ActionEvent actionEvent) {
-        System.out.println("call wr filter");
         showFilterWindow(WRFilter.getInstance());
 
 //        stage_set.setUserData(WRFilter.getInstance());

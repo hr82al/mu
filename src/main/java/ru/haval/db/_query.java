@@ -71,12 +71,6 @@ public class _query {
     private final static String ACTION_PLAN_BASE_QUERY_WITHOUT_OFT = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hmp.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name  INNER JOIN hmmr_mu_staff hms ON hap.Tsk_maker = hms.ID INNER JOIN hmmr_order_type hot ON hot.id = hat.ID_OT AND hap.Type = hot.Name ";
 
 
-//    private static final String HAP_HEAD = "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap." +
-//            "Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm," +
-//            "hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hmp.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON " +
-//            "hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name ";
-
-
     public _query() {
 
     }
@@ -454,9 +448,7 @@ public class _query {
      */
     @SuppressWarnings({"static-access"})
     public ObservableList<hmmr_ap_model> _select_data_ap(String oft) {
-//        String query = HAP_HEAD + "where (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "' OR Tsk_maker = " + "'" + oft + "'" + ") AND hap.del_rec = 0 ORDER BY FIELD(hap.Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
         String query = ACTION_PLAN_BASE_QUERY + "where (Otv_For_Task = " + "'" + oft + "'" + " OR Otv = " + "'" + oft + "' OR Tsk_maker = " + "'" + oft + "'" + ") AND hap.del_rec = 0 ORDER BY FIELD(hap.Icon, '1S', '2Q', '3P', '4M', '1') ASC;";
-       //("1. ap");
         return fillAPModel(query);
     }
 
@@ -6349,7 +6341,6 @@ public class _query {
     private ObservableList<hmmr_ap_model> fillAPModelWithoutOtv(String query) {
         synchronized (_query.class) {
             ObservableList<hmmr_ap_model> list = FXCollections.observableArrayList();
-
             try {
 
                 cn.ConToDb();
@@ -6973,9 +6964,8 @@ public class _query {
     public String _select_at_desc(String id) {
         synchronized (_query.class) {
             String list = "null";
-
             try {
-                String query = "select hat.Description from hmmr_action_plan hap INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name AND hap.id = " + "'" + id + "'" + ";"; // AND ID_TSK = "+"'"+id+"'"+
+                String query = "select hat.Description from hmmr_action_plan hap INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name AND hap.id = " + "'" + id + "'" + ";";
 
                 cn.ConToDb();
                 stmt6 = cn.con.createStatement();

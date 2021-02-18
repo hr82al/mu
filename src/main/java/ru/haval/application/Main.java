@@ -1,6 +1,7 @@
 package ru.haval.application;
 	
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -67,7 +68,13 @@ public class Main extends Application {
 	public void _run_excel(File path) throws IOException
 	{
 		try {
-		getHostServices().showDocument(path.toURI().toURL().toExternalForm());
+			if (path.toString().endsWith(".pdf"))
+				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + path);
+			else {
+				getHostServices().showDocument(path.toURI().toASCIIString());
+			}
+
+//		getHostServices().showDocument(path.toURI().toURL().toExternalForm());
 		}
 		catch (Exception e) {
 			scl._AlertDialog("Указан неверный путь к файлу!", "Внимание!");
