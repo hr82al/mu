@@ -6,12 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="413.0" prefWidth="458.0">
+      <Pane prefHeight="502.0" prefWidth="458.0">
          <children>
             <VBox layoutX="29.0" layoutY="8.0">
-               <VBox minHeight="10" prefHeight="15.0" prefWidth="399.0" />
                <HBox>
                   <ImageView fitHeight="40.0" fitWidth="154.0" layoutX="29.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -24,33 +23,20 @@
                      </font>
                   </Label>
                </HBox>
-            <HBox prefHeight="39.0" prefWidth="399.0">
+               <ComboBox fx:id="filter_name" editable="true" prefHeight="25.0" prefWidth="399.0" />
                <VBox minHeight="10" />
-               <VBox>
-
-                  <TextField />
-                  <VBox minHeight="10" />
-                  <ChoiceBox prefWidth="150.0" />
-                  <VBox minHeight="10" />
-               </VBox>
-               <HBox minWidth="20" />
-               <VBox>
-                  <VBox minHeight="5.0" prefHeight="33.0" prefWidth="230.0" />
-                  <TextField fx:id="sqlText" layoutX="14.0" layoutY="56.0" prefHeight="26.0" prefWidth="193.0" />
-               </VBox>
-
-
-            </HBox>
-            <TableView fx:id="table_ot" layoutX="29.0" layoutY="102.0" prefHeight="218.0" prefWidth="399.0">
-              <columns>
-                 <TableColumn fx:id="name_ot" prefWidth="100.0" sortable="false" text="Колонка" />
-                 <TableColumn fx:id="filter_type" prefWidth="50.0" sortable="false" text="Тип" />
-                 <TableColumn fx:id="desc_ot" prefWidth="245.0" sortable="false" text="Фильтр" />
-              </columns>
-            </TableView>
+               <TextArea fx:id="sqlText" prefHeight="190.0" prefWidth="399.0" />
+               <VBox minHeight="10" />
+               <TableView fx:id="table_ot" layoutX="29.0" layoutY="102.0" prefHeight="171.0" prefWidth="399.0">
+                  <columns>
+                     <TableColumn fx:id="name_ot" prefWidth="100.0" sortable="false" text="Колонка" />
+                     <TableColumn fx:id="filter_type" prefWidth="50.0" sortable="false" text="Тип" />
+                     <TableColumn fx:id="desc_ot" prefWidth="245.0" sortable="false" text="Фильтр" />
+                  </columns>
+               </TableView>
                <VBox minHeight="10" prefHeight="15.0" prefWidth="399.0" />
                <HBox>
-                  <JFXButton fx:id="filter_apply" layoutX="41.0" layoutY="350.0" onAction="#onApply" text="Применить">
+                  <JFXButton fx:id="filter_apply" layoutX="41.0" layoutY="350.0" text="Применить">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

@@ -621,12 +621,73 @@ public class _query {
         return fillWRModel(" ;");
     }
 
-    public ObservableList<hmmr_wr_model> selectWRDataByFilter(String filter) {
-        return fillWRModel("WHERE " + filter + ";");
+    public ObservableList<hmmr_wr_model> selectWRDataByFilter(String query) {
+        synchronized (_query.class) {
+            ObservableList<hmmr_wr_model> list = FXCollections.observableArrayList();
+            try {
+                cn.ConToDb();
+                stmt16 = cn.con.createStatement();
+                rs16 = stmt16.executeQuery(query);
+
+                int total = 0;
+                int confirmed = 0;
+                while (rs16.next()) {
+                    hmmr_wr_model hpm = new hmmr_wr_model();
+                    if (rs16.getString(1) != null && rs16.getString(2) != null && rs16.getString(3) != null) {
+                        hpm.Id.set("WR" + rs16.getString(1));
+                        hpm.shift_report.set(rs16.getString(2));
+                        hpm.req_action.set(rs16.getString(3));
+                        hpm.actual_time.set(rs16.getString(4));
+                        hpm.actual_time1.set(rs16.getString(5));
+                        hpm.data.set(rs16.getString(6));
+                        hpm.equip.set(rs16.getString(7));
+                        hpm.record_type.set(rs16.getString(8));
+                        hpm.resp.set(rs16.getString(9));
+                        hpm.status.set(rs16.getString(10));
+                        hpm.qtyProperty().set(rs16.getBoolean(11));
+                        hpm.ap_num.set(rs16.getString(12));
+                        hpm.user_id.set(rs16.getString(13));
+                        hpm.userProperty().set(rs16.getBoolean(14));
+                        hpm.icon_at.set(rs16.getString(15));
+                        hpm.OFT_ID.set(rs16.getString(16));
+                        hpm.OFT.set(rs16.getString(17));
+                        hpm.iconATAddress.set(rs16.getString(18));
+
+                        list.add(hpm);
+                        total++;
+                        if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals( apwr_controller.USER_S))) {
+                            confirmed++;
+                        }
+                    }
+                }
+                hmmr_wr_model.total.set("Общее количество: " + Integer.toString(total));
+                if (confirmed != 0) {
+                    hmmr_wr_model.setHasConfirmed(false);
+                } else {
+                    hmmr_wr_model.setHasConfirmed(true);
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 493!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt16.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs16.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return list;
+        }
     }
 
     public ObservableList<hmmr_ap_model> selectAPDataByFilter(String filter) {
-        return fillAPModel( "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hmp.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name INNER JOIN hmmr_order_type hot ON hot.id = hat.ID_OT AND hap.Type = hot.Name WHERE " + filter + ";");
+//        return fillAPModel( "select hap.id,hap.PM_Num,hap.Type,hap.Description,hap.Due_Date,hap.Equipment,hap.Instruction,hap.Otv_For_Task,hap.Otv,hap.Tsk_maker,hap.flag_otv,hap.flag_oft,hap.flag_tm,hap.Icon,hap.Icon_AT, hap.user_id, hmp.Icon, hat.Icon, hmp.Description, hat.Description from hmmr_action_plan hap INNER JOIN hmmr_mu_prior hmp ON hap.icon =  hmp.ID_TSK INNER JOIN hmmr_activity_type hat ON hap.Icon_AT = hat.Name INNER JOIN hmmr_order_type hot ON hot.id = hat.ID_OT AND hap.Type = hot.Name " + filter + ";");
+        return fillAPModel(filter);
     }
 
     private ObservableList<hmmr_wr_model> fillWRModel(String filter) {
@@ -9947,6 +10008,73 @@ public class _query {
                     rs.close();
                 } catch (SQLException se) { /*can't do anything */ }
             }
+        }
+    }
+
+    public ObservableList getFiltersNames() {
+        synchronized (_query.class) {
+            ObservableList<String> list = FXCollections.observableArrayList();
+
+            try {
+                String query = "SELECT name FROM hmmr_filters;";
+
+                cn.ConToDb();
+                stmt6 = cn.con.createStatement();
+                rs6 = stmt6.executeQuery(query);
+
+                while (rs6.next()) {
+                    //typepm_model_inst tpm = new typepm_model_inst();
+                    if (rs6.getString(1) != null) {
+                        //tpm.settypepm(rs6.getString(1));
+                        String instr = rs6.getString(1);
+                        list.add(instr);
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 1522!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt6.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs6.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return list;
+        }
+    }
+
+    public String getFilterByName(String name) {
+        String query = "SELECT filter FROM hmmr_filters WHERE name = '" + name + "' LIMIT 1;";
+        synchronized (_query.class) {
+            String filter = "";
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    filter = rs.getString(1);
+                }
+
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return filter;
         }
     }
 }

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<ScrollPane fx:id="sp_pm" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="935.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_controller">
+<ScrollPane fx:id="sp_pm" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="935.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_controller">
    <content>
       <Pane fx:id="pane_pm" layoutX="-41.0" prefHeight="828.0" prefWidth="885.0">
          <children>

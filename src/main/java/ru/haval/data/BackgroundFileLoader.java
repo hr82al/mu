@@ -71,7 +71,6 @@ public class BackgroundFileLoader {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Boolean wait = false;
                     synchronized (BackgroundFileLoader.class) {
                         for (String path : images.keySet()) {
                             if (images.get(path) == null) {
@@ -80,7 +79,6 @@ public class BackgroundFileLoader {
                                     images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
                                 } catch (IOException e) {
                                     //If there is no file set up empty image
-                                    wait = true;
                                     System.out.println(e.getMessage());
                                 }
                             }

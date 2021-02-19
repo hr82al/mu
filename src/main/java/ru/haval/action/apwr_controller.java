@@ -1829,7 +1829,6 @@ public class apwr_controller {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 setTableWRItems(qr.selectWRDataByFilter(WRFilter.getInstance().getSqlFilter()));
-                //setTableWRItems(qr.selectWRDataByFilter(WRFilter.getSqlFilter()));
             }
         });
 

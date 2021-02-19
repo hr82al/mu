@@ -3,6 +3,11 @@ set @from = '10.168.150.74', @to = '192.168.1.215';
 update hmmr_mu.hmmr_activity_type set Icon = REPLACE(Icon, @from, @to) where id > 0;
 update hmmr_mu.hmmr_mu_prior set Icon = REPLACE(Icon, @from, @to)  where id > 0;
 
+CREATE TABLE IF NOT EXISTS hmmr_filters (
+id INT NOT NULL PRIMARY KEY,
+name VARCHAR(50) NOT NULL UNIQUE,
+filter TEXT) CHARSET=utf8;
+
 #Поисик пм по оборудованию в action hmmr_action_plan
 SELECT * FROM hmmr_action_plan hap WHERE hap.PM_Num in (SELECT hp.id FROM pm_inst pi INNER JOIN hmmr_pm hp ON pi.num_instruction = hp.Instruction_num WHERE hp.Eq_ID in (SELECT id FROM `hmmr_plant_structure` hps WHERE Description_RUS LIKE '%IP%')) AND Due_Date LIKE '2021-01%';
 
