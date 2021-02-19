@@ -10077,4 +10077,34 @@ public class _query {
             return filter;
         }
     }
+
+    public void saveSqlFilter(String name, String filter) {
+        filter = filter.replaceAll("'","\\\\'");
+        synchronized (_query.class) {
+            String query = "INSERT INTO hmmr_filters (name, filter) VALUES ('" + name + "', '" + filter +"');";
+            try {
+                cn.ConToDb();
+                stmt = cn.con.createStatement();
+                stmt.executeUpdate(query);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 2035!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
+
+    public void deleteFilterByName(String name) {
+        String query = "DELETE FROM hmmr_filters WHERE name = '" + name + "';";
+        delete(query);
+    }
 }

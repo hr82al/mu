@@ -4,7 +4,7 @@ update hmmr_mu.hmmr_activity_type set Icon = REPLACE(Icon, @from, @to) where id 
 update hmmr_mu.hmmr_mu_prior set Icon = REPLACE(Icon, @from, @to)  where id > 0;
 
 CREATE TABLE IF NOT EXISTS hmmr_filters (
-id INT NOT NULL PRIMARY KEY,
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(50) NOT NULL UNIQUE,
 filter TEXT) CHARSET=utf8;
 

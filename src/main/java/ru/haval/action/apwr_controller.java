@@ -330,6 +330,8 @@ public class apwr_controller {
         if (conn_connector.USER_ROLE.equals("Technics")) {
             create_ap.setDisable(true);
             wrCloseAllButton.setDisable(true);
+            APFilterButton.setDisable(true);
+            WRFilterButton.setDisable(true);
         }
         else  {
             wrCloseAllButton.setDisable(false);
