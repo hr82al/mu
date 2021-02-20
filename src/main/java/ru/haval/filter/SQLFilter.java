@@ -46,6 +46,8 @@ public class SQLFilter {
             vars.add(matcher.group(1));
             variableValues.put(matcher.group(1), matcher.group(2));
         }
+        //vars " =  " type
+
     }
 
     public ObservableList<String> getVars() {

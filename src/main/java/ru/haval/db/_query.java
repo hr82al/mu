@@ -698,7 +698,6 @@ public class _query {
                 cn.ConToDb();
                 stmt16 = cn.con.createStatement();
                 rs16 = stmt16.executeQuery(query);
-
                 int total = 0;
                 int confirmed = 0;
                 while (rs16.next()) {
