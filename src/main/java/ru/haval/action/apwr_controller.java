@@ -73,13 +73,25 @@ public class apwr_controller {
     public TableView<hmmr_ap_model> table_ap = new TableView<>();
 
     @FXML
-    TableView<hmmr_wr_model> table_wr = new TableView<hmmr_wr_model>();
+    TableView<hmmr_wr_model> table_wr = new TableView<>();
 
     @FXML
     public TableView<hmmr_wp_model> table_wp = new TableView<>();
 
     @FXML
-    TableColumn<hmmr_ap_model, String> n_ap, n_pm_ap, type_ap, desc_ap, dd_ap, equip_ap, priorColumn, otv_task_ap, otv_ap;
+    TableColumn<hmmr_ap_model, String> n_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> n_pm_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> type_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> desc_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> dd_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> equip_ap;
+    @FXML
+    TableColumn<hmmr_ap_model, String> otv_ap;
 
     @FXML
     TableColumn<hmmr_wr_model, String> num_wr, shift_report_wr, req_action_wr, actual_time_wr, actual_time1_wr, data_wr, equip_wr, record_type_wr, resp_wr,

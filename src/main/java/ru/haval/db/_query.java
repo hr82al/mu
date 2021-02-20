@@ -10011,7 +10011,7 @@ public class _query {
         }
     }
 
-    public ObservableList getFiltersNames() {
+    public ObservableList<String> getFiltersNames() {
         synchronized (_query.class) {
             ObservableList<String> list = FXCollections.observableArrayList();
 

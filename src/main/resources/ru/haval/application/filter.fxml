@@ -23,13 +23,13 @@
                      </font>
                   </Label>
                </HBox>
-               <ComboBox fx:id="filter_name" editable="true" prefHeight="25.0" prefWidth="399.0" />
+               <ComboBox fx:id="filter_list" editable="true" prefHeight="25.0" prefWidth="399.0" />
                <VBox minHeight="10" />
-               <TextArea fx:id="sqlText" prefHeight="239.0" prefWidth="399.0" />
+               <TextArea fx:id="filter_query" prefHeight="239.0" prefWidth="399.0" />
                <VBox minHeight="10" />
                <HBox alignment="CENTER">
                   <VBox>
-                     <ComboBox fx:id="variables" prefWidth="190" />
+                     <ComboBox fx:id="variable_list" prefWidth="190" />
                   </VBox>
 
                   <HBox prefWidth="10" />
