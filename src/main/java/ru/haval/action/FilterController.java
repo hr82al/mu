@@ -28,8 +28,7 @@ public class FilterController {
     JFXButton filter_apply, save_filter, del_filter, cancel_ot;
 
     @FXML
-    ComboBox<String> filter_list;
-    ComboBox<String> variable_list;
+    ComboBox<String> filter_list, variable_list;
 
     private final _query qr = new _query();
     s_class sclass = new s_class();
@@ -41,13 +40,20 @@ public class FilterController {
         sclass._style(del_filter);
         sclass._style(cancel_ot);
 
-        filter_query.setText(filter.getSqlFilter());
+//        filter_query.setText(filter.getSqlFilter());
         filter_query.setWrapText(true);
 
         filter_list.setItems(qr.getFiltersNames());
 
         filter_apply.setOnAction((ActionEvent event) -> {
-            filter.setSqlFilter(filter_query.getText());
+//            filter.setSqlFilter(filter_query.getText());
+            if (sqlFilter != null) {
+                filter.setSqlFilter(sqlFilter.getQuery());
+            }
+            else {
+                filter.setSqlFilter(filter_query.getText());
+            }
+//            System.out.println(sqlFilter.getQuery());
             Stage stage = (Stage) filter_list.getScene().getWindow();
             stage.close();
         });

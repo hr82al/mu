@@ -16,7 +16,6 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javafx.application.Platform;
 import ru.haval.action.*;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
