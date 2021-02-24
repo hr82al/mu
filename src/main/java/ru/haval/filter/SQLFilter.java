@@ -9,44 +9,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SQLFilter {
-    private final String variablesAndTheirValues;
-    private ObservableList<String> vars;
-    private Map<String, String> variableValues;
+    private ObservableList<String> vars = FXCollections.observableArrayList();
+    private Map<String, String> variableValues = new HashMap<>();
     private String query;
+    private final static String[] MARKERS = {"=", "LIKE"};
 
-    private SQLFilter(String variablesAndTheirValues) {
-        this.variablesAndTheirValues = variablesAndTheirValues;
-    }
+    private SQLFilter() {}
 
     public static SQLFilter setSqlFilter(String query) {
-        Pattern pattern = Pattern.compile("set(.+);");
-        Matcher matcher = pattern.matcher(query);
-        if (matcher.find()) {
-            SQLFilter result = new SQLFilter(matcher.group(1));
-            //init vars
-            result.vars = FXCollections.observableArrayList();
-            result.variableValues = new HashMap<>();
-
-            result.query = query;
-
-            result.updateVariablesAndTheirValues();
-            return result;
+        Matcher matcher;
+        SQLFilter sqlFilter = new SQLFilter();
+        sqlFilter.query = query;
+        for (String mark : MARKERS) {
+            matcher = getGetMatcherByMark(query, mark);
+            while (matcher.find()) {
+                sqlFilter.vars.add(matcher.group(1));
+                sqlFilter.variableValues.put(matcher.group(1), matcher.group(2));
+            }
         }
-        return null;
-
-    }
-
-    private void updateVariablesAndTheirValues() {
-        vars.clear();
-        variableValues.clear();
-//FIXME if severals words
-        Pattern pattern = Pattern.compile("@([^\\s]+)\\s*=\\W*(\\w+)");
-        Matcher matcher = pattern.matcher(variablesAndTheirValues);
-        while (matcher.find()) {
-            vars.add(matcher.group(1));
-            variableValues.put(matcher.group(1), matcher.group(2));
-        }
-        //vars " =  " type
+        return sqlFilter;
 
     }
 
@@ -59,37 +40,34 @@ public class SQLFilter {
     }
 
     public String changeVariable(String variable_name, String newValue) {
-        Pattern pattern = Pattern.compile("@" + variable_name + "\\s*=.*?'?%?([^%';]*?)%?'?[,;]");
-        Matcher matcher = pattern.matcher(query);
-        if (matcher.find()) {
-            variableValues.put(variable_name, newValue);
-            query = query.substring(0, matcher.start(1)) + newValue + query.substring(matcher.end(1));
-        }
+        query = setVar(query, variable_name, newValue);
+        variableValues.put(variable_name, newValue);
         return query;
     }
 
-    private String getFullValueByName(String name) {
-        Pattern pattern = Pattern.compile("@" + name + "\\s*=.*?('?%?[^%';]*?%?'?)[,;]");
+    private static Matcher getGetMatcherByMark(String query, String mark) {
+        Pattern pattern = Pattern.compile("(\\S+?) " + mark + " '(.*?)'");
         Matcher matcher = pattern.matcher(query);
-        while (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
+        return matcher;
     }
 
-    public String getQuery() {
-        String outQuery = query;
-        Pattern pattern = Pattern.compile("set.+?;");
-        Matcher matcher = pattern.matcher(outQuery);
-        if (matcher.find()) {
-            outQuery = matcher.replaceFirst("");
+    private static Matcher getSetMatcherByMark(String query, String mark, String var) {
+        Pattern pattern = Pattern.compile(var + " " + mark + " '(.*?)'");
+        Matcher matcher = pattern.matcher(query);
+        return matcher;
+    }
+
+    private static String setVar(String query, String var, String val) {
+        String out = "";
+        Matcher matcher;
+
+        for (String mark : MARKERS) {
+            //find position of variable
+            matcher = getSetMatcherByMark(query, mark, var);
+            if (matcher.find()) {
+                out = query.substring(0, matcher.start(1)) + val + query.substring(matcher.end(1));
+            }
         }
-        else {
-            return query;
-        }
-        for (Map.Entry<String, String> entry: variableValues.entrySet()) {
-            outQuery = outQuery.replace("@" + entry.getKey(), getFullValueByName(entry.getKey()));
-        }
-        return outQuery;
+        return out;
     }
 }

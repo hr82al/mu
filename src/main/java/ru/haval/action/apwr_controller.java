@@ -1850,6 +1850,8 @@ public class apwr_controller {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 setTableAPItems(qr.selectAPDataByFilter(APFilter.getInstance().getSqlFilter()));
+                //FIXME need to check everyone
+                tableCellAlignCenter_green(dd_ap);
             }
         });
 

@@ -12,6 +12,7 @@ import ru.haval.db._query;
 import ru.haval.filter.IFilter;
 import ru.haval.filter.SQLFilter;
 import ru.haval.share_class.s_class;
+import ru.haval.application.conn_connector;
 
 public class FilterController {
 
@@ -40,20 +41,21 @@ public class FilterController {
         sclass._style(del_filter);
         sclass._style(cancel_ot);
 
-//        filter_query.setText(filter.getSqlFilter());
+        filter_query.setText(filter.getSqlFilter());
         filter_query.setWrapText(true);
+        if (!conn_connector.USER_ROLE.equals("Administrator"))
+            del_filter.setDisable(true);
+
+        if (filter.getSqlFilter() != "") {
+            sqlFilter = SQLFilter.setSqlFilter(filter.getSqlFilter());
+            initVariable_list();
+            setVar_value();
+        }
 
         filter_list.setItems(qr.getFiltersNames());
 
         filter_apply.setOnAction((ActionEvent event) -> {
-//            filter.setSqlFilter(filter_query.getText());
-            if (sqlFilter != null) {
-                filter.setSqlFilter(sqlFilter.getQuery());
-            }
-            else {
-                filter.setSqlFilter(filter_query.getText());
-            }
-//            System.out.println(sqlFilter.getQuery());
+            filter.setSqlFilter(filter_query.getText());
             Stage stage = (Stage) filter_list.getScene().getWindow();
             stage.close();
         });
@@ -85,24 +87,15 @@ public class FilterController {
                 final String query = qr.getFilterByName(name);
                 filter_query.setText(query);
                 sqlFilter = SQLFilter.setSqlFilter(query);
-                if (sqlFilter != null) {
-                    variable_list.setItems(sqlFilter.getVars());
-                    variable_list.getSelectionModel().select(0);
-                }
-                else {
-                    variable_list.setItems(FXCollections.observableArrayList());
-                }
+                initVariable_list();
             }
         });
 
         variable_list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (variable_list.getSelectionModel().getSelectedItem() != null) {
-                var_value.setText(sqlFilter.getVariableValueByName(variable_list.getSelectionModel().getSelectedItem()));
-            }
-            else {
-                var_value.setText("");
-            }
+            setVar_value();
+
         });
+
 
         filter_query.textProperty().addListener((observable, oldValue, newValue) -> sqlFilter = SQLFilter.setSqlFilter(filter_query.getText()));
 
@@ -112,6 +105,25 @@ public class FilterController {
                 filter_query.setText(sqlFilter.changeVariable(VARIABLE_NAME, newValue));
             }
         });
+    }
+
+    private void setVar_value() {
+        if (variable_list.getSelectionModel().getSelectedItem() != null) {
+            var_value.setText(sqlFilter.getVariableValueByName(variable_list.getSelectionModel().getSelectedItem()));
+        }
+        else {
+            var_value.setText("");
+        }
+    }
+
+    private void initVariable_list() {
+        if (sqlFilter != null) {
+            variable_list.setItems(sqlFilter.getVars());
+            variable_list.getSelectionModel().select(0);
+        }
+        else {
+            variable_list.setItems(FXCollections.observableArrayList());
+        }
     }
 
     public void setFilter(IFilter filter) {
