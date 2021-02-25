@@ -1,6 +1,8 @@
 package ru.haval.action;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -23,7 +25,11 @@ public class ChangeExecutorController {
     @SuppressWarnings({"unchecked"})
     @FXML
     public void  initialize() {
-        otv.setItems(qr._select_fio_for_ap(2, sclass.parser_str(apwr_controller.SHOP_NAME, 0)));
+        ObservableList<String> otvs = FXCollections.observableArrayList();
+        otvs.add("need select");
+        otvs.addAll(qr._select_fio_for_ap(2, sclass.parser_str(apwr_controller.SHOP_NAME, 0)));
+        otv.setItems(otvs);
+        otv.getSelectionModel().select(0);
         sclass._style(upd_oft_ok);
         sclass._style(upd_oft_cancel);
         if (conn_connector.USER_ROLE.equals("Technics")) {
@@ -40,21 +46,48 @@ public class ChangeExecutorController {
         Stage stage = (Stage) otv.getScene().getWindow();
 
         stage.close();
-        TableView tableView = (TableView) stage.getUserData();
-        if (tableView.getItems().get(0) instanceof hmmr_wp_model) {
-            for (hmmr_wp_model i : apwr_controller.getInstance().table_wp.getSelectionModel().getSelectedItems()) {
-                if (i.getOFT().equals(apwr_controller.USER_S)) {
-                    qr.changeWpOtv(i.getId().substring(2), newOTV);
+        String tmp = otv.getSelectionModel().getSelectedItem().toString().split(" ")[0];
+        final String NEW_USER_ID = tmp.equals("need") ? "need select" : tmp;
+        if (stage.getUserData() instanceof  TableView) {
+
+            TableView tableView = (TableView) stage.getUserData();
+            if (tableView.getItems().get(0) instanceof hmmr_wp_model) {
+                for (hmmr_wp_model i : apwr_controller.getInstance().table_wp.getSelectionModel().getSelectedItems()) {
+                    if (i.getOFT().equals(apwr_controller.USER_S)) {
+                        qr.updatePmExecutor(i.getPM_Num(), newOTV);
+                        qr.changeWpOtv(i.getId().substring(2), newOTV);
+                    }
+                }
+                apwr_controller.getInstance().setWPItems(qr._select_data_wp(apwr_controller.USER_S));
+            } else if (tableView.getItems().get(0) instanceof hmmr_ap_model) {
+                for (hmmr_ap_model i : apwr_controller.getInstance().table_ap.getSelectionModel().getSelectedItems()) {
+                    if (i.getOFT().equals(apwr_controller.USER_S)) {
+                        qr.updatePmExecutor(i.getPM_Num(), newOTV);
+                        qr.changeApOtv(i.getId().substring(2), newOTV);
+                    }
+                }
+                apwr_controller.getInstance().updateAPTable();
+            }
+        } else if (stage.getUserData() instanceof Stuff_Controller) {
+            Stuff_Controller stuff_controller = (Stuff_Controller) stage.getUserData();
+            if (stuff_controller.table_staff.getSelectionModel().getSelectedItem() != null) {
+                final String USER_ID = stuff_controller.table_staff.getSelectionModel().getSelectedItem().ID.get();
+                if (USER_ID != null && NEW_USER_ID != null) {
+                    qr.changePmRespPmExecutorIDs(USER_ID, NEW_USER_ID);
                 }
             }
-            apwr_controller.getInstance().setWPItems(qr._select_data_wp(apwr_controller.USER_S));
-        } else if (tableView.getItems().get(0) instanceof hmmr_ap_model) {
-            for (hmmr_ap_model i : apwr_controller.getInstance().table_ap.getSelectionModel().getSelectedItems()) {
-                if (i.getOFT().equals(apwr_controller.USER_S)) {
-                    qr.changeApOtv(i.getId().substring(2), newOTV);
+        } else if (stage.getUserData() instanceof pm_controller) {
+            pm_controller pmController = (pm_controller) stage.getUserData();
+            if (pmController.table_pm.getSelectionModel().getSelectedItems().size() > 1) {
+                for (hmmr_pm_model item : pmController.table_pm.getSelectionModel().getSelectedItems()) {
+                    if (pmController.responsible) {
+                        qr.updateResponsible(item.getId(), NEW_USER_ID);
+                    } else {
+                        qr.updatePmExecutor(item.getId(), NEW_USER_ID);
+                    }
                 }
+                pmController.setPmItems(qr._select_data_pm2());
             }
-            apwr_controller.getInstance().updateAPTable();
         }
     }
 

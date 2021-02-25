@@ -330,4 +330,41 @@ public class Hmmr_Stuff_Model {
 	public String getIdStr() {
 		return id.get();
 	}
+
+	@Override
+	public String toString() {
+		return "Hmmr_Stuff_Model{" +
+				"id=" + id +
+				", StaffId=" + StaffId +
+				", ID=" + ID +
+				", user_id=" + user_id +
+				", L_Name_Rus=" + L_Name_Rus +
+				", F_Name_Rus=" + F_Name_Rus +
+				", Otchestvo=" + Otchestvo +
+				", First_Name=" + First_Name +
+				", Last_Name=" + Last_Name +
+				", DoB=" + DoB +
+				", Sec=" + Sec +
+				", Group_S=" + Group_S +
+				", Team=" + Team +
+				", WorkShift=" + WorkShift +
+				", Position=" + Position +
+				", Position_RUS=" + Position_RUS +
+				", HR=" + HR +
+				", GWM_ID=" + GWM_ID +
+				", Date_of_Start=" + Date_of_Start +
+				", E_Mail=" + E_Mail +
+				", Skype=" + Skype +
+				", Cell_1=" + Cell_1 +
+				", Cell_2=" + Cell_2 +
+				", Address=" + Address +
+				", Avto=" + Avto +
+				", Shoes_Size=" + Shoes_Size +
+				", Clothes_Size=" + Clothes_Size +
+				", Working=" + Working +
+				", Quit_Date=" + Quit_Date +
+				", Login=" + Login +
+				", Passwd=" + Passwd +
+				'}';
+	}
 }

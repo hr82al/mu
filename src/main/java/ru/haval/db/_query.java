@@ -10105,4 +10105,78 @@ public class _query {
         String query = "DELETE FROM hmmr_filters WHERE name = '" + name + "';";
         delete(query);
     }
+
+    public void updatePmExecutor(String pm_num, String newOTV) {
+        synchronized (_query.class) {
+            String query = "UPDATE hmmr_pm set PM_Executor = '" + newOTV + "' WHERE id = " + pm_num + ";";
+            try {
+                cn.ConToDb();
+                stmt = cn.con.createStatement();
+                stmt.executeUpdate(query);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
+
+    public void changePmRespPmExecutorIDs(String oldID, String newID) {
+        synchronized (_query.class) {
+            String queryPmExecutorIDs = "UPDATE hmmr_pm hp SET PM_Executor = '" + newID + "' WHERE PM_Executor = '" + oldID + "';";
+            String queryRespIDs = "UPDATE hmmr_pm hp SET PM_Resp = '" + newID + "' WHERE PM_Resp = '" + oldID + "';";
+            try {
+                cn.ConToDb();
+                stmt = cn.con.createStatement();
+                stmt.executeUpdate(queryPmExecutorIDs);
+                stmt.executeUpdate(queryRespIDs);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
+
+    public void updateResponsible(String id, String new_user_id) {
+        synchronized (_query.class) {
+            String query = "UPDATE hmmr_pm set PM_Resp = '" + new_user_id + "' WHERE id = " + id + ";";
+            try {
+                cn.ConToDb();
+                stmt = cn.con.createStatement();
+                stmt.executeUpdate(query);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
 }

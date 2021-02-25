@@ -199,34 +199,35 @@ public class Stuff_Controller {
 			}
 		});
 		del_staff.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent arg0) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-			    alert.setTitle("M&U - Delete Record Window");
-			    Hmmr_Stuff_Model _hsm = table_staff.getSelectionModel().getSelectedItem();
-			    
-			    alert.setHeaderText("Вы действительно хотите удалить запись № = " + _hsm.getIdStr() + "?");
-			    //alert.setContentText("C:/MyFile.txt");
-			 
-			    // option != null.
-			    Optional<ButtonType> option = alert.showAndWait();
-			    if (option.get() == null) {
-			       //label.setText("No selection!");
-			    } else if (option.get() == ButtonType.OK) {
-			  	   _hsm = table_staff.getSelectionModel().getSelectedItem();
-			  	   try {
-			  	   func_del(_hsm.getIdStr());
-			  	   } catch (Exception e) {
-					
+				alert.setTitle("M&U - Delete Record Window");
+				Hmmr_Stuff_Model _hsm = table_staff.getSelectionModel().getSelectedItem();
+
+				alert.setHeaderText("Вы действительно хотите удалить запись № = " + _hsm.getIdStr() + "?");
+				//alert.setContentText("C:/MyFile.txt");
+
+				// option != null.
+				Optional<ButtonType> option = alert.showAndWait();
+				if (option.get() == null) {
+					//label.setText("No selection!");
+				} else if (option.get() == ButtonType.OK) {
+					_hsm = table_staff.getSelectionModel().getSelectedItem();
+					try {
+						updatePmExecutor();
+						func_del(_hsm.getIdStr());
+					} catch (Exception e) {
+
+					}
+				} else if (option.get() == ButtonType.CANCEL) {
+					//label.setText("Cancelled!");
+				} else {
+					//label.setText("-");
 				}
-			    } else if (option.get() == ButtonType.CANCEL) {
-			       //label.setText("Cancelled!");
-			    } else {
-			       //label.setText("-");
-			    }
 			}
-			
+
 		});
 		upd_tbl_staff.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -276,5 +277,24 @@ public class Stuff_Controller {
 		qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Удалил запись № = " + str + " в таблице hmmr_mu_staff");
 		
 		_table_update_staff.addAll(qr._select_data_staff());
+	}
+
+	private void updatePmExecutor() {
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("upd_oft.fxml"));
+			Scene scene = new Scene(root);
+			Stage stage_set = new Stage();
+			stage_set.setUserData(this);
+			stage_set.initModality(Modality.WINDOW_MODAL);
+			stage_set.initOwner(this.stage);
+			stage_set.setTitle("M&U - Изменение ответственного и исполнителя PM-ов.");
+			stage_set.setResizable(false);
+			stage_set.setScene(scene);
+			stage_set.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

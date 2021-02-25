@@ -68,7 +68,10 @@ DELETE FROM hmmr_action_plan WHERE id IN (SELECT * FROM tmp);
 SELECT * FROM hmmr_action_plan hap WHERE Otv = 'need select' and Due_Date BETWEEN '2020-01-01' AND '2020-10-31' ORDER BY hap.Otv_For_Task;
 
 
-
+#Set pm executor by last hmmr_work_plan state
+UPDATE hmmr_pm hp
+SET PM_Executor = (SELECT hwp.Otv FROM hmmr_work_plan hwp INNER JOIN hmmr_mu_staff hms ON hwp.Otv = hms.ID WHERE hwp.PM_Num = hp.id and hwp.Otv != 'need select' AND hms.user_del = 0 ORDER BY hwp.Due_Date DESC limit 1 )
+WHERE id > 0 AND hp.id in (SELECT hwp.PM_Num FROM hmmr_work_plan hwp INNER JOIN hmmr_mu_staff hms ON hwp.Otv = hms.ID WHERE hwp.Otv != 'need select' AND hms.user_del = 0 GROUP BY hwp.PM_Num) and hp.PM_Executor = 'need select';
 
 
 update hmmr_mu.hmmr_work_plan

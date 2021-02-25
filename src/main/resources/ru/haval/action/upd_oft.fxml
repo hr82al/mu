@@ -7,7 +7,7 @@
 
 <AnchorPane prefHeight="149.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.ChangeExecutorController">
          <VBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="353.0" text="Обновить TSK/CM">
+            <Label  alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="353.0" text="Обновить TSK/CM">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
