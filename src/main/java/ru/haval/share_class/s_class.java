@@ -11,9 +11,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import org.apache.commons.lang3.StringUtils;
-import ru.haval.action.hmmr_wp_model;
+import ru.haval.action.hmmr_ps_model;
 import ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
 import ru.haval.dir.CycleController;
@@ -28,8 +26,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
-
-import static com.mysql.cj.protocol.a.MysqlTextValueDecoder.isDate;
 
 public class s_class {
 	static FxDatePickerConverter fx_dp = new FxDatePickerConverter();
@@ -468,5 +464,16 @@ public class s_class {
 			}
 		}
 		return out.toString();
+	}
+
+	public static String promptByEquipmentId(String equipmentId) {
+		String []ids = equipmentId.split("\\.");
+		final String shop = ids[0];
+		final String group = ids[1];
+		final String line = ids[2];
+		final String station = ids[3];
+		final String equipment = ids[4];
+		hmmr_ps_model result = qr.getDescriptionEquipmentByIds(shop, group, line, station, equipment);
+		return result.getFL03_Shop_RUS() + "\n" + result.getFL04_Group_RUS() + "\n" + result.getLine_Machine_RUS() + "\n" + result.getOperation_Station_RUS() + "\n" + result.getFL07_Equipment_RUS() + "\n" + result.getDescription();
 	}
 }

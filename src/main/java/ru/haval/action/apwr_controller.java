@@ -16,6 +16,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.scene.control.*;
+import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import ru.haval.application.Main;
@@ -1856,6 +1857,121 @@ public class apwr_controller {
         });
 
         desc_ap.setSortable(true);
+
+
+
+        //******************************
+        //Shows full description
+        equip_ap.setCellFactory(new Callback<TableColumn<hmmr_ap_model , String>, TableCell<hmmr_ap_model, String>>() {
+            @Override
+            public TableCell<hmmr_ap_model, String> call(TableColumn<hmmr_ap_model, String> p) {
+                return new TableCell<hmmr_ap_model, String>() {
+                    TableCell<hmmr_ap_model, String> hmmr_ap_modelStringTableCell = this;
+
+                    @Override
+                    public void updateItem(String t, boolean empty) {
+
+                        Tooltip tooltip = new Tooltip();
+                        //super.updateItem(t, empty);
+                        tooltip.setOnShowing(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                hmmr_ap_model myModel = getTableView().getItems().get(getTableRow().getIndex());
+//                                System.out.println(myModel.getEquip());
+                                tooltip.setText(s_class.promptByEquipmentId(myModel.getEquip()));
+//                                System.out.println(s_class.promptByEquipmentId(myModel.getEquip()));
+                                setTooltip(tooltip);
+                                setText(t.toString());
+                            }
+                        });
+
+                        if (t == null) {
+                            setTooltip(null);
+                            setText(null);
+                        } else {
+                            tooltip.setText("");
+                            setTooltip(tooltip);
+                            setText(t.toString());
+                        }
+                    }
+                };
+            }
+        });
+
+        //******************************
+        //Shows full description
+        equip_wp.setCellFactory(new Callback<TableColumn<hmmr_wp_model , String>, TableCell<hmmr_wp_model, String>>() {
+            @Override
+            public TableCell<hmmr_wp_model, String> call(TableColumn<hmmr_wp_model, String> p) {
+                return new TableCell<hmmr_wp_model, String>() {
+                    TableCell<hmmr_wp_model, String> hmmr_wp_modelStringTableCell = this;
+
+                    @Override
+                    public void updateItem(String t, boolean empty) {
+
+                        Tooltip tooltip = new Tooltip();
+                        //super.updateItem(t, empty);
+                        tooltip.setOnShowing(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                hmmr_wp_model myModel = getTableView().getItems().get(getTableRow().getIndex());
+//                                System.out.println(myModel.getEquip());
+                                tooltip.setText(s_class.promptByEquipmentId(myModel.getEquip()));
+//                                System.out.println(s_class.promptByEquipmentId(myModel.getEquip()));
+                                setTooltip(tooltip);
+                                setText(t.toString());
+                            }
+                        });
+
+                        if (t == null) {
+                            setTooltip(null);
+                            setText(null);
+                        } else {
+                            tooltip.setText("");
+                            setTooltip(tooltip);
+                            setText(t.toString());
+                        }
+                    }
+                };
+            }
+        });
+        //******************************
+        //Shows full description
+        equip_wr.setCellFactory(new Callback<TableColumn<hmmr_wr_model , String>, TableCell<hmmr_wr_model, String>>() {
+            @Override
+            public TableCell<hmmr_wr_model, String> call(TableColumn<hmmr_wr_model, String> p) {
+                return new TableCell<hmmr_wr_model, String>() {
+                    TableCell<hmmr_wr_model, String> hmmr_wr_modelStringTableCell = this;
+
+                    @Override
+                    public void updateItem(String t, boolean empty) {
+
+                        Tooltip tooltip = new Tooltip();
+                        //super.updateItem(t, empty);
+                        tooltip.setOnShowing(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                hmmr_wr_model myModel = getTableView().getItems().get(getTableRow().getIndex());
+//                                System.out.println(myModel.getEquip());
+                                tooltip.setText(s_class.promptByEquipmentId(myModel.equip.get()));
+//                                System.out.println(s_class.promptByEquipmentId(myModel.getEquip()));
+                                setTooltip(tooltip);
+                                setText(t.toString());
+                            }
+                        });
+
+                        if (t == null) {
+                            setTooltip(null);
+                            setText(null);
+                        } else {
+                            tooltip.setText("");
+                            setTooltip(tooltip);
+                            setText(t.toString());
+                        }
+                    }
+                };
+            }
+        });
     }
 
     private void showSearchedWR() {

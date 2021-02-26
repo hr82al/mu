@@ -10179,4 +10179,86 @@ public class _query {
             }
         }
     }
+
+    public hmmr_ps_model getDescriptionEquipmentByIds(String shop, String group, String line, String station, String equipment) {
+        synchronized (_query.class) {
+            hmmr_ps_model hpm = new hmmr_ps_model();
+            try {
+                String query = "select id, FL01_Company, FL02_Plant, FL03_Shop_s, FL04_Group_s, FL05_Line_s, FL06_Station_s, FL07_Equipment_s, FL03_Shop_ENG, FL04_Group_ENG, FL05_Line_ENG, FL06_Station_ENG, FL07_Equipment_ENG, FL03_Shop_RUS, FL04_Group_RUS, FL05_Line_RUS, FL06_Station_RUS, FL07_Equipment_RUS, Description_RUS, Equip_label, Station_Label, Equipment_Folder_Link, Resp_Planner_Group, Assets_Inventory_Number, Assets_OS1_Number, Assets_Start_up_Date, Cost_Center, Site_Location, Site_CHAMBER, Site_Coordinates, Site_Altitude, TR_CU, TR_CU_Link, Hazardous, Key_equipment, EQ_Integrator, EQ_Manufacture, EQ_Type, EQ_Serial_Number, EQ_Technical_Characteristic, Responsobility, M_Electric, M_Air, M_Water, M_Cold_Water, M_Hot_Water, M_RO_Water, M_Gas from hmmr_plant_structure where Status = 0 AND FL03_Shop_s = '" + shop + "' AND FL04_Group_s = '" + group + "' AND FL05_Line_s = '" + line + "' AND FL06_Station_s = '" + station + "' AND FL07_Equipment_s = '" + equipment + "' LIMIT 1;";
+
+
+                cn.ConToDb();
+                stmt12 = cn.con.createStatement();
+                rs12 = stmt12.executeQuery(query);
+
+                if (rs12.next()) {
+
+                    if (rs12.getString(1) != null && rs12.getString(2) != null && rs12.getString(3) != null) {
+                        hpm.Id.set(rs12.getString(1));
+                        hpm.Company.set(rs12.getString(2));
+                        hpm.Plant.set(rs12.getString(3));
+                        hpm.Shop_s.set(rs12.getString(4));
+                        hpm.Group_PM.set(rs12.getString(5));
+                        hpm.Line_Machine_s.set(rs12.getString(6));
+                        hpm.Operation_Station_s.set(rs12.getString(7));
+                        hpm.Equipment_s.set(rs12.getString(8));
+                        hpm.Shop.set(rs12.getString(9));
+                        hpm.FL04_Group_ENG.set(rs12.getString(10));
+                        hpm.Line_Machine.set(rs12.getString(11));
+                        hpm.Operation_Station.set(rs12.getString(12));
+                        hpm.Equipment.set(rs12.getString(13));
+                        hpm.FL03_Shop_RUS.set(rs12.getString(14));
+                        hpm.FL04_Group_RUS.set(rs12.getString(15));
+                        hpm.Line_Machine_RUS.set(rs12.getString(16));
+                        hpm.Operation_Station_RUS.set(rs12.getString(17));
+                        hpm.FL07_Equipment_RUS.set(rs12.getString(18));
+                        hpm.Description.set(rs12.getString(19));
+                        hpm.Equip_label.set(rs12.getString(20));
+                        hpm.Station_label.set(rs12.getString(21));
+                        hpm.manual.set(rs12.getString(22));
+                        hpm.RespPlannerGroup.set(rs12.getString(23));
+                        hpm.AssetsInvNum.set(rs12.getString(24));
+                        hpm.AssetsOsNum.set(rs12.getString(25));
+                        hpm.AssetsStartDate.set(rs12.getString(26));
+                        hpm.CostCenter.set(rs12.getString(27));
+                        hpm.Location.set(rs12.getString(28));
+                        hpm.CHAMBER.set(rs12.getString(29));
+                        hpm.Coordinates.set(rs12.getString(30));
+                        hpm.Altitude.set(rs12.getString(31));
+                        hpm.TR_CU.set(rs12.getString(32));
+                        hpm.TR_CU_Link.set(rs12.getString(33));
+                        hpm.Hazardous.set(rs12.getString(34));
+                        hpm.Key_equipment.set(rs12.getString(35));
+                        hpm.Station_Supplier.set(rs12.getString(36));
+                        hpm.Manuf.set(rs12.getString(37));
+                        hpm.Type.set(rs12.getString(38));
+                        hpm.S_N.set(rs12.getString(39));
+                        hpm.MTC.set(rs12.getString(40));
+                        hpm.Resp.set(rs12.getString(41));
+                        hpm.M_Electric.set(rs12.getString(42));
+                        hpm.M_Air.set(rs12.getString(43));
+                        hpm.M_Water.set(rs12.getString(44));
+                        hpm.M_Cold_water.set(rs12.getString(45));
+                        hpm.M_Hot_water.set(rs12.getString(46));
+                        hpm.RO_Water.set(rs12.getString(47));
+                        hpm.M_Gas.set(rs12.getString(48));
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 406!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return hpm;
+        }
+    }
 }

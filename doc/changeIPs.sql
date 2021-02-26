@@ -73,6 +73,15 @@ UPDATE hmmr_pm hp
 SET PM_Executor = (SELECT hwp.Otv FROM hmmr_work_plan hwp INNER JOIN hmmr_mu_staff hms ON hwp.Otv = hms.ID WHERE hwp.PM_Num = hp.id and hwp.Otv != 'need select' AND hms.user_del = 0 ORDER BY hwp.Due_Date DESC limit 1 )
 WHERE id > 0 AND hp.id in (SELECT hwp.PM_Num FROM hmmr_work_plan hwp INNER JOIN hmmr_mu_staff hms ON hwp.Otv = hms.ID WHERE hwp.Otv != 'need select' AND hms.user_del = 0 GROUP BY hwp.PM_Num) and hp.PM_Executor = 'need select';
 
+#Set pm executor by last hmmr_action_plan state
+UPDATE hmmr_pm hp
+SET PM_Executor = (
+SELECT hap.Otv FROM hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID WHERE hap.PM_Num = hp.id AND hms.user_del = 0 AND hap.Otv != 'need select' ORDER BY hap.Due_Date DESC limit 1
+)
+WHERE id > 0 AND hp.id in (
+SELECT hap.PM_Num FROM hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON hap.Otv = hms.ID WHERE hms.user_del = 0 AND hap.Otv != 'need select' GROUP BY PM_Num
+) and hp.PM_Executor = 'need select';
+
 
 update hmmr_mu.hmmr_work_plan
 set
