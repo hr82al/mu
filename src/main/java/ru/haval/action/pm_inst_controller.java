@@ -1,11 +1,16 @@
 package ru.haval.action;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.*;
+import net.sf.jasperreports.data.cache.LongArrayStore;
 import ru.haval.application.Main;
 import  ru.haval.application.conn_connector;
 import  ru.haval.db._query;
@@ -20,13 +25,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -48,6 +46,9 @@ public class pm_inst_controller
 	
 	@FXML
 	ScrollPane sp_inst;
+
+	@FXML
+	TextField searchPMDB;
 	
 	@FXML
 	JFXButton add_inst, upd_inst, del_inst, close_inst, upd_table_inst;
@@ -74,7 +75,10 @@ public class pm_inst_controller
 	public static ObservableList<TableColumn<hmmr_inst_model, ?>> columns_inst;
 	public static ObservableList<hmmr_inst_model> _table_update_inst = FXCollections.observableArrayList();
 	public static Stage pStage;
-	
+	boolean isPmsGet = false;
+	private static ObservableList<hmmr_inst_model> pmDbRows = FXCollections.observableArrayList();
+	private HashSet<String> periods = new HashSet<>();
+
 	public pm_inst_controller()
 	{
 		
@@ -287,7 +291,7 @@ public class pm_inst_controller
 			
 			@Override
 			public void handle(ActionEvent event) {
-				table_inst.setItems(qr._select_data_pminst());
+				setTableInst(qr._select_data_pminst());
 				columns_inst.get(0).setVisible(false);
 			    columns_inst.get(0).setVisible(true);
 			}
@@ -295,7 +299,7 @@ public class pm_inst_controller
 		 _table_update_inst.addListener(new ListChangeListener<hmmr_inst_model>() {
 			    @Override
 				public void onChanged(Change<? extends hmmr_inst_model> c) {
-					table_inst.setItems(qr._select_data_pminst());
+					setTableInst(qr._select_data_pminst());
 			    	table_inst.getColumns().get(0).setVisible(false);
 			        table_inst.getColumns().get(0).setVisible(true);
 				}
@@ -306,11 +310,72 @@ public class pm_inst_controller
 	        table_inst.getFocusModel().focus(0);
 	        table_inst.getSelectionModel().selectLast();
 	        table_inst.scrollTo(table_inst.getItems().size());
+
+		searchPMDB.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				showSearchedPMDB(newValue);
+			}
+		});
+	}
+
+	public void setTableInst(ObservableList<hmmr_inst_model> data) {
+		pmDbRows.clear();
+		pmDbRows.addAll(data);
+		getPms();
+		showSearchedPMDB(searchPMDB.getText());
+	}
+
+	private void getPms() {
+		if (isPmsGet) return;
+		for (hmmr_inst_model i : pmDbRows) {
+			periods.add(i.getPM_cycle1());
+		}
+		isPmsGet = true;
+	}
+
+	private void showSearchedPMDB(String pmRows) {
+
+		synchronized (pm_controller.class) {
+			if (pmRows.length() != 0) {
+				ObservableList<hmmr_inst_model> searchedRows = FXCollections.observableArrayList();
+				ObservableList<hmmr_inst_model> tmpSearch = FXCollections.observableArrayList();
+				tmpSearch.addAll(pmDbRows);
+				String[] searches = pmRows.split(",");
+
+				for (String search : searches) {
+					//If the search is OTV
+					if (periods.contains(search)) {
+						for (hmmr_inst_model i : tmpSearch) {
+							if (i.getPM_cycle1().equals(search)) {
+								searchedRows.add(i);
+							}
+						}
+					}
+					else {
+						for (hmmr_inst_model i : tmpSearch) {
+							if ((i.getnum_inst() != null && i.getnum_inst().contains(search)) || (i.Model_Type_task.get() != null && i.Model_Type_task.get().contains(search)) || (i.PM_name.get() != null && i.PM_name.get().contains(search))) {
+								searchedRows.add(i);
+							}
+						}
+					}
+					tmpSearch.clear();
+					tmpSearch.addAll(searchedRows);
+					searchedRows.clear();
+				}
+				table_inst.setItems(tmpSearch);
+			} else {
+				table_inst.setItems(pmDbRows);
+			}
+			table_inst.getColumns().get(0).setVisible(false);
+			table_inst.getColumns().get(0).setVisible(true);
+		}
+
 	}
 	
 	private void initData()
 	{
-		table_inst.setItems(qr._select_data_pminst());
+		setTableInst(qr._select_data_pminst());
 	}
 	
 	//Вызываем окно добавления записи к PM_Instruction
@@ -439,7 +504,7 @@ public class pm_inst_controller
 								Platform.runLater(new Runnable() {
 							        @Override
 							        public void run() {
-							        	table_inst.setItems(qr._select_data_pminst());
+							        	setTableInst(qr._select_data_pminst());
 										table_inst.getColumns().get(0).setVisible(false);
 								        table_inst.getColumns().get(0).setVisible(true);
 							        }

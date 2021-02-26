@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <ScrollPane fx:id="sp_inst" hbarPolicy="NEVER" prefHeight="828.0" prefWidth="1851.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.pm_inst_controller">
    <content>
       <Pane fx:id="pane_inst" prefHeight="828.0" prefWidth="1841.0">
@@ -26,6 +27,9 @@
                               <Image url="@haval.jpg" />
                            </image>
                         </ImageView>
+                         <VBox prefHeight="10"/>
+                         <TextField fx:id="searchPMDB" prefWidth="450" promptText="Фильтр поиска(введите условия поиска через запятую)" />
+                         <VBox prefHeight="10"/>
                         <Label fx:id="head_pm" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="1340.0" text="Редактирование таблицы PM Instruction">
                            <font>
                               <Font name="System Bold Italic" size="14.0" />
