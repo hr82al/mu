@@ -446,6 +446,8 @@ public class s_class {
 		ruEn.put("ъ", "");
 		ruEn.put("Ь", "");
 		ruEn.put("ь", "");
+		ruEn.put("Ы", "Y");
+		ruEn.put("ы", "y");
 		ruEn.put("Э", "E");
 		ruEn.put("э", "e");
 		ruEn.put("Ю", "Yu");
