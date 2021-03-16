@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
-import com.jfoenix.controls.JFXRippler;
 import javafx.scene.control.*;
 import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.ArrayUtils;
@@ -217,13 +216,12 @@ public class apwr_controller {
     public static boolean isApMultipleSelected;
     private ObservableList<hmmr_wp_model> wpRows;
     private ObservableList<hmmr_ap_model> apRows;
-    private String wpFilterText = "";
-    private String apFilterText = "";
+
     private static apwr_controller instance;
     private DynamicFilter wrDynamicFilter;
     private final HashSet<String> wpOTVs = new HashSet<>();
-    private final HashSet<String> apOTVs = new HashSet<>();
     private DynamicFilter apDynamicFilter;
+    private DynamicFilter wpDynamicFilter;
 
 
     @SuppressWarnings({"unchecked"})
@@ -1740,8 +1738,7 @@ public class apwr_controller {
         search_wp.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                wpFilterText = newValue;
-                showSearchedWP();
+                wpDynamicFilter.change(newValue);
             }
         });
         search_ap.textProperty().addListener(new ChangeListener<String>() {
@@ -1981,6 +1978,9 @@ public class apwr_controller {
         if (apDynamicFilter == null) {
             apDynamicFilter = new DynamicFilter(table_ap);
         }
+        if (wpDynamicFilter == null) {
+            wpDynamicFilter = new DynamicFilter(table_wp);
+        }
     }
 
 
@@ -2022,74 +2022,9 @@ public class apwr_controller {
         return instance;
     }
 
-    public void setWPItems(ObservableList<hmmr_wp_model> select_data_wp) {
-        wpRows = select_data_wp;
-        wpOTVs.clear();
-        for (hmmr_wp_model i : wpRows) {
-            wpOTVs.add(i.getOTV());
-        }
-        showSearchedWP();
-    }
 
-    private void showSearchedWP() {
-        synchronized (apwr_controller.class) {
-            if (wpFilterText.length() != 0) {
-                ObservableList<hmmr_wp_model> searchedRows = FXCollections.observableArrayList();
-                ObservableList<hmmr_wp_model> tmpSearch = FXCollections.observableArrayList();
-                tmpSearch.addAll(wpRows);
-                String[] searches = wpFilterText.split(",");
-                for (String search : searches) {
-                    //If wpSearch one upper letter search by shop
-                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
-                        for (hmmr_wp_model i : tmpSearch) {
-                            if (i.getEquip().charAt(0) == search.charAt(0)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                        //If the search is OTV
-                    } else if (search.equals("need select") || (search.length() <= 3 && wpOTVs.contains(search))) {
-                        for (hmmr_wp_model i : tmpSearch) {
-                            if (i.getOTV().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a number than search in PM
-                    else if (StringUtils.isNumeric(search)) {
-                        for (hmmr_wp_model i : tmpSearch) {
-                            if (i.getPM_Num().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a date
-                    else if (isDate(search)) {
-                        for (hmmr_wp_model i : tmpSearch) {
-                            if (i.getD_D().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    // else search in equipment and description
-                    else {
-                        for (hmmr_wp_model i : tmpSearch) {
-                            if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    tmpSearch.clear();
-                    tmpSearch.addAll(searchedRows);
-                    searchedRows.clear();
-                }
-                table_wp.setItems(tmpSearch);
-            } else {
-                table_wp.setItems(wpRows);
-            }
-            table_wp.getColumns().get(0).setVisible(false);
-            table_wp.getColumns().get(0).setVisible(true);
-        }
-    }
+
+
 
     private void newPWAPTasks() {
         //выгрузка создание и удаление новый записей
@@ -2275,6 +2210,10 @@ public class apwr_controller {
                 break;
             }
         }
+    }
+
+    public void setWPItems(ObservableList<hmmr_wp_model> items) {
+        wpDynamicFilter.update(items, search_wp.getText());
     }
 
     public void setTableAPItems(ObservableList<hmmr_ap_model> items) {

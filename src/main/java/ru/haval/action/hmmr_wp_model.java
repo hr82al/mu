@@ -1,8 +1,9 @@
 package ru.haval.action;
 
 import javafx.beans.property.SimpleStringProperty;
+import ru.haval.filter.WrTable;
 
-public class hmmr_wp_model {
+public class hmmr_wp_model implements WrTable {
 
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty PM_Num = new SimpleStringProperty();
@@ -240,5 +241,47 @@ public class hmmr_wp_model {
                 ", flag_tm='" + flag_tm.get() + '\'' +
                 ", icon='" + icon.get() + '\'' +
                 '}';
+    }
+
+    //Getters for dynamic filter
+
+    @Override
+    public String getOtv() {
+        return OTV.get();
+    }
+
+    @Override
+    public String getOtv_Isp() {
+        return OFT.get();
+    }
+
+    @Override
+    public String getPMC() {
+        return null;
+    }
+
+    @Override
+    public String getGroup_PM() {
+        return null;
+    }
+
+    @Override
+    public String getnum_inst() {
+        return Id.get();
+    }
+
+    @Override
+    public String getap_num() {
+        return PM_Num.get();
+    }
+
+    @Override
+    public String getdata() {
+        return Due_Date.get();
+    }
+
+    @Override
+    public String getshift_report() {
+        return Desc.get();
     }
 }

@@ -378,7 +378,7 @@ public class hmmr_ap_model implements WrTable {
 
     @Override
     public String getap_num() {
-        return null;
+        return Id.get();
     }
 
     @Override

@@ -3,9 +3,14 @@ package ru.haval.filter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
+import org.apache.commons.lang3.StringUtils;
+import ru.haval.action.apwr_controller;
+import ru.haval.action.hmmr_wp_model;
 import ru.haval.action.pm_controller;
 
 import java.util.HashSet;
+
+import static com.mysql.cj.protocol.a.MysqlTextValueDecoder.isDate;
 
 public class DynamicFilter {
     TableView<WrTable> table;
@@ -50,7 +55,6 @@ public class DynamicFilter {
                         }
                     } else {
                         for (WrTable i : tmpSearch) {
-
                             if ((i.getEquip() != null && i.getEquip().contains(search))
                                     || (i.getnum_inst() != null && i.getnum_inst().contains(search))
                                     || i.getap_num() != null && i.getap_num().contains(search)
