@@ -280,9 +280,7 @@ public class _query {
             ObservableList<hmmr_inst_model> list = FXCollections.observableArrayList();
 
             try {
-                String query = "select id,num_instruction,Creation_date,Last_edition_date,Link_instruction_PDF,Version,Model_Type_Task,PM_name,Type_PM,PM_Cycle1,PM_Cycle2,ON_Line_OFF_Line,"
-                        + "Power_ON_Power_OFF,Position,Src_Info,Src_Doc,Qty_Specialist,Prep_Work_Time,Work_Time,Admission_2,"
-                        + "Admission_3,Outfit_1,Outfit_2 from pm_inst where del_rec = 0;";
+                String query = "select id,num_instruction,Creation_date,Last_edition_date,Link_instruction_PDF,Version,Model_Type_Task,PM_name,Type_PM,PM_Cycle1,PM_Cycle2,ON_Line_OFF_Line,Power_ON_Power_OFF,Position,Src_Info,Src_Doc,Qty_Specialist,Prep_Work_Time,Work_Time,Admission_2, Admission_3,Outfit_1,Outfit_2 from pm_inst where del_rec = 0;";
 
                 cn.ConToDb();
                 stmt5 = cn.con.createStatement();

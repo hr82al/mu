@@ -38,7 +38,7 @@ public class DynamicFilter {
                     //If wpSearch one upper letter search by shop
                     if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
                         for (WrTable i : tmpSearch) {
-                            if (i.getEquip().charAt(0) == search.charAt(0)) {
+                            if (i.getEquip() != null && i.getEquip().charAt(0) == search.charAt(0)) {
                                 searchedRows.add(i);
                             }
                         }

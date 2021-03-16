@@ -20,7 +20,7 @@
          <children>
             <VBox fx:id="vbox_inst" alignment="TOP_CENTER" prefHeight="828.0" prefWidth="1837.0">
                <children>
-                  <HBox fx:id="hb1" alignment="CENTER" prefHeight="100.0" prefWidth="1644.0">
+                  <HBox fx:id="hb1" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="1644.0">
                      <children>
                         <ImageView fitHeight="70.0" fitWidth="219.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -30,7 +30,7 @@
                          <VBox prefHeight="10"/>
                          <TextField fx:id="searchPMDB" prefWidth="450" promptText="Фильтр поиска(введите условия поиска через запятую)" />
                          <VBox prefHeight="10"/>
-                        <Label fx:id="head_pm" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="1340.0" text="Редактирование таблицы PM Instruction">
+                        <Label fx:id="head_pm" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="400.0" text="Редактирование таблицы PM Instruction">
                            <font>
                               <Font name="System Bold Italic" size="14.0" />
                            </font>

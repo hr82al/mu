@@ -32,6 +32,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import ru.haval.filter.DynamicFilter;
 import ru.haval.share_class.s_class;
 
 public class pm_inst_controller
@@ -78,6 +79,7 @@ public class pm_inst_controller
 	boolean isPmsGet = false;
 	private static ObservableList<hmmr_inst_model> pmDbRows = FXCollections.observableArrayList();
 	private HashSet<String> periods = new HashSet<>();
+	private DynamicFilter dynamicFilter;
 
 	public pm_inst_controller()
 	{
@@ -87,6 +89,9 @@ public class pm_inst_controller
 	@FXML
 	public void initialize()
 	{
+		if (dynamicFilter == null) {
+			dynamicFilter = new DynamicFilter(table_inst);
+		}
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		Double screen_width = primaryScreenBounds.getWidth();
 		Double screen_hight = primaryScreenBounds.getHeight(); 
@@ -314,64 +319,16 @@ public class pm_inst_controller
 		searchPMDB.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				showSearchedPMDB(newValue);
+				dynamicFilter.change(newValue);
 			}
 		});
 	}
 
 	public void setTableInst(ObservableList<hmmr_inst_model> data) {
-		pmDbRows.clear();
-		pmDbRows.addAll(data);
-		getPms();
-		showSearchedPMDB(searchPMDB.getText());
+		dynamicFilter.update(data, searchPMDB.getText());
 	}
 
-	private void getPms() {
-		if (isPmsGet) return;
-		for (hmmr_inst_model i : pmDbRows) {
-			periods.add(i.getPM_cycle1());
-		}
-		isPmsGet = true;
-	}
 
-	private void showSearchedPMDB(String pmRows) {
-
-		synchronized (pm_controller.class) {
-			if (pmRows.length() != 0) {
-				ObservableList<hmmr_inst_model> searchedRows = FXCollections.observableArrayList();
-				ObservableList<hmmr_inst_model> tmpSearch = FXCollections.observableArrayList();
-				tmpSearch.addAll(pmDbRows);
-				String[] searches = pmRows.split(",");
-
-				for (String search : searches) {
-					//If the search is OTV
-					if (periods.contains(search)) {
-						for (hmmr_inst_model i : tmpSearch) {
-							if (i.getPM_cycle1().equals(search)) {
-								searchedRows.add(i);
-							}
-						}
-					}
-					else {
-						for (hmmr_inst_model i : tmpSearch) {
-							if ((i.getnum_inst() != null && i.getnum_inst().contains(search)) || (i.Model_Type_task.get() != null && i.Model_Type_task.get().contains(search)) || (i.PM_name.get() != null && i.PM_name.get().contains(search))) {
-								searchedRows.add(i);
-							}
-						}
-					}
-					tmpSearch.clear();
-					tmpSearch.addAll(searchedRows);
-					searchedRows.clear();
-				}
-				table_inst.setItems(tmpSearch);
-			} else {
-				table_inst.setItems(pmDbRows);
-			}
-			table_inst.getColumns().get(0).setVisible(false);
-			table_inst.getColumns().get(0).setVisible(true);
-		}
-
-	}
 	
 	private void initData()
 	{
