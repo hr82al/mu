@@ -66,7 +66,8 @@ DELETE FROM hmmr_action_plan WHERE id IN (SELECT * FROM tmp);
 
 
 SELECT * FROM hmmr_action_plan hap WHERE Otv = 'need select' and Due_Date BETWEEN '2020-01-01' AND '2020-10-31' ORDER BY hap.Otv_For_Task;
-
+#mysql param
+?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
 
 #Set pm executor by last hmmr_work_plan state
 UPDATE hmmr_pm hp

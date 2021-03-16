@@ -3,9 +3,6 @@ package ru.haval.filter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import org.apache.commons.lang3.StringUtils;
-import ru.haval.action.apwr_controller;
-import ru.haval.action.hmmr_wp_model;
 import ru.haval.action.pm_controller;
 
 import java.util.HashSet;

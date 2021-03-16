@@ -76,9 +76,6 @@ public class pm_inst_controller
 	public static ObservableList<TableColumn<hmmr_inst_model, ?>> columns_inst;
 	public static ObservableList<hmmr_inst_model> _table_update_inst = FXCollections.observableArrayList();
 	public static Stage pStage;
-	boolean isPmsGet = false;
-	private static ObservableList<hmmr_inst_model> pmDbRows = FXCollections.observableArrayList();
-	private HashSet<String> periods = new HashSet<>();
 	private DynamicFilter dynamicFilter;
 
 	public pm_inst_controller()
@@ -327,8 +324,6 @@ public class pm_inst_controller
 	public void setTableInst(ObservableList<hmmr_inst_model> data) {
 		dynamicFilter.update(data, searchPMDB.getText());
 	}
-
-
 	
 	private void initData()
 	{

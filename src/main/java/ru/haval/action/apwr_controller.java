@@ -18,7 +18,6 @@ import com.jfoenix.controls.JFXRadioButton;
 import javafx.scene.control.*;
 import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import ru.haval.application.Main;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
@@ -222,6 +221,7 @@ public class apwr_controller {
     private final HashSet<String> wpOTVs = new HashSet<>();
     private DynamicFilter apDynamicFilter;
     private DynamicFilter wpDynamicFilter;
+    private ResourceBundle lngBndl;
 
 
     @SuppressWarnings({"unchecked"})
@@ -837,6 +837,10 @@ public class apwr_controller {
             }
         });
 
+        table_ap.setOnKeyPressed(e -> {
+            initApButtons();
+        });
+
 		table_ap.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -1309,8 +1313,11 @@ public class apwr_controller {
 
         scl._style(add_wr);
 
-        add_wr.setOnAction(new EventHandler<ActionEvent>() {
+        table_ap.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            initApButtons();
+        });
 
+        add_wr.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
@@ -1319,13 +1326,7 @@ public class apwr_controller {
                     //даты для сортировки таблицы
                     before_date = fx_dp.toString(begin_data.getValue());
                     after_date = fx_dp.toString(last_data.getValue().plusDays(1));
-
-                    if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
-                        isApMultipleSelected = true;
-                    } else {
-                        isApMultipleSelected = false;
-                    }
-
+                    initApButtons();
                     addwr_start();
 
                 } catch (IOException e) {
@@ -1971,6 +1972,17 @@ public class apwr_controller {
         });
     }
 
+    private void initApButtons() {
+        if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
+            isApMultipleSelected = true;
+            add_wr.setText(lngBndl.getString("commit_several"));
+            System.out.println(lngBndl.getString("commit_several"));
+        } else {
+            isApMultipleSelected = false;
+            add_wr.setText(lngBndl.getString("add_wr"));
+        }
+    }
+
     private void initWrDynamicFilter() {
         if (wrDynamicFilter == null) {
             wrDynamicFilter = new DynamicFilter(table_wr);
@@ -2316,7 +2328,7 @@ public class apwr_controller {
     }
 
     private void lang_fun(String loc1, String loc2) {
-        ResourceBundle lngBndl = ResourceBundle
+        lngBndl = ResourceBundle
                 .getBundle("bundles.LangBundle", new Locale(loc1, loc2));
 
         type_ap.setText(lngBndl.getString("type_ap"));
