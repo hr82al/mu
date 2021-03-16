@@ -34,9 +34,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import ru.haval.filter.DynamicFilter;
 import ru.haval.share_class.s_class;
 
 public class pm_controller {
+
+    DynamicFilter dynamicFilter;
 
     @FXML
     TextField searchPMDB;
@@ -71,15 +74,12 @@ public class pm_controller {
     public static ObservableList<TableColumn<hmmr_pm_model, ?>> columns_pm;
     private String name_col = "Оборудование";
     public static ObservableList<hmmr_pm_model> _table_update_pm = FXCollections.observableArrayList();
-    private static ObservableList<hmmr_pm_model> pmDbRows = FXCollections.observableArrayList();
+    //private static ObservableList<hmmr_pm_model> pmDbRows = FXCollections.observableArrayList();
     //TableColumn<hmmr_pm_model, String> col_eq_id = new TableColumn<hmmr_pm_model, String>(name_col);
 
     public static int _Id_Dup_Pm = 0;
     public static String _num_inst_last = "NULL"; //Номер последней выбранной инструкции
 
-    private HashSet<String> pmOTVs = new HashSet<>();
-    private HashSet<String> pmPMCs = new HashSet<>();
-    private HashSet<String> pmPMGroups = new HashSet<>();
     public boolean responsible;
 
     boolean isPmsGet = false;
@@ -93,16 +93,6 @@ public class pm_controller {
         Double screen_hight = primaryScreenBounds.getHeight();
 
         table_pm.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        //sp_pm.setPrefWidth(screen_width - 230);
-        //sp_pm.setPrefHeight(screen_hight - 50);
-
-        //pane_pm.setPrefHeight(screen_hight - 50);
-        //vbox_pm.setPrefHeight(screen_hight - 50);
-
-        //	hbox_pm.setPrefHeight(screen_hight - 199);
-
-
 
         sp_pm.setPrefWidth(screen_width - 900);
         sp_pm.setPrefHeight(screen_hight - 50);
@@ -214,12 +204,6 @@ public class pm_controller {
         scl._style(close_pm);
         scl._style(upd_table_pm);
         scl._style(dup_rec_pm);
-        //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        //Double screen_width = primaryScreenBounds.getWidth();
-        //Double screen_hight = primaryScreenBounds.getHeight();
-
-        //sp_pm.setPrefWidth(screen_width - 230);
-        //sp_pm.setPrefHeight(screen_hight - 30);
 
         initData();
 
@@ -235,7 +219,6 @@ public class pm_controller {
         col_period.setCellValueFactory(CellData -> CellData.getValue().PMCProperty());
 //		col_eq_id.setCellValueFactory(CellData -> CellData.getValue().eq_idProperty());
         col_group_pm.setCellValueFactory(CellData -> CellData.getValue().Group_PMProperty());
-        //col_group_pm.setCellFactory(TooltippedTableCell.forTableColumn());
 
         //Shows the due date of howerd group in the pm editor
         col_group_pm.setCellFactory(new Callback<TableColumn<hmmr_pm_model, String>, TableCell<hmmr_pm_model, String>>() {
@@ -272,48 +255,12 @@ public class pm_controller {
                 };
             }
         });
-//		col_lm_pm.setCellValueFactory(CellData -> CellData.getValue().L_MProperty());
-//		col_os_pm.setCellValueFactory(CellData -> CellData.getValue().O_SProperty());
-//		col_equip_pm.setCellValueFactory(CellData -> CellData.getValue().EquipProperty());
-//		col_group_eq.setCellValueFactory(CellData -> CellData.getValue().Group_EQProperty());
-        //col_supplier_pm.setCellValueFactory(CellData -> CellData.getValue().S_SProperty());
-        //col_mtt_pm.setCellValueFactory(CellData -> CellData.getValue().MTTProperty());
-//		col_pmn_pm.setCellValueFactory(CellData -> CellData.getValue().PMNProperty());
-//		col_pmc_pm.setCellValueFactory(CellData -> CellData.getValue().PMCProperty());
-//		col_pmtype_pm.setCellValueFactory(CellData -> CellData.getValue().TPOTProperty());
         col_ool_pm.setCellValueFactory(CellData -> CellData.getValue().OOLProperty());
         col_otv_pm.setCellValueFactory(CellData -> CellData.getValue().OtvProperty());
         col_isp_pm.setCellValueFactory(CellData -> CellData.getValue().Otv_IspProperty());
 
-//		col_id_pm.setSortable(false);
-//		col_ninst_pm.setSortable(false);
-//		col_eq_id.setSortable(false);
-//		col_lm_pm.setSortable(false);
-//		col_os_pm.setSortable(false);
-//		col_equip_pm.setSortable(false);
-//		col_group_pm.setSortable(false);
-//		col_group_eq.setSortable(false);
-//		col_pmn_pm.setSortable(false);
-//		col_pmc_pm.setSortable(false);
-//		col_pmtype_pm.setSortable(false);
-//		col_ool_pm.setSortable(false);
-//		col_otv_pm.setSortable(false);
-//		col_days_exp.setSortable(false);
-
         table_pm.setEditable(true);
         final ObservableList<TableColumn<hmmr_pm_model, ?>> columns = table_pm.getColumns();
-//		col_eq_id.setCellValueFactory(
-//                new Callback<TableColumn.CellDataFeatures<hmmr_pm_model, String>, ObservableValue<String>>() {
-//
-//                    @Override
-//                    public ObservableValue<String> call(TableColumn.CellDataFeatures<hmmr_pm_model, String> arg0) {
-//                        hmmr_pm_model data = arg0.getValue();
-//                        return new SimpleObjectProperty<String>(qr._select_fillpm_equip(data.geteq_id(), "hmmr_pm"));
-//                    }
-//
-//                });
-
-        //columns.add(col_eq_id);
 
         //Вызываем окно обновления по двойному клику на строке
         table_pm.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -341,15 +288,12 @@ public class pm_controller {
             }
         });
 
+        table_pm.setOnKeyPressed( e -> {
+            changeButtonLabels();
+        });
+
         table_pm.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (table_pm.getSelectionModel().getSelectedItems().size() > 1) {
-                upd_pm.setText(lngBndl.getString("chg_exec"));
-                add_ap_pm.setText(lngBndl.getString("chg_resp"));
-            }
-            else {
-                upd_pm.setText(lngBndl.getString("upd_wr"));
-                add_ap_pm.setText(lngBndl.getString("add_ap_pm"));
-            }
+            changeButtonLabels();
         });
         add_pm.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -396,7 +340,6 @@ public class pm_controller {
                 hmmr_pm_model _ccl = table_pm.getSelectionModel().getSelectedItem();
 
                 alert.setHeaderText("Вы действительно хотите удалить запись № = " + _ccl.getId() + "?");
-                //alert.setContentText("C:/MyFile.txt");
 
                 // option != null.
                 Optional<ButtonType> option = alert.showAndWait();
@@ -437,47 +380,13 @@ public class pm_controller {
 
                     hmmr_pm_model selectedItem = table_pm.getSelectionModel().getSelectedItem();
 
-                    //String sql_rez = qr._select_for_pmplan(_ccl.getGroup_PM());
-                    //for(int j = 0; j < qr._select_data_pmplan().size(); j++) {
                     if (!selectedItem.getGroup_PM().equals("0")) {
                         if (!scl.parser_sql_str(qr._select_for_pmgroup(selectedItem.getGroup_PM()), 0).equals(selectedItem.getGroup_PM())) {
                             try {
                                 String before_pars = qr._select_for_pmplan(selectedItem.getGroup_PM()).get(0);
-//                            String pereodic = scl.parser_sql_str(before_pars, 0);
                                 String b_date = scl.parser_sql_str(before_pars, 1);
                                 if (!b_date.equals("2018-10-10")) {
                                     String pmGroup = selectedItem.getGroup_PM();
-                                /*String e_date = scl.parser_sql_str(before_pars, 2);
-                                @SuppressWarnings("unused")
-                                String shop = scl.parser_sql_str(before_pars, 3);
-                                Otv_for_task = scl.parser_sql_str(before_pars, 4);
-
-                                int pm_group = Integer.parseInt(_ccl.getGroup_PM());
-
-                                int _count = Integer.parseInt(pereodic);
-                                int _cnt = _count;
-
-                                int day_bdate = fx_dp.fromString(b_date).getDayOfMonth();
-                                int month_bdate = fx_dp.fromString(b_date).getMonthValue();
-                                int year_bdate = fx_dp.fromString(b_date).getYear();
-
-                                int day_edate = fx_dp.fromString(e_date).getDayOfMonth();
-                                int month_edate = fx_dp.fromString(e_date).getMonthValue();
-                                int year_edate = fx_dp.fromString(e_date).getYear();
-
-                                //Находим количество дней в течении которых должно выполняться ППР, а затем находим сколько надо создать записей в таблице hmmr_pm_year
-                                int gen_day = Math.abs(day_edate - day_bdate);
-                                int gen_month = Math.abs(month_edate - month_bdate) * 30;
-                                int gen_year = Math.abs(year_edate - year_bdate) * 365;
-
-                                int _general = Math.round((gen_day + gen_month + gen_year) / _count);
-
-                                for (int i = 0; i < _general; i++) {
-                                    LocalDate days = LocalDate.of(year_bdate, month_bdate, day_bdate).plusDays(_count);//Расчитываем даты когда заявка должна быть выполнена
-                                    qr._insert_pm_year(_ccl.getId(), pm_group, days, Otv_for_task);
-                                    _count = _cnt + _count;
-                                }
-                                qr._update_week_year(pm_group);*/
 
                                     LocalDate beginDate = LocalDate.parse(b_date);
                                     String periodID = qr.getGroupCycleByGroup(selectedItem.getGroup_PM()).PM_Cycle;
@@ -532,9 +441,27 @@ public class pm_controller {
         searchPMDB.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                showSearchedPMDB(newValue);
+//                initDynamicFilter();
+                dynamicFilter.change(newValue);
             }
         });
+    }
+
+    private void initDynamicFilter() {
+        if (dynamicFilter == null) {
+            dynamicFilter = new DynamicFilter(table_pm);
+        }
+    }
+
+    private void changeButtonLabels() {
+        if (table_pm.getSelectionModel().getSelectedItems().size() > 1) {
+            upd_pm.setText(lngBndl.getString("chg_exec"));
+            add_ap_pm.setText(lngBndl.getString("chg_resp"));
+        }
+        else {
+            upd_pm.setText(lngBndl.getString("upd_wr"));
+            add_ap_pm.setText(lngBndl.getString("add_ap_pm"));
+        }
     }
 
     private void updateResp() {
@@ -575,79 +502,15 @@ public class pm_controller {
         }
     }
 
-    private void showSearchedPMDB(String pmRows) {
-
-        synchronized (pm_controller.class) {
-            if (pmRows.length() != 0) {
-                ObservableList<hmmr_pm_model> searchedRows = FXCollections.observableArrayList();
-                ObservableList<hmmr_pm_model> tmpSearch = FXCollections.observableArrayList();
-                tmpSearch.addAll(pmDbRows);
-                String[] searches = pmRows.split(",");
-
-                for (String search : searches) {
-                    //If the search is OTV
-                    if (pmOTVs.contains(search)) {
-                        for (hmmr_pm_model i : tmpSearch) {
-                            if (i.getOtv().equals(search) || i.getOtv_Isp().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    } else if (pmPMCs.contains(search)) {
-                        for (hmmr_pm_model i : tmpSearch) {
-                            if (i.getPMC().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    } else if (pmPMGroups.contains(search)) {
-                        for (hmmr_pm_model i : tmpSearch) {
-                            if (i.getGroup_PM().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    } else {
-                        for (hmmr_pm_model i : tmpSearch) {
-
-                            if ((i.getEquip() != null && i.getEquip().contains(search)) || (i.getnum_inst() != null && i.getnum_inst().contains(search))) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    tmpSearch.clear();
-                    tmpSearch.addAll(searchedRows);
-                    searchedRows.clear();
-                }
-                table_pm.setItems(tmpSearch);
-            } else {
-                table_pm.setItems(pmDbRows);
-            }
-            table_pm.getColumns().get(0).setVisible(false);
-            table_pm.getColumns().get(0).setVisible(true);
-        }
-
-    }
 
     private void initData() {
+        initDynamicFilter();
         setPmItems(qr._select_data_pm2());
     }
 
     public void setPmItems(ObservableList<hmmr_pm_model> select_data_pm2) {
-        pmDbRows.clear();
-        pmDbRows.addAll(select_data_pm2);
-        getPms();
-        showSearchedPMDB(searchPMDB.getText());
+        dynamicFilter.update(select_data_pm2, searchPMDB.getText());
     }
-
-    private void getPms() {
-        if (isPmsGet) return;
-        for (hmmr_pm_model i : pmDbRows) {
-            pmOTVs.add(i.getOtv());
-            pmOTVs.add(i.getOtv_Isp());
-            pmPMCs.add(i.getPMC());
-            pmPMGroups.add(i.getGroup_PM());
-        }
-        isPmsGet = true;
-    }
-
 
     private void func_upd(String str) {
 

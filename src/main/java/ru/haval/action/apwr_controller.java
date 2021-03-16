@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import com.jfoenix.controls.JFXRippler;
 import javafx.scene.control.*;
 import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.ArrayUtils;
@@ -60,6 +61,7 @@ import net.sf.jasperreports.engine.JRException;
 import report.ExportToExcel;
 import report.PrintReport;
 import ru.haval.filter.APFilter;
+import ru.haval.filter.DynamicFilter;
 import ru.haval.filter.IFilter;
 import ru.haval.filter.WRFilter;
 import ru.haval.share_class.TooltippedTableCell;
@@ -215,20 +217,19 @@ public class apwr_controller {
     public static boolean isApMultipleSelected;
     private ObservableList<hmmr_wp_model> wpRows;
     private ObservableList<hmmr_ap_model> apRows;
-    private ObservableList<hmmr_wr_model> wrRows;
-    private HashSet<String> wpOTVs = new HashSet<>();
-    private HashSet<String> apOTVs = new HashSet<>();
-    private HashSet<String> wrOTVs = new HashSet<>();
     private String wpFilterText = "";
     private String apFilterText = "";
-    private String wrFilterText = "";
     private static apwr_controller instance;
-
+    private DynamicFilter wrDynamicFilter;
+    private final HashSet<String> wpOTVs = new HashSet<>();
+    private final HashSet<String> apOTVs = new HashSet<>();
+    private DynamicFilter apDynamicFilter;
 
 
     @SuppressWarnings({"unchecked"})
     @FXML
     public void initialize() {
+        initWrDynamicFilter();
         instance = this;
         wr_total_amount.textProperty().bind(hmmr_wr_model.totalProperty());
         ap_total_amount.textProperty().bind(hmmr_ap_model.totalProperty());
@@ -1746,16 +1747,15 @@ public class apwr_controller {
         search_ap.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                apFilterText = newValue;
-                showSearchedAP();
+                apDynamicFilter.change(newValue);
             }
         });
 
         search_wr.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                wrFilterText = newValue;
-                showSearchedWR();
+                wrDynamicFilter.change(newValue);
+                //showSearchedWR();
             }
         });
 
@@ -1974,65 +1974,16 @@ public class apwr_controller {
         });
     }
 
-    private void showSearchedWR() {
-        synchronized (apwr_controller.class) {
-            if (wrFilterText.length() != 0) {
-                ObservableList<hmmr_wr_model> searchedRows = FXCollections.observableArrayList();
-                ObservableList<hmmr_wr_model> tmpSearch = FXCollections.observableArrayList();
-                tmpSearch.addAll(wrRows);
-                String[] searches = wrFilterText.split(",");
-                for (String search : searches) {
-                    //If wpSearch one upper letter search by shop
-                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
-                        for (hmmr_wr_model i : tmpSearch) {
-                            if (i.getequip().charAt(0) == search.charAt(0)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                        //If the search is OTV
-                    } else if (search.equals("need select") || (search.length() <= 3 && wrOTVs.contains(search))) {
-                        for (hmmr_wr_model i : tmpSearch) {
-                            if (i.getresp().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a number than search in AP or WP
-                    else if (StringUtils.isNumeric(search)) {
-                        for (hmmr_wr_model i : tmpSearch) {
-                            if (i.getap_num().contains(search) || i.getId().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a date
-                    else if (isDate(search)) {
-                        for (hmmr_wr_model i : tmpSearch) {
-                            if (i.getdata().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    // else search in equipment and description
-                    else {
-                        for (hmmr_wr_model i : tmpSearch) {
-                            if (i.getequip().contains(search) || i.getshift_report().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    tmpSearch.clear();
-                    tmpSearch.addAll(searchedRows);
-                    searchedRows.clear();
-                }
-                table_wr.setItems(tmpSearch);
-            } else {
-                table_wr.setItems(wrRows);
-            }
-            table_wr.getColumns().get(0).setVisible(false);
-            table_wr.getColumns().get(0).setVisible(true);
+    private void initWrDynamicFilter() {
+        if (wrDynamicFilter == null) {
+            wrDynamicFilter = new DynamicFilter(table_wr);
+        }
+        if (apDynamicFilter == null) {
+            apDynamicFilter = new DynamicFilter(table_ap);
         }
     }
+
+
 
     public void updateAPTable() {
         initSops();
@@ -2080,65 +2031,6 @@ public class apwr_controller {
         showSearchedWP();
     }
 
-    private void showSearchedAP() {
-        synchronized (apwr_controller.class) {
-            if (apFilterText.length() != 0) {
-                ObservableList<hmmr_ap_model> searchedRows = FXCollections.observableArrayList();
-                ObservableList<hmmr_ap_model> tmpSearch = FXCollections.observableArrayList();
-                tmpSearch.addAll(apRows);
-                String[] searches = apFilterText.split(",");
-                for (String search : searches) {
-                    //If wpSearch one upper letter search by shop
-                    if (search.length() == 1 && Character.isUpperCase(search.charAt(0))) {
-                        for (hmmr_ap_model i : tmpSearch) {
-                            if (i.getEquip().charAt(0) == search.charAt(0)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                        //If the search is OTV
-                    } else if (search.equals("need select") || (search.length() <= 3 && apOTVs.contains(search))) {
-                        for (hmmr_ap_model i : tmpSearch) {
-                            if (i.getOTV().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a number than search in PM
-                    else if (StringUtils.isNumeric(search)) {
-                        for (hmmr_ap_model i : tmpSearch) {
-                            if (i.getPM_Num().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    //If the search is a date
-                    else if (isDate(search)) {
-                        for (hmmr_ap_model i : tmpSearch) {
-                            if (i.getD_D().equals(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    // else search in equipment and description
-                    else {
-                        for (hmmr_ap_model i : tmpSearch) {
-                            if (i.getEquip().contains(search) || i.getDesc().contains(search)) {
-                                searchedRows.add(i);
-                            }
-                        }
-                    }
-                    tmpSearch.clear();
-                    tmpSearch.addAll(searchedRows);
-                    searchedRows.clear();
-                }
-                table_ap.setItems(tmpSearch);
-            } else {
-                table_ap.setItems(apRows);
-            }
-            table_ap.getColumns().get(0).setVisible(false);
-            table_ap.getColumns().get(0).setVisible(true);
-        }
-    }
     private void showSearchedWP() {
         synchronized (apwr_controller.class) {
             if (wpFilterText.length() != 0) {
@@ -2386,22 +2278,11 @@ public class apwr_controller {
     }
 
     public void setTableAPItems(ObservableList<hmmr_ap_model> items) {
-        apRows = items;
-        apOTVs.clear();
-        for (hmmr_ap_model i : apRows) {
-            apOTVs.add(i.getOTV());
-        }
-
-        showSearchedAP();
+        apDynamicFilter.update(items, search_ap.getText());
     }
 
     public void setTableWRItems(ObservableList<hmmr_wr_model> items) {
-        wrRows = items;
-        wrOTVs.clear();
-        for (hmmr_wr_model i : wrRows) {
-            wrOTVs.add(i.getresp());
-        }
-        showSearchedWR();
+        wrDynamicFilter.update(items, search_wr.getText());
     }
 
 

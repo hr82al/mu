@@ -3,9 +3,10 @@ package ru.haval.action;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
+import ru.haval.filter.WrTable;
 
 
-public class hmmr_ap_model {
+public class hmmr_ap_model implements WrTable {
 
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty PM_Num = new SimpleStringProperty();
@@ -345,5 +346,48 @@ public class hmmr_ap_model {
                 ", icon='" + icon.get() + '\'' +
                 ", icon_at='" + icon_at.get() + '\'' +
                 '}';
+    }
+
+    //getters for dynamic filter
+
+
+    @Override
+    public String getOtv() {
+        return OTV.get();
+    }
+
+    @Override
+    public String getOtv_Isp() {
+        return OFT.get();
+    }
+
+    @Override
+    public String getPMC() {
+        return null;
+    }
+
+    @Override
+    public String getGroup_PM() {
+        return null;
+    }
+
+    @Override
+    public String getnum_inst() {
+        return PM_Num.get();
+    }
+
+    @Override
+    public String getap_num() {
+        return null;
+    }
+
+    @Override
+    public String getdata() {
+        return D_DProperty().get();
+    }
+
+    @Override
+    public String getshift_report() {
+        return Desc.get();
     }
 }

@@ -1,25 +1,31 @@
 package ru.haval.action;
 
 import javafx.beans.property.SimpleStringProperty;
+import ru.haval.filter.WrTable;
 
-public class hmmr_pm_model
+public class hmmr_pm_model implements WrTable
 {
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty user_id = new SimpleStringProperty();
+	//hmmr_pm.Instruction_num
 	public SimpleStringProperty num_instruction = new SimpleStringProperty();
 	public SimpleStringProperty eq_id = new SimpleStringProperty();
 	public SimpleStringProperty Group_PM = new SimpleStringProperty();
 	public SimpleStringProperty Line_Machine = new SimpleStringProperty();
 	public SimpleStringProperty Operation_Station = new SimpleStringProperty();
+    //hmmr_work_recording..Equipment_Full The shot ID of equipment
 	public SimpleStringProperty Equipment = new SimpleStringProperty();
 	public SimpleStringProperty Group_EQ = new SimpleStringProperty();
 	public SimpleStringProperty Station_Supplier = new SimpleStringProperty();
 	public SimpleStringProperty Model_Type_Task = new SimpleStringProperty();
 	public SimpleStringProperty PM_Name = new SimpleStringProperty();
+	//hmmr_group_cycle.PM_Cycle ID of the cycle execution for example "TO3"
 	public SimpleStringProperty PM_Cycle = new SimpleStringProperty();
 	public SimpleStringProperty Type_of_PM_Org_Tech = new SimpleStringProperty();
+	//hmmr_pm.PM_Resp The ID of the one who control execution of this PM
 	public SimpleStringProperty Otv = new SimpleStringProperty();
 	public SimpleStringProperty OnOff_Line = new SimpleStringProperty();
+	//hmmr_pm.PM_Executor The ID of the worker who do this task.
 	public SimpleStringProperty Otv_Isp = new SimpleStringProperty();
 	
 	public hmmr_pm_model()
@@ -293,5 +299,20 @@ public class hmmr_pm_model
                 ", Otv='" + Otv.get() + '\'' +
                 ", Otv_Isp='" + Otv_Isp.get() + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getap_num() {
+        return null;
+    }
+
+    @Override
+    public String getdata() {
+        return null;
+    }
+
+    @Override
+    public String getshift_report() {
+        return OnOff_Line.get();
     }
 }

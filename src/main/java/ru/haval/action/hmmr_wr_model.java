@@ -2,19 +2,23 @@ package ru.haval.action;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import ru.haval.filter.WrTable;
 
-public class hmmr_wr_model {
+public class hmmr_wr_model implements WrTable {
 
     public static SimpleBooleanProperty hasConfirmed = new SimpleBooleanProperty(true);
 
 	public SimpleStringProperty Id = new SimpleStringProperty();
+	//hmmr_work_recording.Task_Description
 	public SimpleStringProperty shift_report = new SimpleStringProperty();
 	public SimpleStringProperty req_action = new SimpleStringProperty();
 	public SimpleStringProperty actual_time = new SimpleStringProperty();
 	public SimpleStringProperty actual_time1 = new SimpleStringProperty();
 	public SimpleStringProperty data = new SimpleStringProperty();
+	//hmmr_work_recording.Equipment_Full The shot ID of equipment
 	public SimpleStringProperty equip = new SimpleStringProperty();
 	public SimpleStringProperty record_type = new SimpleStringProperty();
+	//Task_Resp_ID The ID of the one who did task
 	public SimpleStringProperty resp = new SimpleStringProperty();
 	public SimpleStringProperty status = new SimpleStringProperty();
 	private SimpleBooleanProperty qty = new SimpleBooleanProperty();
@@ -24,6 +28,7 @@ public class hmmr_wr_model {
 	public SimpleStringProperty icon_at = new SimpleStringProperty();
 
     public SimpleStringProperty OFT_ID = new SimpleStringProperty();
+    //hap.Otv_For_Task The ID of the one who control execution of the task
     public SimpleStringProperty OFT = new SimpleStringProperty();
     public SimpleStringProperty iconATAddress = new SimpleStringProperty();
 
@@ -332,5 +337,35 @@ public class hmmr_wr_model {
                 ", OFT_ID= " + OFT_ID.get() +
                 ", OFT=" + OFT.get() +
                 '}';
+    }
+
+    @Override
+    public String getOtv() {
+        return OFT.get();
+    }
+
+    @Override
+    public String getOtv_Isp() {
+        return resp.get();
+    }
+
+    @Override
+    public String getPMC() {
+        return null;
+    }
+
+    @Override
+    public String getGroup_PM() {
+        return null;
+    }
+
+    @Override
+    public String getEquip() {
+        return equip.get();
+    }
+
+    @Override
+    public String getnum_inst() {
+        return null;
     }
 }
