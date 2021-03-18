@@ -888,11 +888,7 @@ public class apwr_controller {
                         func_upd(table_ap.getSelectionModel().getSelectedItem().getId());
                     if (conn_connector.USER_ROLE.equals("Technics")) {
                         try {
-                            if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
-                                isApMultipleSelected = true;
-                            } else {
-                                isApMultipleSelected = false;
-                            }
+                            initApButtons();
                             addwr_start();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -1976,7 +1972,6 @@ public class apwr_controller {
         if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
             isApMultipleSelected = true;
             add_wr.setText(lngBndl.getString("commit_several"));
-            System.out.println(lngBndl.getString("commit_several"));
         } else {
             isApMultipleSelected = false;
             add_wr.setText(lngBndl.getString("add_wr"));
@@ -2475,16 +2470,30 @@ public class apwr_controller {
 
     //Вызываем окно записи для WR
     protected void addwr_start() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("add_rec_wr.fxml"));
-        Scene scene = new Scene(root);
-        Stage stage_set = new Stage();
-        stage_set.setUserData(this);
-        stage_set.initModality(Modality.WINDOW_MODAL);
-        stage_set.initOwner(conn_connector.getPrimaryStage());
-        stage_set.setTitle("M&U - Add Record Window");
-        stage_set.setResizable(false);
-        stage_set.setScene(scene);
-        stage_set.show();
+        if (isApMultipleSelected) {
+            Parent root = FXMLLoader.load(getClass().getResource("/ru/haval/application/new_wrs.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage_set = new Stage();
+            stage_set.setUserData(this);
+            stage_set.initModality(Modality.WINDOW_MODAL);
+            stage_set.initOwner(conn_connector.getPrimaryStage());
+            stage_set.setTitle("M&U - Add Records Window");
+            stage_set.setResizable(false);
+            stage_set.setScene(scene);
+            stage_set.show();
+        } else {
+            Parent root = FXMLLoader.load(getClass().getResource("add_rec_wr.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage_set = new Stage();
+            stage_set.setUserData(this);
+            stage_set.initModality(Modality.WINDOW_MODAL);
+            stage_set.initOwner(conn_connector.getPrimaryStage());
+            stage_set.setTitle("M&U - Add Record Window");
+            stage_set.setResizable(false);
+            stage_set.setScene(scene);
+            stage_set.show();
+        }
+
     }
 
 

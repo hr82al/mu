@@ -2271,7 +2271,6 @@ public class _query {
             String query = "INSERT INTO hmmr_work_recording (ap_num, user_number, FL_WSH, FL_Group, FL_Line, FL_Station, FL_Equipment, Equipment_Full, Record_Type, CM_Work_Time, Task_Resp_ID, _Resp2, _Resp3, _Resp4, WR_Executor_Confirmed, Task_Description, Task_Report, WR_Begin_Date, _Actual_Date_2, _Actual_Date_3, _Actual_Date_4, CM_DownTime, WR_End_Date, _Actual_Date2, _Actual_Date3, _Actual_Date4, WR_Work_Time, _Actual_Time2, _Actual_Time3, _Actual_Time4, WR_Work_Time_Begin, _Hours1_2, _Hours1_3, _Hours1_4, WR_Work_Time_End, _Hours2_2, _Hours2_3, _Hours2_4, CM_Date_Begin, CM_Date_End, CM_Time_Begin, CM_Time_End, Activity_Type, _Resp5, _Resp6, _Resp7, _Resp8, _Resp9, _Actual_Date_5, _Actual_Date_6, _Actual_Date_7, _Actual_Date_8, _Actual_Date_9, _Actual_Date5, _Actual_Date6, _Actual_Date7, _Actual_Date8, _Actual_Date9, _Actual_Time5, _Actual_Time6, _Actual_Time7, _Actual_Time8, _Actual_Time9, _Hours1_5, _Hours1_6, _Hours1_7, _Hours1_8, _Hours1_9, _Hours2_5, _Hours2_6, _Hours2_7, _Hours2_8, _Hours2_9) VALUES (" + "'" + ap_num + "'" + "," + "'" + userid + "'" + "," + "'" + WSH + "'" + "," + "'" + Group_EQ + "'" + "," + "'" + Line + "'" + "," + "'" + Station + "'" + "," + "'" + Equip + "'" + "," + "'" + equip + "'" + "," + "'" + record_type + "'" + "," + "'" + wt + "'" + "," + "'" + resp + "'" + "," + "'" + resp1 + "'" + "," + "'" + resp2 + "'" + "," + "'" + resp3 + "'" + "," + "'" + status_wr + "'" + "," + "'" + shift_report + "'" + "," + "'" + req_action + "'" + "," + "'" + actual_date + "'" + "," + "'" + actual_date_2 + "'" + "," + "'" + actual_date_3 + "'" + "," + "'" + actual_date_4 + "'" + "," + "'" + actual_time + "'" + "," + "'" + actual_date1 + "'" + "," + "'" + actual_date2 + "'" + "," + "'" + actual_date3 + "'" + "," + "'" + actual_date4 + "'" + "," + "'" + actual_time1 + "'" + "," + "'" + actual_time2 + "'" + "," + "'" + actual_time3 + "'" + "," + "'" + actual_time4 + "'" + "," + "'" + hours1 + "'" + "," + "'" + hours1_2 + "'" + "," + "'" + hours1_3 + "'" + "," + "'" + hours1_4 + "'" + "," + "'" + hours2 + "'" + "," + "'" + hours2_2 + "'" + "," + "'" + hours2_3 + "'" + "," + "'" + hours2_4 + "'" + "," + "'" + b_gdw + "'" + "," + "'" + e_gdw + "'" + "," + "'" + b_gtw + "'" + "," + "'" + e_gtw + "'" + "," + "'" + icon_at + "'" + "," + "'" + _Resp4 + "'" + "," + "'" + _Resp5 + "'" + "," + "'" + _Resp6 + "'" + "," + "'" + _Resp7 + "'" + "," + "'" + _Resp8 + "'" + "," + "'" + _Actual_Date_5 + "'" + "," + "'" + _Actual_Date_6 + "'" + "," + "'" + _Actual_Date_7 + "'" + "," + "'" + _Actual_Date_8 + "'" + "," + "'" + _Actual_Date_9 + "'" + "," + "'" + _Actual_Date5 + "'" + "," + "'" + _Actual_Date6 + "'" + "," + "'" + _Actual_Date7 + "'" + "," + "'" + _Actual_Date8 + "'" + "," + "'" + _Actual_Date9 + "'" + "," + "'" + _Actual_Time5 + "'" + "," + "'" + _Actual_Time6 + "'" + "," + "'" + _Actual_Time7 + "'" + "," + "'" + _Actual_Time8 + "'" + "," + "'" + _Actual_Time9 + "'" + "," + "'" + _Hours1_5 + "'" + "," + "'" + _Hours1_6 + "'" + "," + "'" + _Hours1_7 + "'" + "," + "'" + _Hours1_8 + "'" + "," + "'" + _Hours1_9 + "'" + "," + "'" + _Hours2_5 + "'" + "," + "'" + _Hours2_6 + "'" + "," + "'" + _Hours2_7 + "'" + "," + "'" + _Hours2_8 + "'" + "," + "'" + _Hours2_9 + "'" + ");";
 
 
-
             try {
                 cn.ConToDb();
                 stmt = cn.con.createStatement();
@@ -10257,6 +10256,40 @@ public class _query {
                 } catch (SQLException se) { /*can't do anything */ }
             }
             return hpm;
+        }
+    }
+
+    public String[] dataForAddWrByApId(String ap_num) {
+        synchronized (_query.class) {
+            String [] res = new String[11];
+            hmmr_ps_model hpm = new hmmr_ps_model();
+            try {
+                String query = "SELECT hms.user_id as user_number, hps.FL03_Shop_s as FL_WSH, hps.FL04_Group_s as FL_Group, hps.FL05_Line_s as FL_Line, hps.FL06_Station_s as FL_Station, hps.FL07_Equipment_s as FL_Equipment, hap.Equipment as Equipment_Full, hap.Type as Record_Type,hap.Otv Task_Resp_ID , hap.Description as Task_Description, hap.Icon_AT as Activity_Type FROM hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON  hap.Otv = hms.ID INNER JOIN hmmr_pm hp ON hap.PM_Num = hp.id INNER JOIN hmmr_plant_structure hps ON hp.Eq_ID = hps.id WHERE hap.id = " + ap_num + ";";
+
+
+                cn.ConToDb();
+                stmt12 = cn.con.createStatement();
+                rs12 = stmt12.executeQuery(query);
+                if (rs12.next()) {
+                    for (int i = 0; i < res.length; i++) {
+                        res[i] = rs12.getString(i + 1);
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return res;
         }
     }
 }

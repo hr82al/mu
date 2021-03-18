@@ -29,6 +29,11 @@ public class hmmr_ap_model implements WrTable {
     public SimpleStringProperty priorDescription = new SimpleStringProperty();
     public SimpleStringProperty ATDescription = new SimpleStringProperty();
 
+    public SimpleStringProperty beginDate = new SimpleStringProperty();
+    public SimpleStringProperty endDate = new SimpleStringProperty();
+    public SimpleStringProperty beginTime = new SimpleStringProperty();
+    public SimpleStringProperty endTime = new SimpleStringProperty();
+
     private Button oft;
 	private Button tm;
 
@@ -346,6 +351,55 @@ public class hmmr_ap_model implements WrTable {
                 ", icon='" + icon.get() + '\'' +
                 ", icon_at='" + icon_at.get() + '\'' +
                 '}';
+    }
+    //getters and setters for make work records
+
+    public String getBeginDate() {
+        return beginDate.get();
+    }
+
+    public SimpleStringProperty beginDateProperty() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate.set(beginDate);
+    }
+
+    public String getEndDate() {
+        return endDate.get();
+    }
+
+    public SimpleStringProperty endDateProperty() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate.set(endDate);
+    }
+
+    public String getBeginTime() {
+        return beginTime.get();
+    }
+
+    public SimpleStringProperty beginTimeProperty() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime.set(beginTime);
+    }
+
+    public String getEndTime() {
+        return endTime.get();
+    }
+
+    public SimpleStringProperty endTimeProperty() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime.set(endTime);
     }
 
     //getters for dynamic filter

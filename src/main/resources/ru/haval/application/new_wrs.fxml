@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane fx:id="sp_pm" hbarPolicy="NEVER" prefHeight="480.0" prefWidth="900.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.AddNewWrsController">
+   <content>
+      <Pane fx:id="pane_pm" layoutX="-41.0" prefHeight="480.0" prefWidth="900.0">
+         <children>
+            <VBox fx:id="vbox_pm" prefHeight="480.0" prefWidth="900.0">
+               <children>
+                  <HBox fx:id="hb1" alignment="CENTER" prefHeight="51.0" prefWidth="900.0">
+                     <children>
+
+
+                           <ImageView fitHeight="70.0" fitWidth="219.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@haval.jpg" />
+                              </image>
+                           </ImageView>
+                           <VBox prefHeight="10" />
+                           <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="451.0" text="Выполнить несколько PM">
+                              <font>
+                                 <Font name="System Bold Italic" size="14.0" />
+                              </font>
+                           </Label>
+
+                     </children>
+                  </HBox>
+
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <HBox minWidth="20" />
+                        <Label text="Дата начала: " />
+                        <HBox minWidth="20" />
+                        <DatePicker fx:id="beginDate" />
+                        <HBox minWidth="20" />
+                        <Label text="Время начала: " />
+                        <HBox minWidth="20" />
+                        <JFXTimePicker fx:id="beginTime" />
+                        <HBox minWidth="20" />
+                     </children>
+                  </HBox>
+                  <VBox minHeight="10" />
+                  <HBox alignment="CENTER_LEFT">
+                     <HBox minWidth="20" />
+                     <TextArea fx:id="report" editable="true" prefHeight="80" prefWidth="860" promptText="Введите что сделано" />
+                     <HBox minWidth="20" />
+                  </HBox>
+
+                  <VBox minHeight="20" />
+                  <HBox fx:id="hb2" prefHeight="231.0" prefWidth="900.0">
+                     <children>
+
+                        <TableView fx:id="table_ap" prefHeight="323.0" prefWidth="860.0">
+                           <columns>
+                              <TableColumn fx:id="desc_ap" prefWidth="205.0" text="Описание" />
+                              <TableColumn fx:id="dd_ap" minWidth="0.0" prefWidth="70.0" text="Due Date" />
+                              <TableColumn fx:id="equip_ap" prefWidth="170.0" sortable="false" text="Оборудование" />
+                              <TableColumn fx:id="begin_date" prefWidth="105.0" sortable="false" text="Дата начала" />
+                              <TableColumn fx:id="begin_time" prefWidth="95.0" sortable="false" text="Время начала" />
+                              <TableColumn fx:id="end_date" prefWidth="105.0" sortable="false" text="Дата окончания" />
+                              <TableColumn fx:id="end_time" prefWidth="95.0" sortable="false" text="Время окончания" />
+                           </columns>
+                           <HBox.margin>
+                              <Insets left="20.0" right="20" />
+                           </HBox.margin>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox minHeight="10" />
+                  <HBox fx:id="hb3" alignment="CENTER" prefHeight="49.0" prefWidth="900.0">
+                     <children>
+                        <HBox prefHeight="73.0" prefWidth="4.0" />
+                        <JFXButton fx:id="add_wrs" text="Выполнить">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </JFXButton>
+                        <HBox prefHeight="100.0" prefWidth="17.0" />
+                     </children>
+                  </HBox>
+                  <HBox minHeight="10" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </content>
+</ScrollPane>

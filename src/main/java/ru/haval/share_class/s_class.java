@@ -3,6 +3,8 @@ package ru.haval.share_class;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +12,9 @@ import java.util.regex.Pattern;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import ru.haval.action.apwr_controller;
 import javafx.application.Platform;
+import javafx.scene.control.*;
 import ru.haval.action.hmmr_ps_model;
 import ru.haval.data.FxDatePickerConverter;
 import  ru.haval.db._query;
@@ -21,10 +25,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 
 public class s_class {
@@ -478,4 +478,55 @@ public class s_class {
 		hmmr_ps_model result = qr.getDescriptionEquipmentByIds(shop, group, line, station, equipment);
 		return result.getFL03_Shop_RUS() + "\n" + result.getFL04_Group_RUS() + "\n" + result.getLine_Machine_RUS() + "\n" + result.getOperation_Station_RUS() + "\n" + result.getFL07_Equipment_RUS() + "\n" + result.getDescription();
 	}
+
+	public static void addWorkRecord(String ap_num,   String Task_Report, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
+		final long DURATION = 60;
+		//total work duration
+		double CM_Work_Time = 0;
+		LocalTime currentTime = LocalTime.now();
+		currentTime = LocalTime.of(currentTime.getHour(), currentTime.getMinute());
+//		currentTime = LocalTime.parse("10:12");
+		LocalDate currentDate = LocalDate.now();
+//		currentDate = LocalDate.parse("2021-03-17");
+		LocalTime currentTimeEnd = currentTime.plusMinutes(DURATION);
+		String [] params = qr.dataForAddWrByApId(ap_num);
+
+		String user_number = params[0];
+		String FL_WSH = params[1];
+		String FL_Group = params[2];
+		String FL_Line = params[3];
+		String FL_Station = params[4];
+		String FL_Equipment = params[5];
+		String Equipment_Full = params[6];
+		String Record_Type = params[7];
+		String Task_Resp_ID = params[8];
+		String Task_Description = params[9];
+		String WR_Work_Time = String.valueOf(fix_time(startDate, endDate, startTime, endTime));
+		String Activity_Type = params[10];
+		qr._insert_wr(ap_num, user_number, FL_WSH, FL_Group, FL_Line, FL_Station, FL_Equipment, Equipment_Full, Record_Type, CM_Work_Time, Task_Resp_ID,"0","0","0","Confirmed WR", Task_Description, Task_Report,startDate,currentDate,currentDate,currentDate,"0",endDate,currentDate,currentDate,currentDate,WR_Work_Time,"60","60","60",startTime,currentTime,currentTime,currentTime,endTime,currentTimeEnd,currentTimeEnd,currentTimeEnd,"0000-00-00","0000-00-00","00:00","00:00", Activity_Type,"0","0","0","0","0",currentDate,currentDate,currentDate,currentDate,currentDate,currentDate,currentDate,currentDate,currentDate,currentDate,"60","60","60","60","60",currentTime,currentTime,currentTime,currentTime,currentTime,currentTimeEnd,currentTimeEnd,currentTimeEnd,currentTimeEnd,currentTimeEnd);
+		qr._update_otv_ap(ap_num, "flag_otv", "1");
+		qr._update_otv_ap(ap_num, "flag_oft", "0");
+		qr._update_otv_ap(ap_num, "flag_tm", "0");
+	}
+
+	private static int fix_time(LocalDate d1, LocalDate d2, LocalTime t1, LocalTime t2)
+	{
+		int wt_rezult1 = 0;
+		int d_b = d1.getDayOfYear();
+		int d_e = d2.getDayOfYear();
+
+		int data_rezult = d_e - d_b;
+
+		LocalTime test = t1;
+		LocalTime test2 = t2;
+
+		//long h_between = ChronoUnit.HOURS.between(test, test2);
+		long m_between = ChronoUnit.MINUTES.between(test, test2);
+
+		int time_rezult = Math.abs((int) m_between);
+
+		wt_rezult1 = data_rezult*24*60 + time_rezult;
+		return wt_rezult1;
+	}
 }
+
