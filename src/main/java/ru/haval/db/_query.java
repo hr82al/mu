@@ -10072,16 +10072,16 @@ public class _query {
         }
     }
 
-    public void saveSqlFilter(String name, String filter) {
+    public void saveSqlFilter(String name, String type, String filter) {
         filter = filter.replaceAll("'","\\\\'");
         synchronized (_query.class) {
-            String query = "INSERT INTO hmmr_filters (name, filter) VALUES ('" + name + "', '" + filter +"');";
+            String query = "INSERT INTO hmmr_filters (name, type, filter) VALUES ('" + name + "', '" + type + "', '" + filter +"');";
             try {
                 cn.ConToDb();
                 stmt = cn.con.createStatement();
                 stmt.executeUpdate(query);
             } catch (SQLException e) {
-                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 2035!");
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
             } finally {
                 //close connection ,stmt and resultset here
                 try {

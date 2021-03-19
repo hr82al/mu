@@ -2,7 +2,6 @@ package ru.haval.action;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,9 +13,7 @@ import ru.haval.filter.*;
 import ru.haval.share_class.s_class;
 import ru.haval.application.conn_connector;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
@@ -52,6 +49,7 @@ public class FilterController {
         sclass._style(save_filter);
         sclass._style(del_filter);
         sclass._style(cancel_ot);
+        sclass._style(to_excel);
 
         filter_query.setText(filter.getSqlFilter());
         filter_query.setWrapText(true);
@@ -78,7 +76,7 @@ public class FilterController {
             if (filter_list.getSelectionModel().getSelectedItem() != null) {
                 final String NAME = filter_list.getSelectionModel().getSelectedItem();
                 final String FILTER = filter_query.getText();
-                qr.saveSqlFilter(NAME, FILTER);
+                qr.saveSqlFilter(NAME, type, FILTER);
                 filter_list.setItems(qr.getFiltersNames(type));
             }
         });
@@ -102,15 +100,20 @@ public class FilterController {
             stage.close();
         }));
 
-        filter_list.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+        filter_list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (filter_list.getSelectionModel().getSelectedItem() != null) {
                 final String name = filter_list.getSelectionModel().getSelectedItem();
                 final String query = qr.getFilterByName(name);
-                filter_query.setText(query);
-                sqlFilter = SQLFilter.setSqlFilter(query);
-                initVariable_list();
+                if (query != "") {
+                    filter_query.setText(query);
+                    sqlFilter = SQLFilter.setSqlFilter(query);
+                    initVariable_list();
+                }
             }
         });
+//        filter_list.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+//
+//        });
 
         variable_list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             setVar_value();
