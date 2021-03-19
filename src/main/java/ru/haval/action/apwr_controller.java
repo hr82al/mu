@@ -3298,4 +3298,22 @@ public class apwr_controller {
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
+
+    /**
+     * When added a new record to work the work recording table update color of a record corresponding responsible icon to yellow
+     * @param ap_num ID in action plan
+     */
+    public void updateAPWhenNewWorkAdded(String ap_num) {
+        Platform.runLater(() -> {
+            hmmr_ap_model item = getAPById(ap_num);
+            if (item != null) {
+                item.flag_otv.set("1");
+                item.flag_oft.set("0");
+                item.flag_tm.set("0");
+                TableView<hmmr_ap_model> table = table_ap;
+                table.getColumns().get(0).setVisible(false);
+                table.getColumns().get(0).setVisible(true);
+            }
+        });
+    }
 }

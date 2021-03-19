@@ -352,6 +352,41 @@ public class hmmr_ap_model implements WrTable {
                 ", icon_at='" + icon_at.get() + '\'' +
                 '}';
     }
+    public String getByIndex(int index) {
+        switch (index) {
+            case 0:
+                return Id.get();
+            case 1:
+                return PM_Num.get();
+            case 2:
+                return Type.get();
+            case 3:
+                return Desc.get();
+            case 4:
+                return Due_Date.get();
+            case 5:
+                return Equip.get();
+            case 6:
+                return OFT.get();
+            case 7:
+                return OTV.get();
+            case 8:
+                return tsk_maker.get();
+            case 9:
+                return icon.get();
+            case 10:
+                return icon_at.get();
+            case 11:
+                return inst_btn.get();
+            case 12:
+                return flag_otv.get();
+            case 13:
+                return flag_oft.get();
+            case 14:
+                return flag_tm.get();
+        }
+        return "";
+    }
     //getters and setters for make work records
 
     public String getBeginDate() {

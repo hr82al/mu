@@ -61,12 +61,18 @@ public class AddNewWrsController {
         add_wrs.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                for (hmmr_ap_model i : table_ap.getItems()) {
-                    s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
-                }
-                apwr_controller.getInstance().updateAPTable();
                 Stage stage = (Stage) add_wrs.getScene().getWindow();
                 stage.close();
+                Thread thread = new Thread(() -> {
+                    for (hmmr_ap_model i : table_ap.getItems()) {
+                        s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
+                    }
+                });
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
+
+//                apwr_controller.getInstance().updateAPTable();
+
             }
         });
 

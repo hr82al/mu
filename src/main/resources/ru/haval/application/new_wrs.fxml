@@ -15,8 +15,6 @@
                <children>
                   <HBox fx:id="hb1" alignment="CENTER" prefHeight="51.0" prefWidth="900.0">
                      <children>
-
-
                            <ImageView fitHeight="70.0" fitWidth="219.0" pickOnBounds="true" preserveRatio="true">
                               <image>
                                  <Image url="@haval.jpg" />

@@ -2270,7 +2270,6 @@ public class _query {
         synchronized (_query.class) {
             String query = "INSERT INTO hmmr_work_recording (ap_num, user_number, FL_WSH, FL_Group, FL_Line, FL_Station, FL_Equipment, Equipment_Full, Record_Type, CM_Work_Time, Task_Resp_ID, _Resp2, _Resp3, _Resp4, WR_Executor_Confirmed, Task_Description, Task_Report, WR_Begin_Date, _Actual_Date_2, _Actual_Date_3, _Actual_Date_4, CM_DownTime, WR_End_Date, _Actual_Date2, _Actual_Date3, _Actual_Date4, WR_Work_Time, _Actual_Time2, _Actual_Time3, _Actual_Time4, WR_Work_Time_Begin, _Hours1_2, _Hours1_3, _Hours1_4, WR_Work_Time_End, _Hours2_2, _Hours2_3, _Hours2_4, CM_Date_Begin, CM_Date_End, CM_Time_Begin, CM_Time_End, Activity_Type, _Resp5, _Resp6, _Resp7, _Resp8, _Resp9, _Actual_Date_5, _Actual_Date_6, _Actual_Date_7, _Actual_Date_8, _Actual_Date_9, _Actual_Date5, _Actual_Date6, _Actual_Date7, _Actual_Date8, _Actual_Date9, _Actual_Time5, _Actual_Time6, _Actual_Time7, _Actual_Time8, _Actual_Time9, _Hours1_5, _Hours1_6, _Hours1_7, _Hours1_8, _Hours1_9, _Hours2_5, _Hours2_6, _Hours2_7, _Hours2_8, _Hours2_9) VALUES (" + "'" + ap_num + "'" + "," + "'" + userid + "'" + "," + "'" + WSH + "'" + "," + "'" + Group_EQ + "'" + "," + "'" + Line + "'" + "," + "'" + Station + "'" + "," + "'" + Equip + "'" + "," + "'" + equip + "'" + "," + "'" + record_type + "'" + "," + "'" + wt + "'" + "," + "'" + resp + "'" + "," + "'" + resp1 + "'" + "," + "'" + resp2 + "'" + "," + "'" + resp3 + "'" + "," + "'" + status_wr + "'" + "," + "'" + shift_report + "'" + "," + "'" + req_action + "'" + "," + "'" + actual_date + "'" + "," + "'" + actual_date_2 + "'" + "," + "'" + actual_date_3 + "'" + "," + "'" + actual_date_4 + "'" + "," + "'" + actual_time + "'" + "," + "'" + actual_date1 + "'" + "," + "'" + actual_date2 + "'" + "," + "'" + actual_date3 + "'" + "," + "'" + actual_date4 + "'" + "," + "'" + actual_time1 + "'" + "," + "'" + actual_time2 + "'" + "," + "'" + actual_time3 + "'" + "," + "'" + actual_time4 + "'" + "," + "'" + hours1 + "'" + "," + "'" + hours1_2 + "'" + "," + "'" + hours1_3 + "'" + "," + "'" + hours1_4 + "'" + "," + "'" + hours2 + "'" + "," + "'" + hours2_2 + "'" + "," + "'" + hours2_3 + "'" + "," + "'" + hours2_4 + "'" + "," + "'" + b_gdw + "'" + "," + "'" + e_gdw + "'" + "," + "'" + b_gtw + "'" + "," + "'" + e_gtw + "'" + "," + "'" + icon_at + "'" + "," + "'" + _Resp4 + "'" + "," + "'" + _Resp5 + "'" + "," + "'" + _Resp6 + "'" + "," + "'" + _Resp7 + "'" + "," + "'" + _Resp8 + "'" + "," + "'" + _Actual_Date_5 + "'" + "," + "'" + _Actual_Date_6 + "'" + "," + "'" + _Actual_Date_7 + "'" + "," + "'" + _Actual_Date_8 + "'" + "," + "'" + _Actual_Date_9 + "'" + "," + "'" + _Actual_Date5 + "'" + "," + "'" + _Actual_Date6 + "'" + "," + "'" + _Actual_Date7 + "'" + "," + "'" + _Actual_Date8 + "'" + "," + "'" + _Actual_Date9 + "'" + "," + "'" + _Actual_Time5 + "'" + "," + "'" + _Actual_Time6 + "'" + "," + "'" + _Actual_Time7 + "'" + "," + "'" + _Actual_Time8 + "'" + "," + "'" + _Actual_Time9 + "'" + "," + "'" + _Hours1_5 + "'" + "," + "'" + _Hours1_6 + "'" + "," + "'" + _Hours1_7 + "'" + "," + "'" + _Hours1_8 + "'" + "," + "'" + _Hours1_9 + "'" + "," + "'" + _Hours2_5 + "'" + "," + "'" + _Hours2_6 + "'" + "," + "'" + _Hours2_7 + "'" + "," + "'" + _Hours2_8 + "'" + "," + "'" + _Hours2_9 + "'" + ");";
 
-
             try {
                 cn.ConToDb();
                 stmt = cn.con.createStatement();
@@ -10006,12 +10005,12 @@ public class _query {
         }
     }
 
-    public ObservableList<String> getFiltersNames() {
+    public ObservableList<String> getFiltersNames(String type) {
         synchronized (_query.class) {
             ObservableList<String> list = FXCollections.observableArrayList();
 
             try {
-                String query = "SELECT name FROM hmmr_filters;";
+                String query = "SELECT name FROM hmmr_filters WHERE type = '" + type + "';";
 
                 cn.ConToDb();
                 stmt6 = cn.con.createStatement();

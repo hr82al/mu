@@ -693,7 +693,13 @@ public class addrec_wr_controller {
 						updateTable(id_wr);
 					}
 					else {
-						addRecToWr(selectedItem);
+						Thread thread1 = new Thread(() -> {
+							synchronized (addrec_wr_controller.class) {
+								addRecToWr(selectedItem);
+							}
+						});
+						thread1.setPriority(Thread.MIN_PRIORITY);
+						thread1.start();
 					}
 
 				/*if(shift_report_wr_add.getText().length() != 0 && req_action_wr_add.getText().length() != 0 && actual_time_wr_add.getText().length() != 0 &&
@@ -1567,7 +1573,8 @@ public class addrec_wr_controller {
 			qr._update_r_wr(id_wr, "_Resp9", "0");
 			qr._update_r_wr(id_wr, "_Actual_Time9", "0");
 		}
-		updateTable(id_wr);
+		apwr_controller.getInstance().updateAPWhenNewWorkAdded(numap_wr_add.getText().substring(2));
+//		updateTable(id_wr);
 	}
 
 

@@ -339,6 +339,38 @@ public class hmmr_wr_model implements WrTable {
                 '}';
     }
 
+    public String getByIndex(int j) {
+        switch (j) {
+            case 0:
+                return Id.get();
+            case 1:
+                return shift_report.get();
+            case 2:
+                return req_action.get();
+            case 3:
+                return actual_time.get();
+            case 4:
+                return actual_time1.get();
+            case 5:
+                return data.get();
+            case 6:
+                return equip.get();
+            case 7:
+                return record_type.get();
+            case 8:
+                return resp.get();
+            case 9:
+                return status.get();
+            case 10:
+                return qty.get() ? "1" : "0";
+            case 11:
+                return ap_num.get();
+            case 12:
+                return icon_at.get();
+        }
+        return "";
+    }
+
     @Override
     public String getOtv() {
         return OFT.get();
@@ -368,4 +400,5 @@ public class hmmr_wr_model implements WrTable {
     public String getnum_inst() {
         return null;
     }
+
 }

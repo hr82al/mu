@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="413.0" prefWidth="458.0">
+      <Pane prefHeight="413.0" prefWidth="523.0">
          <children>
             <VBox layoutX="29.0" layoutY="8.0">
                <HBox>
@@ -23,7 +24,7 @@
                      </font>
                   </Label>
                </HBox>
-               <ComboBox fx:id="filter_list" editable="true" prefHeight="25.0" prefWidth="399.0" />
+               <ComboBox fx:id="filter_list" editable="true" prefHeight="25.0" prefWidth="462.0" />
                <VBox minHeight="10" />
                <TextArea fx:id="filter_query" prefHeight="239.0" prefWidth="399.0" />
                <VBox minHeight="10" />
@@ -57,11 +58,20 @@
                      </font>
                   </JFXButton>
                   <HBox minWidth="15" />
+                  <JFXButton fx:id="to_excel" layoutX="41.0" layoutY="350.0" text="Экскорот в Excel">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <HBox minWidth="15" />
                   <JFXButton fx:id="cancel_ot" layoutX="349.0" layoutY="351.0" text="Отмена">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXButton>
+                  <HBox.margin>
+                     <Insets left="20" right="20" />
+                  </HBox.margin>
                </HBox>
 
             </VBox>

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import ru.haval.action.hmmr_ap_model;
 import ru.haval.action.apwr_controller;
 import javafx.application.Platform;
 import javafx.scene.control.*;
@@ -507,6 +508,11 @@ public class s_class {
 		qr._update_otv_ap(ap_num, "flag_otv", "1");
 		qr._update_otv_ap(ap_num, "flag_oft", "0");
 		qr._update_otv_ap(ap_num, "flag_tm", "0");
+
+		//update table
+		Platform.runLater(() -> {
+			apwr_controller.getInstance().updateAPWhenNewWorkAdded(ap_num);
+		});
 	}
 
 	private static int fix_time(LocalDate d1, LocalDate d2, LocalTime t1, LocalTime t2)
