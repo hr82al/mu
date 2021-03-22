@@ -611,8 +611,6 @@ public class addrec_wr_controller {
 		sclass._style(add_wr_add);
 		
 		add_wr_add.setOnAction(new EventHandler<ActionEvent>() {
-
-
 			@Override
 			public void handle(ActionEvent event) {
 				stage = (Stage) add_wr_add.getScene().getWindow();
@@ -621,8 +619,6 @@ public class addrec_wr_controller {
 				apwr_controller _apwr = (apwr_controller) node.getScene().getWindow().getUserData();
 				ObservableList<hmmr_ap_model> selectedItems = _apwr.table_ap.getSelectionModel().getSelectedItems();
 				hmmr_ap_model selectedItem = _apwr.table_ap.getSelectionModel().getSelectedItem();
-
-				Thread thread = new Thread(() -> {
 					if (selectedItems.size() > 1) {
 						//Checks
 						for (hmmr_ap_model i : selectedItems) {
@@ -714,9 +710,6 @@ public class addrec_wr_controller {
 				//}
 				//else
 				//	err_msg.setVisible(true);
-			});
-				thread.setPriority(Thread.MIN_PRIORITY);
-				thread.start();
 		}
 		});
 		

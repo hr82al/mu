@@ -48,6 +48,7 @@ public class AddNewWrsController {
     public void initialize(){
 
         beginTime.setIs24HourView(true);
+        report.setWrapText(true);
 
         beginTime.setValue(LocalTime.now());
         beginDate.setValue(LocalDate.now());
@@ -64,8 +65,10 @@ public class AddNewWrsController {
                 Stage stage = (Stage) add_wrs.getScene().getWindow();
                 stage.close();
                 Thread thread = new Thread(() -> {
-                    for (hmmr_ap_model i : table_ap.getItems()) {
-                        s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
+                    synchronized (addrec_wr_controller.class) {
+                        for (hmmr_ap_model i : table_ap.getItems()) {
+                            s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
+                        }
                     }
                 });
                 thread.setPriority(Thread.MIN_PRIORITY);

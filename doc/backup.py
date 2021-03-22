@@ -11,9 +11,11 @@ projects = [
 dest = r"\\10.168.130.9\HMMR_Share\Maintenance_and_Utility_Department\07.USER\U.44.AKH\Work_recording\src"
 
 def bkfile(project):
-    os.system(f"git clone {project}")
     file_name = re.match(r".*/(.+?).git", project).group(1)
+    shutil.rmtree(file_name, ignore_errors=True)
+    os.system(f"git clone {project}")
     shutil.make_archive(file_name, "zip", file_name)
+    shutil.rmtree(file_name, ignore_errors=True)
     shutil.move(file_name + ".zip", dest + "\\" + file_name + ".zip")
 
 os.chdir(os.getenv("tmp"))
