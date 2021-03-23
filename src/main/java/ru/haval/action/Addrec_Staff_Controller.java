@@ -114,7 +114,7 @@ public class Addrec_Staff_Controller {
 			list_rule.add("Engineer");
 			list_rule.add("Technician");
 		}
-		if(conn_connector.USER_ROLE.equals("Engeneer")) {
+		if(conn_connector.USER_ROLE.equals("Engineer")) {
 			list_rule.add("Engineer");
 			list_rule.add("Technician");
 		}

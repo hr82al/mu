@@ -6001,7 +6001,6 @@ public class _query {
                         list.add(hpm);
                     }
                 }
-                BackgroundFileLoader.getInstance().update();
             } catch (SQLException e) {
                 s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 5120!");
             } finally {

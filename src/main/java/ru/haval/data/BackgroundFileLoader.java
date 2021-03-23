@@ -9,15 +9,35 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BackgroundFileLoader {
     private HashMap<String, Image> images = new HashMap<>();
     private static BackgroundFileLoader instance = null;
     private AtomicBoolean runs = new AtomicBoolean(false);
-
+    private BlockingDeque<String> queue = new LinkedBlockingDeque<>();
     private BackgroundFileLoader() {
-
+        Thread thread = new Thread(() -> {
+            try {
+                while (true) {
+                    String path = queue.take();
+                    BufferedImage bufferedImage = ImageIO.read(new File(path));
+                    synchronized (BackgroundFileLoader.class) {
+                        System.out.println("loaded a new path: " + path);
+                        images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        });
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public static BackgroundFileLoader getInstance() {
@@ -32,73 +52,17 @@ public class BackgroundFileLoader {
         if (!images.containsKey(path)) {
             BufferedImage bufferedImage = new BufferedImage(10, 10, 2);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+            try {
+                queue.put(path);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             synchronized (BackgroundFileLoader.class) {
                 images.put(path, null);
             }
-            loadImages();
             return new ImageView(image);
         } else {
             return new ImageView(images.get(path));
         }
-    }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        }
-//
-//            if (!data.geticon().equals("1")) {
-//                if (!priorImages.containsKey(data.getPrior_img())) {
-//                    bufferedImage = ImageIO.read(new File(data.getPrior_img()));
-//                    priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
-//                }
-//                Image image = priorImages.get(data.getPrior_img());;
-//                iv.setGraphic(new ImageView(image));
-//            }
-//
-//            bufferedImage = new BufferedImage(10, 10, 2);
-//            priorImages.put(data.getPrior_img(), SwingFXUtils.toFXImage(bufferedImage, null));
-//            Image image = priorImages.get(data.getPrior_img());
-//            iv.setGraphic(new ImageView(image));
-//            //error
-//            System.out.println(e.getMessage().toString() + " prior_controller " + "Ошибка загрузки изображения");
-//        }
-
-
-    public void loadImages() {
-        if (images.containsValue(null)) {
-            runs.set(true);
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (BackgroundFileLoader.class) {
-                        for (String path : images.keySet()) {
-                            if (images.get(path) == null) {
-                                try {
-                                    BufferedImage bufferedImage = ImageIO.read(new File(path));
-                                    images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
-                                } catch (IOException e) {
-                                    //If there is no file set up empty image
-                                    System.out.println(e.getMessage());
-                                }
-                            }
-                        }
-
-                    }
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    runs.set(false);
-                }
-            });
-            thread.setPriority(Thread.MIN_PRIORITY);
-            thread.start();
-        }
-    }
-
-    public void update() {
-        loadImages();
     }
 }
