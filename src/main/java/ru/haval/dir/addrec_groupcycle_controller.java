@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import ru.haval.action.apwr_controller;
 import ru.haval.application.conn_connector;
@@ -43,7 +44,7 @@ public class addrec_groupcycle_controller {
 	s_class scl = new s_class();
 	group_cycle_controller gcc = new group_cycle_controller();
 	FxDatePickerConverter fx_dp = new FxDatePickerConverter();
-	
+
 	private Stage stage;
 	LocalDate new_date;
 	
@@ -169,6 +170,17 @@ public class addrec_groupcycle_controller {
 				stage.close();
 			}
 		});
+		Platform.runLater(() -> {
+			String pmNum = qr.findFreePmNum();
+			txt_pm_group.setText(pmNum);
+		});
+		String[] last = qr.getLastGroupCycle();
+		list_pm_cycle.setValue(last[2]);
+		d_start_date.setValue(LocalDate.parse(last[3]));
+		txt_days_gc.setText(last[5]);
+		txt_duration.setText(last[4]);
+		oft.setValue(last[6]);
+		add_rec.setDisable(false);
 	}
 	
 	private void lang_fun(String loc1, String loc2)

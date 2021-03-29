@@ -2537,7 +2537,7 @@ public class _query {
         synchronized (_query.class) {
             String query = "INSERT INTO hmmr_pm (user_id, Instruction_num, Eq_ID, PM_Group, PM_Resp, OnOff_Line, PM_Executor) "
                     + "VALUES (" + "'" + conn_connector.USER_ID + "'" + "," + "'" + ninst_pm + "'" + "," + "'" + eq_id + "'" + "," + "'" + group_pm + "'" + "," + "'" + otv_pm + "'" + "," + "'" + ool_pm + "'" + "," + "'" + pm_exec + "'" + ");";
-
+            System.out.println(query);
             try {
                 cn.ConToDb();
                 stmt = cn.con.createStatement();
@@ -5193,7 +5193,7 @@ public class _query {
 
             try {
                 String query = "select id from hmmr_plant_structure where Status = 0 AND FL03_Shop_s = " + "'" + shop + "'" + " AND FL04_Group_s = " + "'" + eq_group + "'" + " AND FL05_Line_s = " + "'" + line + "'" + " AND FL06_Station_s = " + "'" + os + "'" + " AND FL07_Equipment_s = " + "'" + equip + "'" + ";";
-
+                System.out.println(query);
                 cn.ConToDb();
                 stmt12 = cn.con.createStatement();
                 rs12 = stmt12.executeQuery(query);
@@ -9762,6 +9762,45 @@ public class _query {
         }
     }
 
+    /**
+     * Check if the PM group is not used anywhere and the PM group is available for creation
+     * Проверка если PM группа свободна и эту группу можно создать
+     * @param pmGroup - a number of the PM group to check (номер проверяемой группы PM)
+     * @return true if the PM group is exists and used anywhere (true если проверяемая группа существует и используется где либо)
+     */
+    public boolean isPmGroupFree(String pmGroup) {
+        String query1 = "select * from hmmr_pm_year where PM_Group = " + pmGroup + " LIMIT 1;";
+        String query2 = "select * from hmmr_group_cycle where PM_Group = " + pmGroup + " LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query1);
+                if (rs.next()) {
+                    exists = true;
+                }
+                rs = stmt.executeQuery(query2);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
     public boolean isPmGroupExists(String pmGroup) {
         String query = "select * from hmmr_pm_year where record_del = 0 AND PM_Group = " + pmGroup + " LIMIT 1;";
         synchronized (_query.class) {
@@ -10263,6 +10302,163 @@ public class _query {
             hmmr_ps_model hpm = new hmmr_ps_model();
             try {
                 String query = "SELECT hms.user_id as user_number, hps.FL03_Shop_s as FL_WSH, hps.FL04_Group_s as FL_Group, hps.FL05_Line_s as FL_Line, hps.FL06_Station_s as FL_Station, hps.FL07_Equipment_s as FL_Equipment, hap.Equipment as Equipment_Full, hap.Type as Record_Type,hap.Otv Task_Resp_ID , hap.Description as Task_Description, hap.Icon_AT as Activity_Type FROM hmmr_action_plan hap INNER JOIN hmmr_mu_staff hms ON  hap.Otv = hms.ID INNER JOIN hmmr_pm hp ON hap.PM_Num = hp.id INNER JOIN hmmr_plant_structure hps ON hp.Eq_ID = hps.id WHERE hap.id = " + ap_num + ";";
+
+
+                cn.ConToDb();
+                stmt12 = cn.con.createStatement();
+                rs12 = stmt12.executeQuery(query);
+                if (rs12.next()) {
+                    for (int i = 0; i < res.length; i++) {
+                        res[i] = rs12.getString(i + 1);
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs12.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return res;
+        }
+    }
+
+    public hmmr_inst_model getLastPmInstruction() {
+        synchronized (_query.class) {
+            hmmr_inst_model him = new hmmr_inst_model();
+
+            try {
+                String query = "select id,num_instruction,Creation_date,Last_edition_date,Link_instruction_PDF,Version,Model_Type_Task,PM_name,Type_PM,PM_Cycle1,PM_Cycle2,ON_Line_OFF_Line,Power_ON_Power_OFF,Position,Src_Info,Src_Doc,Qty_Specialist,Prep_Work_Time,Work_Time,Admission_2, Admission_3,Outfit_1,Outfit_2 from pm_inst where del_rec = 0 ORDER BY id DESC limit 1;";
+
+                cn.ConToDb();
+                stmt5 = cn.con.createStatement();
+                rs5 = stmt5.executeQuery(query);
+
+                if (rs5.next()) {
+                    if (rs5.getString(1) != null) {
+                        him.Id.set(rs5.getString(1));
+                        him.num_instruction.set(rs5.getString(2));
+                        him.date_create.set(rs5.getString(3));
+                        him.date_change.set(rs5.getString(4));
+                        him.inst_pdf.set(rs5.getString(5));
+                        him.Version.set(rs5.getString(6));
+                        him.Model_Type_task.set(rs5.getString(7));
+                        him.PM_name.set(rs5.getString(8));
+                        him.Type_PM.set(rs5.getString(9));
+                        him.PM_Cycle1.set(rs5.getString(10));
+                        him.PM_Cycle2.set(rs5.getString(11));
+                        him.ON_Line_OFF_Line.set(rs5.getString(12));
+                        him.Power_ON_Power_OFF.set(rs5.getString(13));
+                        him.Position.set(rs5.getString(14));
+                        him.Src_info.set(rs5.getString(15));
+                        him.Src_Doc.set(rs5.getString(16));
+                        him.Qty_Specialist.set(rs5.getString(17));
+                        him.Prep_Work_time.set(rs5.getString(18));
+                        him.Work_Time.set(rs5.getString(19));
+                        him.Admission_2.set(rs5.getString(20));
+                        him.Admission_3.set(rs5.getString(21));
+                        him.Outfit_1.set(rs5.getString(22));
+                        him.Outfit_2.set(rs5.getString(23));
+                    }
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 239!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt5.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs5.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return him;
+        }
+    }
+
+    public boolean isInstNumExists(String inst) {
+        String query = "SELECT * FROM pm_inst WHERE num_instruction = '" + inst + "' LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
+
+    private boolean isPmNumExists(String pmNum) {
+        String query = "SELECT * FROM hmmr_group_cycle WHERE PM_Group = " + pmNum + " LIMIT 1;";
+        synchronized (_query.class) {
+            boolean exists = false;
+            try {
+                cn.ConToDb();
+                stmt = _connect.con.createStatement();
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    exists = true;
+                }
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № " + Thread.currentThread().getStackTrace()[1].getLineNumber() + "!");
+            } finally {
+
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    stmt.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    rs.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+            return exists;
+        }
+    }
+
+    public String findFreePmNum() {
+        long pmNum = 1;
+        while (isPmGroupFree(Long.toString(pmNum))) {
+            pmNum++;
+        }
+        return Long.toString(pmNum);
+    }
+
+    public String[] getLastGroupCycle() {
+        //SELECT gc.id, gc.PM_Group, gc.PM_Cycle, gc.PM_StartDate, gc.PM_Duration, gc.Date_Beforehand, py.OFT FROM hmmr_group_cycle gc INNER JOIN hmmr_pm_year py ON gc.PM_Group = py.PM_Group WHERE del_rec = 0 ORDER BY gc.id DESC LIMIT 1;
+        synchronized (_query.class) {
+            String [] res = new String[7];
+            hmmr_ps_model hpm = new hmmr_ps_model();
+            try {
+                String query = "SELECT gc.id, gc.PM_Group, gc.PM_Cycle, gc.PM_StartDate, gc.PM_Duration, gc.Date_Beforehand, py.OFT FROM hmmr_group_cycle gc INNER JOIN hmmr_pm_year py ON gc.PM_Group = py.PM_Group WHERE del_rec = 0 ORDER BY gc.id DESC LIMIT 1;";
 
 
                 cn.ConToDb();

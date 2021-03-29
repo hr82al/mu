@@ -4,6 +4,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.jfoenix.controls.JFXButton;
 import  ru.haval.application.conn_connector;
 import ru.haval.config.Config;
@@ -498,6 +501,47 @@ public class addrec_inst_controller
 				stage.close();
 			}
 		});
+		//FIXME
+		hmmr_inst_model last = qr.getLastPmInstruction();
+		Pattern pattern = Pattern.compile("\\d{4,}");
+		String inst = last.getnum_inst();
+
+			Matcher matcher = pattern.matcher(inst);
+			if (matcher.find()) {
+				final String numString = matcher.group(0);
+				long num = Long.parseLong(numString);
+				do {
+				++num;
+				inst = inst.replace(numString, String.format("%0" + numString.length() + "d", num));
+				} while (qr.isInstNumExists(inst));
+			}
+
+		ninst_inst.setText(inst);
+		ver_inst.setText(last.getVer());
+		date_create_pi.setValue(LocalDate.parse(last.getdate_create()));
+		date_change_pi.setValue(LocalDate.parse(last.getdate_change()));
+		inst_pdf_pi.setText(last.getinst_pdf());
+		mt_inst.setText(last.getMTT());
+		pmname_inst.setText(last.getPM_name());
+		typepm_inst.setValue(last.gettype_PM());
+		cyclepm1_inst.setValue(last.getPM_cycle1());
+		cyclepm2_inst.setValue(last.getPM_cycle2());
+		line_inst.setValue(last.getOlOl());
+		power_inst.setValue(last.getPoPo());
+		pos_inst.setValue(last.getPos());
+		sinfo_inst.setValue(last.getS_info());
+		sdoc_txt_inst.setText(last.getS_doc());
+		qtyspec_inst.setText(last.getQty_s());
+		ptw_inst.setText(last.getPWT());
+		wt_inst.setText(last.getWT());
+		adm2_inst.setText(last.getAdm_2());
+		list_adm2.setValue(last.getAdm_2());
+		adm3_inst.setText(last.getAdm_3());
+		list_adm3.setValue(last.getAdm_3());
+		of1_inst.setText(last.getOF_1());
+		list_of1.setValue(last.getOF_1());
+		of2_inst.setText(last.getOF_2());
+		list_of2.setValue(last.getOF_2());
 	}
 	
 	private void lang_fun(String loc1, String loc2)

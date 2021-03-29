@@ -25,7 +25,6 @@ public class BackgroundFileLoader {
                     String path = queue.take();
                     BufferedImage bufferedImage = ImageIO.read(new File(path));
                     synchronized (BackgroundFileLoader.class) {
-                        System.out.println("loaded a new path: " + path);
                         images.put(path, SwingFXUtils.toFXImage(bufferedImage, null));
                     }
                 }

@@ -314,7 +314,6 @@ public class s_class {
 		while (date.isBefore(END_DATE)) {
 			//check if some of excluded groups already has the date
 			if (date.isAfter(LocalDate.now()) && (excludedPMGroups == null || !qr.hasDateInPMGroupS(date, excludedPMGroups))) {
-				System.out.println(PM_ID + " : " + PM_GROUP + " : " + date +  " : " + OFT);
 				qr._insert_pm_year(PM_ID,PM_GROUP, date, OFT);
 			}
 			//update counter!!!
