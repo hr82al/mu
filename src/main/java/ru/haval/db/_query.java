@@ -10486,4 +10486,31 @@ public class _query {
             return res;
         }
     }
+
+    /**
+     * Change a responsible for the group (Измениние ответственного  для группы)
+     * @param group - the group where the responsible is changing (группа у которой меняется ответсвенный)
+     * @param newResponsible - A new responsible for the group (Новый ответсвенный группы)
+     */
+    public void changeResponsible(String group, String  newResponsible) {
+        synchronized (_query.class) {
+            try {
+                cn.ConToDb();
+                stmt9 = cn.con.createStatement();
+
+                String query = "UPDATE hmmr_pm_year SET OFT = '" + newResponsible + "' WHERE PM_Group = '" + group + "';";
+                stmt9.executeUpdate(query);
+            } catch (SQLException e) {
+                s_class._AlertDialog(e.getMessage() + ", " + " ошибка в строке № 8001!");
+            } finally {
+                //close connection ,stmt and resultset here
+                try {
+                    stmt9.close();
+                } catch (SQLException se) { /*can't do anything */ }
+                try {
+                    cn.con.close();
+                } catch (SQLException se) { /*can't do anything */ }
+            }
+        }
+    }
 }

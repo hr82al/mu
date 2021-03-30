@@ -12,6 +12,9 @@ import ru.haval.application.conn_connector;
 import ru.haval.db._query;
 import ru.haval.share_class.s_class;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ChangeExecutorController {
     @FXML
     ComboBox otv;
@@ -42,9 +45,7 @@ public class ChangeExecutorController {
 
     public void changeOFTs(ActionEvent actionEvent) {
         String newOTV = otv.getValue().toString().split(" ")[0];
-
         Stage stage = (Stage) otv.getScene().getWindow();
-
         stage.close();
         String tmp = otv.getSelectionModel().getSelectedItem().toString().split(" ")[0];
         final String NEW_USER_ID = tmp.equals("need") ? "need select" : tmp;
@@ -79,12 +80,17 @@ public class ChangeExecutorController {
         } else if (stage.getUserData() instanceof pm_controller) {
             pm_controller pmController = (pm_controller) stage.getUserData();
             if (pmController.table_pm.getSelectionModel().getSelectedItems().size() > 1) {
+                Set<String> PMGroups = new HashSet<>();
                 for (hmmr_pm_model item : pmController.table_pm.getSelectionModel().getSelectedItems()) {
+                    PMGroups.add(item.getGroup_PM());
                     if (pmController.responsible) {
                         qr.updateResponsible(item.getId(), NEW_USER_ID);
                     } else {
                         qr.updatePmExecutor(item.getId(), NEW_USER_ID);
                     }
+                }
+                for (String group : PMGroups) {
+                    qr.changeResponsible(group, NEW_USER_ID);
                 }
                 pmController.setPmItems(qr._select_data_pm2());
             }
