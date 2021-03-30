@@ -504,19 +504,23 @@ public class addrec_inst_controller
 		//FIXME
 		hmmr_inst_model last = qr.getLastPmInstruction();
 		Pattern pattern = Pattern.compile("\\d{4,}");
-		String inst = last.getnum_inst();
+		final String inst = last.getnum_inst();
+		String tmpInst = inst;
 
 			Matcher matcher = pattern.matcher(inst);
 			if (matcher.find()) {
 				final String numString = matcher.group(0);
 				long num = Long.parseLong(numString);
-				do {
-				++num;
-				inst = inst.replace(numString, String.format("%0" + numString.length() + "d", num));
-				} while (qr.isInstNumExists(inst));
+				for (long current = ++num; current < num + 100; current++){
+					tmpInst = inst;
+					tmpInst = tmpInst.replace(numString, String.format("%0" + numString.length() + "d", current));
+					if (!qr.isInstNumExists(tmpInst)) {
+						break;
+					}
+				}
 			}
 
-		ninst_inst.setText(inst);
+		ninst_inst.setText(tmpInst);
 		ver_inst.setText(last.getVer());
 		date_create_pi.setValue(LocalDate.parse(last.getdate_create()));
 		date_change_pi.setValue(LocalDate.parse(last.getdate_change()));
