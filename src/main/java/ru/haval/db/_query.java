@@ -10513,4 +10513,13 @@ public class _query {
             }
         }
     }
+
+    /**
+     * Get current not executed yet tasks for all shops of the action plan table
+     * @return current not executed yet tasks for all shops of the action plan table
+     */
+    public ObservableList<hmmr_ap_model> getCurrentTasks() {
+            String query = ACTION_PLAN_BASE_QUERY_WITHOUT_OFT + "WHERE hap.del_rec = 0;";
+            return fillAPModel(query);
+    }
 }

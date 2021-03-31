@@ -765,7 +765,7 @@ public class apwr_controller {
                                             tmConfirm(currentAPItem);
                                         }
                                     }
-                                    setTableAPItems(qr._select_data_ap(USER_S));
+                                    showPrivateAP();
                                 }
 
                             }
@@ -1362,7 +1362,8 @@ public class apwr_controller {
 
             @Override
             public void handle(ActionEvent event) {
-                setTableAPItems(qr._select_data_ap(USER_S));
+                showPrivateAP();
+
                 private_ap.setDisable(true);
                 showall_ap.setDisable(false);
                 chk_btn = true;
@@ -1705,7 +1706,7 @@ public class apwr_controller {
         _table_update.addListener(new ListChangeListener<hmmr_ap_model>() {
             @Override
             public void onChanged(Change<? extends hmmr_ap_model> c) {
-                setTableAPItems(qr._select_data_ap(USER_S));
+                showPrivateAP();
             }
         });
         _table_update_wp.addListener(new ListChangeListener<hmmr_wp_model>() {
@@ -1968,6 +1969,14 @@ public class apwr_controller {
         });
     }
 
+    private void showPrivateAP() {
+        if (conn_connector.USER_ROLE.equals("Administrator")) {
+            setTableAPItems(qr.getCurrentTasks());
+        } else {
+            setTableAPItems(qr._select_data_ap(USER_S));
+        }
+    }
+
     private void initApButtons() {
         if (table_ap.getSelectionModel().getSelectedItems().size() > 1) {
             isApMultipleSelected = true;
@@ -1995,7 +2004,7 @@ public class apwr_controller {
     public void updateAPTable() {
         initSops();
         if (chk_btn) {
-            setTableAPItems(qr._select_data_ap(USER_S));
+            showPrivateAP();
             private_ap.setDisable(true);
             showall_ap.setDisable(false);
         } else {
@@ -2095,7 +2104,7 @@ public class apwr_controller {
                             _chk.removeAll(_chk);
                             _get_field.removeAll(_get_field);
                             _chk.addAll(qr._select_pmplan());
-                            //setTableAPItems(qr._select_data_ap(USER_S));
+                            //showPrivateAP();
                             setWPItems(qr._select_data_wp(USER_S));
                         }
                     }
@@ -2126,7 +2135,7 @@ public class apwr_controller {
                 //Удаляем PM из WP
                 qr._update_wp_record(_id);
 
-                //setTableAPItems(qr._select_data_ap(USER_S));
+                //showPrivateAP();
                 setWPItems(qr._select_data_wp(USER_S));
 
             }
@@ -2253,8 +2262,8 @@ public class apwr_controller {
     private void shopsSelectOne(JFXButton selectedShop) {
         shopsEnableAll();
         selectedShop.setDisable(true);
-        if (!(conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead") ||
-                conn_connector.USER_ROLE.equals("Technics"))) {
+        if (conn_connector.USER_ROLE.equals("Administrator") || conn_connector.USER_ROLE.equals("Group Lead") ||
+                !conn_connector.USER_ROLE.equals("Technics")) {
             private_ap.setDisable(false);
             showall_ap.setDisable(false);
             chk_btn = false;
@@ -2317,7 +2326,7 @@ public class apwr_controller {
     }
 
     private void initData() {
-        setTableAPItems(qr._select_data_ap(USER_S));
+        showPrivateAP();
         setWPItems(qr._select_data_wp(USER_S));
         setTableWRItems(qr._select_data_wr(fx_dp.toString(begin_data.getValue()), fx_dp.toString(last_data.getValue())));
     }
@@ -2813,9 +2822,9 @@ public class apwr_controller {
                 table_ap.getColumns().removeAll(col);
                 table_ap = new TableView<hmmr_ap_model>();
                 table_ap.getColumns().addAll(col);
-                setTableAPItems(qr._select_data_ap(USER_S));
-                col.get(0).setVisible(false);
-                col.get(0).setVisible(true);
+                showPrivateAP();
+                /*col.get(0).setVisible(false);
+                col.get(0).setVisible(true);*/
             }
         });
 
@@ -2971,9 +2980,9 @@ public class apwr_controller {
 
                         @Override
                         public void run() {
-                            setTableAPItems(qr._select_data_ap(USER_S));
-                            table_ap.getColumns().get(0).setVisible(false);
-                            table_ap.getColumns().get(0).setVisible(true);
+                            showPrivateAP();
+//                            table_ap.getColumns().get(0).setVisible(false);
+//                            table_ap.getColumns().get(0).setVisible(true);
                         }
                     });
 
@@ -3080,9 +3089,9 @@ public class apwr_controller {
                 //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
                 //CECKME
-                setTableAPItems(qr._select_data_ap(USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
+                showPrivateAP();
+//                table_ap.getColumns().get(0).setVisible(false);
+//                table_ap.getColumns().get(0).setVisible(true);
             }
 
             //Если задачу подтвердил ее хозяин или если хозяин задачи совпадает с ответственным за задачу
@@ -3092,9 +3101,9 @@ public class apwr_controller {
                 //btn.setStyle("-fx-background-color: green");
                 //Если владелец или ответственный задачи подвердили что задача проверена то переходим к полю tm и делаем его желтым
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "1");
-                setTableAPItems(qr._select_data_ap(USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
+                showPrivateAP();
+                /*table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);*/
             }
 
             //Владелец задачи может ее подтвердить в любом случае
@@ -3119,9 +3128,9 @@ public class apwr_controller {
                 qr._update_otv_ap(data.getId().substring(2), "flag_tm", "2");
                 //btn.setStyle("-fx-background-color: green");
 
-                setTableAPItems(qr._select_data_ap(USER_S));
-                table_ap.getColumns().get(0).setVisible(false);
-                table_ap.getColumns().get(0).setVisible(true);
+                showPrivateAP();
+                /*table_ap.getColumns().get(0).setVisible(false);
+                table_ap.getColumns().get(0).setVisible(true);*/
             }
 
             //Владелец задачи может ее подтвердить в любом случае

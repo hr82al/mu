@@ -67,6 +67,10 @@ public class Main extends Application {
 	@SuppressWarnings("static-access")
 	public void _run_excel(File path) throws IOException
 	{
+//		System.out.println(path.toString());
+//		if (!path.exists() && path.toString().endsWith(".pdf")) {
+//			path = fix_pdf_path(path);
+//		}
 		try {
 			if (path.toString().endsWith(".pdf"))
 				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + path);
@@ -80,8 +84,12 @@ public class Main extends Application {
 			scl._AlertDialog("Указан неверный путь к файлу!", "Внимание!");
 		}
 	}
-	
-	
+
+	private File fix_pdf_path(File path) {
+		return path;
+	}
+
+
 	public static void main(String[] args) {
 		launch(args);
 	}
