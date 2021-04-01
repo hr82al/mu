@@ -18,10 +18,13 @@ public class Main extends Application {
 	private AnchorPane rootLayout;
 	public static Stage pStage;
 	public static String jarLocation;
+	public static String jarFile;
 
 	static {
 		String jarLocationUrl = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		jarLocation = new File(jarLocationUrl.toString()).getParent();
+		File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+		jarFile = file.getName();
 	}
 	
 	s_class scl = new s_class();

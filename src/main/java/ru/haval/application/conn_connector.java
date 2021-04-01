@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.ResourceBundle;;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -206,8 +208,13 @@ public class conn_connector
 			USER_ID = _parser_sql(query_rez, 0);
 			USER_ROLE = _parser_sql(query_rez, 2);
 			USER_LOGIN = login;
-			
-			qr._insert_history(USER_ID, "#V018# Авторизация пользователя - " + scl.parser_str(qr._select_user(conn_connector.USER_ID), 1));
+			String version = "dev";
+			Pattern pattern = Pattern.compile("\\d{3}");
+			Matcher matcher = pattern.matcher(Main.jarFile);
+			if (matcher.find()) {
+				version = matcher.group(0);
+			}
+			qr._insert_history(USER_ID, "#V" + version + "# Авторизация пользователя - " + scl.parser_str(qr._select_user(conn_connector.USER_ID), 1));
 			Stage stage = new Stage();
 	        try {
 				FXMLDocumentController(stage);
