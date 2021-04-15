@@ -21,11 +21,11 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label id="host_err" fx:id="host_err" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="136.0" prefHeight="17.0" prefWidth="166.0" stylesheets="/ru/haval/application/application.css" text="Неверный логин или пароль!" textAlignment="CENTER" textFill="#e80909" visible="false">
+                  <Hyperlink id="host_err" fx:id="host_err" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="136.0" prefHeight="17.0" prefWidth="166.0" stylesheets="/ru/haval/application/application.css" text="Веб версия" textAlignment="CENTER" textFill="#e80909" >
                      <font>
                         <Font name="Times New Roman Bold" size="12.0" />
                      </font>
-                  </Label>
+                  </Hyperlink>
                   <GridPane hgap="30.0" prefHeight="212.0" prefWidth="240.0" vgap="10.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.0" minWidth="10.0" prefWidth="168.0" />
@@ -53,6 +53,7 @@
                            </font>
                         </JFXCheckBox>
                         <JFXButton fx:id="set_btn" focusTraversable="false" onAction="#changeSettings" prefHeight="25.0" prefWidth="77.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <Hyperlink text="" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="20" left="30.0" right="30.0" />

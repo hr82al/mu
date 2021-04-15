@@ -3,15 +3,18 @@
 */
 package ru.haval.application;
 
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;;
 
+import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
@@ -50,7 +53,10 @@ public class conn_connector
 	@FXML
 	PasswordField passwd_id;
 	@FXML
-	Label l_info, host_err;
+	Label l_info;
+
+	@FXML
+	Hyperlink host_err;
 	@FXML
 	JFXButton btn_conn, set_btn;
 	
@@ -73,7 +79,7 @@ public class conn_connector
 	@FXML
 	public void initialize()
 	{
-		host_err.setVisible(false);
+//		host_err.setVisible(false);
 		
 		scl._style(btn_conn);
 		
@@ -169,6 +175,15 @@ public class conn_connector
 		Platform.runLater(() -> {
 			Image imageOk = new Image(getClass().getResourceAsStream("/ru/haval/action/settings.png"));
 			set_btn.setGraphic(new ImageView(imageOk)); });
+
+		host_err.setOnAction(event -> {
+			try {
+				Desktop.getDesktop().browse(new URI("http://10.168.150.74:8080/"));
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		});
 	}
 	
 	
@@ -196,6 +211,7 @@ public class conn_connector
 		query_rez = qr._check_login_passwd(login);
 		if(!passwd.equals(_parser_sql(query_rez, 1)) || login.isEmpty())
 		{
+			host_err.setText("Неверный логин или пароль!");
 			host_err.setVisible(true);
 		}
 		else
