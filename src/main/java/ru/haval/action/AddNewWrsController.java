@@ -42,6 +42,7 @@ public class AddNewWrsController {
     @FXML
     DatePicker beginDate;
 
+    private boolean is_dates_correct = false;
 
     s_class scl = new s_class();
     _query qr = new _query();
@@ -53,7 +54,7 @@ public class AddNewWrsController {
         report.setWrapText(true);
 
         beginTime.setValue(LocalTime.now());
-        beginDate.setValue(LocalDate.now());
+        beginDate.setValue(LocalDate.now().minusDays(1));
         cutSeconds(beginTime);
 
         apwr_controller apwr = apwr_controller.getInstance();
@@ -102,11 +103,7 @@ public class AddNewWrsController {
         });
 
         report.textProperty().addListener((event) -> {
-            if (report.getText().length() > 0) {
-                add_wrs.setDisable(false);
-            } else {
-                add_wrs.setDisable(true);
-            }
+            check_buttons();
         });
 
         //Fill table with only works hwo belong to the executor.
@@ -196,6 +193,9 @@ public class AddNewWrsController {
         long beginEpochSecond = beginDate.getValue().toEpochSecond(beginTime.getValue(), zoneOffset);
         LocalDateTime beginDateTime = LocalDateTime.ofEpochSecond(beginEpochSecond,0, zoneOffset);
         LocalDateTime lastDateTime = beginDateTime;
+        long full_time = 0;
+        boolean has_fore_dates = false;
+        LocalDate current_date = LocalDate.now();
         for (hmmr_ap_model i : table_ap.getItems()) {
             long totalTime = qr.getTotalWorkTime(i.getPM_Num());
             i.setBeginTime(lastDateTime.toLocalTime().toString());
@@ -203,12 +203,35 @@ public class AddNewWrsController {
             lastDateTime = lastDateTime.plusMinutes(totalTime);
             i.setEndTime(lastDateTime.toLocalTime().toString());
             i.setEndDate(lastDateTime.toLocalDate().toString());
+            full_time += totalTime;
+        }
+        if (full_time > 720 || lastDateTime.isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0)))) {
+            is_dates_correct = false;
+        }
+        else {
+            is_dates_correct = true;
         }
     }
 
     private void updateTable() {
         recalculate();
+        check_buttons();
         table_ap.getColumns().get(0).setVisible(false);
         table_ap.getColumns().get(0).setVisible(true);
+    }
+
+    private void check_buttons() {
+        if (report.getText().length() > 0 && is_dates_correct) {
+            add_wrs.setText("Выполнить");
+            add_wrs.setDisable(false);
+        } else {
+            add_wrs.setDisable(true);
+            if (report.getText().length() == 0) {
+                add_wrs.setText("Введите описание");
+            }
+            if (!is_dates_correct) {
+                add_wrs.setText("Время > 720 min или неверная дата");
+            }
+        }
     }
 }
