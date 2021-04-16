@@ -3284,10 +3284,19 @@ public class apwr_controller {
 
 
     public void onWrCloseAllButton(ActionEvent actionEvent) {
-        Thread thread = new Thread(() -> {
-            for (hmmr_wr_model hpm : table_wr.getItems()) {
-                if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals(apwr_controller.USER_S))) {
-                    //Confirm everything  //73734, 73738, 67188
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ObservableList<hmmr_wr_model> hpms = table_wr.getItems();
+                int count = hpms.size();
+                final String old_confirm_button_text = wrCloseAllButton.getText();
+                Platform.runLater(() -> {
+                    wrCloseAllButton.setDisable(true);
+                    wrCloseAllButton.setText("Выполняется закрытие задач");
+                });
+                final String tmp_total_amount = wr_total_amount.getText();
+                for (hmmr_wr_model hpm : hpms) {
+                    if (hpm.getstatus().equals("Confirmed WR") && (hpm.OFT_ID.get().equals(conn_connector.USER_ID) || hpm.OFT.get().equals(apwr_controller.USER_S))) {
                     qr._update_oft_wr("1", hpm.IdProperty().get().substring(2));
                     qr._update_qty_wr("1", hpm.IdProperty().get().substring(2));
                     qr._update_otv_ap(hpm.getap_num(), "flag_tm", "2");
@@ -3295,15 +3304,25 @@ public class apwr_controller {
                     qr._update_otv_ap(hpm.getap_num(), "flag_otv", "2");
                     qr._update_calc_field(hpm.getap_num());
                     qr._update_deleterec_ap(hpm.getap_num());
+                        final String current_count = "Осталось закрыть " + Integer.toString(count) + " задач.";
+                        Platform.runLater(() -> {
+                            hmmr_wr_model.setTotal(current_count);
+                        });
+                    }
+                    count--;
                 }
-            }
-            Platform.runLater(() -> {
                 //update tables
-                setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
-                updateTableWr();
-            });
-
-        });
+                Platform.runLater(() -> {
+                    setTableAPItems(qr._select_data_ap(apwr_controller.USER_S));
+                    hmmr_wr_model.setTotal(tmp_total_amount);
+                    updateTableWr();
+                    wrCloseAllButton.setDisable(false);
+                    wrCloseAllButton.setText(old_confirm_button_text);
+                });
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
@@ -3313,7 +3332,7 @@ public class apwr_controller {
      * @param ap_num ID in action plan
      */
     public void updateAPWhenNewWorkAdded(String ap_num) {
-        Platform.runLater(() -> {
+//        Platform.runLater(() -> {
             hmmr_ap_model item = getAPById(ap_num);
             if (item != null) {
                 item.flag_otv.set("1");
@@ -3323,6 +3342,6 @@ public class apwr_controller {
                 table.getColumns().get(0).setVisible(false);
                 table.getColumns().get(0).setVisible(true);
             }
-        });
+//        });
     }
 }

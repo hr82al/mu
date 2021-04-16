@@ -2,10 +2,12 @@ package ru.haval.action;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,18 +66,38 @@ public class AddNewWrsController {
             public void handle(ActionEvent event) {
                 Stage stage = (Stage) add_wrs.getScene().getWindow();
                 stage.close();
-                Thread thread = new Thread(() -> {
-                    synchronized (addrec_wr_controller.class) {
-                        for (hmmr_ap_model i : table_ap.getItems()) {
-                            s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
+                synchronized (addrec_wr_controller.class) {
+                    Task<Void> task = new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            final String old_button_caption = apwr_controller.getInstance().add_wr.getText();
+                            final String old_counter_caption = hmmr_ap_model.getTotal();
+                            ObservableList<hmmr_ap_model> haps = table_ap.getItems();
+                            int counter = haps.size();
+                            Platform.runLater(() -> {
+                                apwr_controller.getInstance().add_wr.setDisable(true);
+                            });
+                            for (hmmr_ap_model i : haps) {
+                                s_class.addWorkRecord(i.getId().substring(2), report.getText(), LocalTime.parse(i.getBeginTime()), LocalDate.parse(i.getBeginDate()), LocalTime.parse(i.getEndTime()), LocalDate.parse(i.getEndDate()));
+                                final String button_caption = counter + " осталось";
+                                Platform.runLater(() -> {
+                                    apwr_controller.getInstance().add_wr.setText(button_caption);
+                                    hmmr_ap_model.setTotal(button_caption);
+                                });
+                                counter--;
+                            }
+                            Platform.runLater(() -> {
+                                apwr_controller.getInstance().add_wr.setDisable(false);
+                                apwr_controller.getInstance().add_wr.setText(old_button_caption);
+                                hmmr_ap_model.setTotal(old_counter_caption);
+                            });
+                            return null;
                         }
-                    }
-                });
-                thread.setPriority(Thread.MIN_PRIORITY);
-                thread.start();
-
-//                apwr_controller.getInstance().updateAPTable();
-
+                    };
+                    Thread thread = new Thread(task);
+                    thread.setPriority(Thread.MIN_PRIORITY);
+                    thread.start();
+                }
             }
         });
 
