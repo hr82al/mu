@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <ScrollPane fx:id="sp_ps" hbarPolicy="NEVER" prefHeight="791.0" prefWidth="3734.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haval.action.ps_controller">
 	   
         <content>
@@ -42,6 +43,7 @@
                         <ComboBox fx:id="c_line" prefHeight="25.0" prefWidth="112.0" promptText="Линия" />
                         <ComboBox fx:id="c_os" prefHeight="25.0" prefWidth="114.0" promptText="Станция" />
                         <ComboBox fx:id="c_equip" prefHeight="25.0" prefWidth="125.0" promptText="Оборудование" />
+                        <TextField fx:id="search_ps" prefHeight="26.0" prefWidth="323.0" promptText="Фильтр поиска (введите условия поиска через запятую)" />
                      </children>
                   </HBox>
                   <HBox fx:id="hb3" alignment="CENTER" prefHeight="707.0" prefWidth="3727.0">

@@ -3332,7 +3332,7 @@ public class apwr_controller {
      * @param ap_num ID in action plan
      */
     public void updateAPWhenNewWorkAdded(String ap_num) {
-//        Platform.runLater(() -> {
+        Platform.runLater(() -> {
             hmmr_ap_model item = getAPById(ap_num);
             if (item != null) {
                 item.flag_otv.set("1");
@@ -3342,6 +3342,6 @@ public class apwr_controller {
                 table.getColumns().get(0).setVisible(false);
                 table.getColumns().get(0).setVisible(true);
             }
-//        });
+        });
     }
 }

@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
+import javafx.scene.control.*;
 import  ru.haval.application.conn_connector;
 import ru.haval.application.mu_main_controller;
 import  ru.haval.db._query;
@@ -22,14 +23,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -38,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import ru.haval.filter.DynamicFilter;
 import ru.haval.share_class.s_class;
 
 public class ps_controller {
@@ -89,10 +83,17 @@ public class ps_controller {
 	public static String _filter_shop, _filter_group, _filter_line, _filter_os, _filter_equip;
 	
 	public static int flag_ps = 0; // Флаг сортировки таблицы PS
+
+	@FXML
+	private TextField search_ps;
+	private DynamicFilter psDynamicFilter;
 	
 	@FXML
 	public void initialize()
 	{
+		if (psDynamicFilter == null) {
+			psDynamicFilter = new DynamicFilter(table_ps);
+		}
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		Double screen_width = primaryScreenBounds.getWidth();
 		Double screen_hight = primaryScreenBounds.getHeight(); 
@@ -274,9 +275,8 @@ public class ps_controller {
 					_table_update_ps.addAll(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os));
 				if(flag_ps == 5)
 					_table_update_ps.addAll(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os, _filter_equip));*/
-				table_ps.setItems(qr._select_data_ps());
-				columns_ps.get(0).setVisible(false);
-			    columns_ps.get(0).setVisible(true);
+				setPsItems(qr._select_data_ps());
+
 			   
 			    c_group.valueProperty().set(null);
 			    c_line.valueProperty().set(null);
@@ -319,34 +319,25 @@ public class ps_controller {
 		    @Override
 			public void onChanged(Change<? extends hmmr_ps_model> c) {
 				
-			    table_ps.setItems(qr._select_data_ps());
+			    setPsItems(qr._select_data_ps());
 			    table_ps.getColumns().get(0).setVisible(false);
 			    table_ps.getColumns().get(0).setVisible(true);
 		    	
 		        if(flag_ps == 1) {
-		        	table_ps.setItems(qr._select_data_filter_ps(_filter_shop));
-					table_ps.getColumns().get(0).setVisible(false);
-			        table_ps.getColumns().get(0).setVisible(true);
+		        	setPsItems(qr._select_data_filter_ps(_filter_shop));
 		        }
 				if(flag_ps == 2) {
-					table_ps.setItems(qr._select_data_filter_ps(_filter_shop, _filter_group));
-					table_ps.getColumns().get(0).setVisible(false);
-			        table_ps.getColumns().get(0).setVisible(true);
+					setPsItems(qr._select_data_filter_ps(_filter_shop, _filter_group));
 				}
 				if(flag_ps == 3) {
-					table_ps.setItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line));
-					table_ps.getColumns().get(0).setVisible(false);
-			        table_ps.getColumns().get(0).setVisible(true);
+					setPsItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line));
 				}
 				if(flag_ps == 4) {
-					table_ps.setItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os));
-					table_ps.getColumns().get(0).setVisible(false);
-			        table_ps.getColumns().get(0).setVisible(true);
+					setPsItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os));
+
 				}
 				if(flag_ps == 5) {
-					table_ps.setItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os, _filter_equip));
-					table_ps.getColumns().get(0).setVisible(false);
-			        table_ps.getColumns().get(0).setVisible(true);
+					setPsItems(qr._select_data_filter_ps(_filter_shop, _filter_group, _filter_line, _filter_os, _filter_equip));
 				}
 			}
 		});
@@ -378,7 +369,7 @@ public class ps_controller {
 						c_equip.valueProperty().set(null);
 						
 						c_group.setItems(qr._select_group_pm(scl.parser_str(c_shop.getValue(), 0)));
-						table_ps.setItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0)));
+						setPsItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0)));
 						_filter_shop = scl.parser_str(c_shop.getValue(), 0);
 						flag_ps = 1;
 					}
@@ -399,7 +390,7 @@ public class ps_controller {
 						c_equip.valueProperty().set(null);
 						
 						c_line.setItems(qr._select_lm_pm(scl.parser_str(c_group.getValue(), 0)));
-						table_ps.setItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0)));
+						setPsItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0)));
 						_filter_group = scl.parser_str(c_group.getValue(), 0);
 						flag_ps = 2;
 					}
@@ -436,7 +427,7 @@ public class ps_controller {
 						c_equip.valueProperty().set(null);
 						
 						c_os.setItems(qr._select_os_pm(scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0)));
-						table_ps.setItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0)));
+						setPsItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0)));
 						_filter_line = scl.parser_str(c_line.getValue(), 0);
 						flag_ps = 3;
 					}
@@ -472,7 +463,7 @@ public class ps_controller {
 						c_equip.valueProperty().set(null);
 						
 						c_equip.setItems(qr._select_equip_pm(scl.parser_str(c_os.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0)));
-						table_ps.setItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0), scl.parser_str(c_os.getValue(), 0)));
+						setPsItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0), scl.parser_str(c_os.getValue(), 0)));
 						_filter_os = scl.parser_str(c_os.getValue(), 0);
 						flag_ps = 4;
 					}
@@ -503,7 +494,7 @@ public class ps_controller {
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
 				try {
 					if(c_os.getValue().toString().length() != 0) {
-						table_ps.setItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0), scl.parser_str(c_os.getValue(), 0), scl.parser_str(c_equip.getValue(), 0)));
+						setPsItems(qr._select_data_filter_ps(scl.parser_str(c_shop.getValue(), 0), scl.parser_str(c_group.getValue(), 0), scl.parser_str(c_line.getValue(), 0), scl.parser_str(c_os.getValue(), 0), scl.parser_str(c_equip.getValue(), 0)));
 						_filter_equip = scl.parser_str(c_equip.getValue(), 0);
 						flag_ps = 5;
 					}
@@ -535,11 +526,18 @@ public class ps_controller {
         table_ps.getFocusModel().focus(0);
         table_ps.getSelectionModel().selectLast();
         table_ps.scrollTo(table_ps.getItems().size());
+
+		search_ps.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				psDynamicFilter.change(newValue);
+			}
+		});
 	}
 	
 	private void initData()
 	{
-		table_ps.setItems(qr._select_data_ps());
+		setPsItems(qr._select_data_ps());
 	}
 	//Вызываем окно записи для PS
 	protected void addps_start() throws IOException {
@@ -557,7 +555,7 @@ public class ps_controller {
 	public void refreshTable_ps(@SuppressWarnings("rawtypes") ObservableList col) {
 		 table_ps.getColumns().removeAll(columns_ps);
 		 table_ps.getColumns().addAll(columns_ps);
-		 table_ps.setItems(qr._select_data_ps());
+		 setPsItems(qr._select_data_ps());
 		 columns_ps.get(0).setVisible(false);
 	     columns_ps.get(0).setVisible(true);
 	 }
@@ -701,5 +699,9 @@ public class ps_controller {
 		del_ps.setText(lngBndl.getString("del_inst"));
 		upd_table.setText(lngBndl.getString("upd_table_wr"));
 		btn_duplicate.setText(lngBndl.getString("btn_duplicate")+" x");
+	}
+
+	public void setPsItems(ObservableList<hmmr_ps_model> items) {
+		psDynamicFilter.update(items, search_ps.getText());
 	}
 }

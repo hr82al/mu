@@ -1,8 +1,9 @@
 package ru.haval.action;
 
 import javafx.beans.property.SimpleStringProperty;
+import ru.haval.filter.WrTable;
 
-public class hmmr_ps_model {
+public class hmmr_ps_model implements WrTable {
 	
 	public SimpleStringProperty Id = new SimpleStringProperty();
 	public SimpleStringProperty Company = new SimpleStringProperty();
@@ -737,5 +738,45 @@ public class hmmr_ps_model {
     
     public void setCostCenter(String CostCenter) {
         this.CostCenter.set(CostCenter);
+    }
+
+    @Override
+    public String getOtv() {
+        return null;
+    }
+
+    @Override
+    public String getOtv_Isp() {
+        return null;
+    }
+
+    @Override
+    public String getPMC() {
+        return null;
+    }
+
+    @Override
+    public String getEquip() {
+        return Shop_s.get();
+    }
+
+    @Override
+    public String getnum_inst() {
+        return "" + Id + Company + Plant + Shop_s  + Group_PM + Line_Machine_s + Operation_Station_s + Equipment_s  + Shop + FL04_Group_ENG + Line_Machine + Line_Machine_RUS + Operation_Station + Operation_Station_RUS + Equipment + FL03_Shop_RUS + FL04_Group_RUS + FL07_Equipment_RUS + Description + Equip_label + Station_label + manual + RespPlannerGroup + AssetsInvNum + AssetsOsNum + AssetsStartDate + CostCenter + Location + Station_Supplier + Coordinates + Altitude + CHAMBER + TR_CU +TR_CU_Link + Hazardous + Key_equipment + Type + S_N + Manuf + MTC +Resp +M_Electric + M_Air + M_Water + M_Cold_water + M_Hot_water + RO_Water + M_Gas;
+    }
+
+    @Override
+    public String getap_num() {
+        return null;
+    }
+
+    @Override
+    public String getdata() {
+        return null;
+    }
+
+    @Override
+    public String getshift_report() {
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -689,13 +690,22 @@ public class addrec_wr_controller {
 						updateTable(id_wr);
 					}
 					else {
-						Thread thread1 = new Thread(() -> {
-							synchronized (addrec_wr_controller.class) {
-								addRecToWr(selectedItem);
-							}
-						});
-						thread1.setPriority(Thread.MIN_PRIORITY);
-						thread1.start();
+//						Thread thread1 = new Thread(() -> {
+						synchronized (addrec_wr_controller.class) {
+							Task<Void> task = new Task<Void>() {
+								@Override
+								protected Void call() throws Exception {
+									addRecToWr(selectedItem);
+									return null;
+								}
+							};
+							Thread thread = new Thread(task);
+							thread.setPriority(Thread.MIN_PRIORITY);
+							thread.start();
+						}
+//						});
+//						thread1.setPriority(Thread.MIN_PRIORITY);
+//						thread1.start();
 					}
 
 				/*if(shift_report_wr_add.getText().length() != 0 && req_action_wr_add.getText().length() != 0 && actual_time_wr_add.getText().length() != 0 &&
