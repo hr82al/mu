@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import ru.haval.action.*;
 import ru.haval.application.conn_connector;
 import ru.haval.config.Config;
-import ru.haval.data.BackgroundFileLoader;
 import ru.haval.dir.Cycle;
 import ru.haval.dir.Hmmr_OrderType_Model;
 import ru.haval.dir.Hmmr_PartCharDir_Model;
@@ -5193,7 +5192,6 @@ public class _query {
 
             try {
                 String query = "select id from hmmr_plant_structure where Status = 0 AND FL03_Shop_s = " + "'" + shop + "'" + " AND FL04_Group_s = " + "'" + eq_group + "'" + " AND FL05_Line_s = " + "'" + line + "'" + " AND FL06_Station_s = " + "'" + os + "'" + " AND FL07_Equipment_s = " + "'" + equip + "'" + ";";
-                System.out.println(query);
                 cn.ConToDb();
                 stmt12 = cn.con.createStatement();
                 rs12 = stmt12.executeQuery(query);
