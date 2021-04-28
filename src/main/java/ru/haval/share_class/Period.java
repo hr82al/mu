@@ -20,6 +20,7 @@ public class Period implements Comparable<Period> {
         namePeriod.put("MP1", 90);
         namePeriod.put("CP1", 180);
         namePeriod.put("KP1", 360);
+        namePeriod.put("KP3", 1080);
     }
 
     public Period() {
