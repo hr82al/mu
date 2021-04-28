@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import javafx.concurrent.Task;
 import ru.haval.action.hmmr_ap_model;
 import ru.haval.action.apwr_controller;
 import javafx.application.Platform;
@@ -258,32 +259,42 @@ public class s_class {
 	}
 
 	public static void updatePmYearDates(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID) {
-		Thread thread = new Thread(() -> {
-			synchronized (s_class.class) {
-				List<Period> periods = findPassPeriods(Integer.parseInt(PMGroup));
-				List<Long> excludedPeriods = new LinkedList<>();
+//		Thread thread = new Thread(() -> {
 
-				if (periods != null) {
-					ArrayList<String> excludedPMGroups = new ArrayList<>();
-					for (Period period : periods) {
-						excludedPMGroups.add(period.getPmGroup());
+				Task<Void> task = new Task<Void>() {
+					@Override
+					protected Void call() throws Exception {
+						synchronized (s_class.class) {
+							List<Period> periods = findPassPeriods(Integer.parseInt(PMGroup));
+							List<Long> excludedPeriods = new LinkedList<>();
+
+							if (periods != null) {
+								ArrayList<String> excludedPMGroups = new ArrayList<>();
+								for (Period period : periods) {
+									excludedPMGroups.add(period.getPmGroup());
+								}
+								for (Period period : periods) {
+									//удаляем все записи из PM Plan группы для которой поменяли дату
+									qr.deleteFromPmYearByPmGroup(period.getPmGroup());
+								}
+								for (Period period : periods) {
+									updatePmYears(period.getPmGroup(), period.getBeginDate(), OFT, period.getPeriodId(), excludedPMGroups, true);
+									excludedPeriods.add((long) period.getPeriod());
+								}
+							} else {
+								qr.deleteFromPmYearByPmGroup(PMGroup);
+								updatePmYears(PMGroup, BEGIN_DATE, OFT, PERIOD_ID, null, false);
+							}
+							return null;
+						}
 					}
-					for (Period period : periods) {
-						//удаляем все записи из PM Plan группы для которой поменяли дату
-						qr.deleteFromPmYearByPmGroup(period.getPmGroup());
-					}
-					for (Period period : periods) {
-						updatePmYears(period.getPmGroup(), period.getBeginDate(), OFT, period.getPeriodId(), excludedPMGroups, true);
-						excludedPeriods.add((long) period.getPeriod());
-					}
-				} else {
-					qr.deleteFromPmYearByPmGroup(PMGroup);
-					updatePmYears(PMGroup, BEGIN_DATE, OFT, PERIOD_ID, null, false);
-				}
-			}
-		});
-		thread.setPriority(Thread.MIN_PRIORITY);
-		thread.start();
+				};
+				Thread thread = new Thread(task);
+				thread.setPriority(Thread.MIN_PRIORITY);
+				thread.start();
+//		});
+//		thread.setPriority(Thread.MIN_PRIORITY);
+//		thread.start();
 	}
 
 	public static void updatePmYears(final String PMGroup, final LocalDate BEGIN_DATE, final String OFT, final String PERIOD_ID, ArrayList<String> excludedPMGroups, boolean isNewShift) {
@@ -343,12 +354,14 @@ public class s_class {
 				}
 			}
 			//remove equipment that not conform target equipment
+			ArrayList<Period> periods_tmp = new ArrayList<>();
 			for (Period period : periods) {
 				//Check all periods has only one in pm group or not target equipment ID
-				if (qr.countEquipmentInPmGroup(Integer.parseInt(period.getPmGroup())) > 1 || period.getEqID() != targetEqID) {
-					periods.remove(period);
+				if (!(qr.countEquipmentInPmGroup(Integer.parseInt(period.getPmGroup())) > 1 || period.getEqID() != targetEqID)) {
+					periods_tmp.add(period);
 				}
 			}
+			periods = periods_tmp;
 			if (periods.size() == 0) {
 				return null;
 			}

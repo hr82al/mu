@@ -204,6 +204,7 @@ public class updrec_groupcycle_controller {
 			
 			@Override
 			public void handle(ActionEvent arg0) {
+				System.out.println("update");
 				qr._update_for_gc(gcc._id_gc, txt_pm_group.getText(), list_pm_cycle.getValue(), txt_days_gc.getText(), d_start_date.getValue(), txt_duration.getText());
 				qr._insert_history(conn_connector.USER_ID, apwr_controller.USER_S + " - Обновил запись № = " + qr._select_last_id("hmmr_group_cycle") + " в справочнике Группа-Период");
 				s_class.updatePmYearDates(txt_pm_group.getText(), d_start_date.getValue(), oft.getValue().split(" - ")[0], list_pm_cycle.getValue());
