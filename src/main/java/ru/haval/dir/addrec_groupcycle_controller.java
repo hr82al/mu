@@ -170,10 +170,10 @@ public class addrec_groupcycle_controller {
 				stage.close();
 			}
 		});
-		Platform.runLater(() -> {
-			String pmNum = qr.findFreePmNum();
-			txt_pm_group.setText(pmNum);
-		});
+//		Platform.runLater(() -> {
+//			String pmNum = qr.findFreePmNum();
+//			txt_pm_group.setText(pmNum);
+//		});
 		String[] last = qr.getLastGroupCycle();
 		list_pm_cycle.setValue(last[2]);
 		d_start_date.setValue(LocalDate.parse(last[3]));
