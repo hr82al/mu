@@ -29,7 +29,11 @@ public class Config {
     private Config(){
         isValid = false;
         Map<String, String> env = System.getenv();
-        confFileName = env.get("APPDATA")  + "/config.xml";
+        confFileName = env.get("APPDATA");
+        if (confFileName == null) {
+            confFileName = env.get("HOME");
+        }
+        confFileName = confFileName  + "/config.xml";
         File file = new File(confFileName);
         if (!file.exists()) {
             try {
